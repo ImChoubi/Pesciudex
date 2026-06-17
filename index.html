@@ -900,7 +900,7 @@ function launchWithLoading(pid){
 function renderManage(){
   const inner=document.getElementById('ps-inner');
   let h='<div class="ps-cards" style="margin-bottom:14px">';
-  PROFILES.forEach(p=>{const av=p.photo?`<img src="${p.photo}">`:`<span>${p.name[0]?.toUpperCase()||'🎣'}</span>`;h+=`<div class="pc"><div class="pc-av" style="border-color:rgba(180,0,0,.4);position:relative">${av}<div onclick="delProfile('${p.id}')" style="position:absolute;top:-3px;right:-3px;width:20px;height:20px;background:#c0392b;border-radius:50%;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #060e1f">×</div></div><div class="pc-name">${p.name}</div></div>`;});
+  PROFILES.forEach(p=>{const av=p.photo?`<img src="${p.photo}">`:`<span>${p.name[0]?.toUpperCase()||'🎣'}</span>`;h+=`<div class="pc" style="position:relative"><div class="pc-av" style="border-color:rgba(180,0,0,.4)">${av}</div><div onclick="delProfile('${p.id}')" style="position:absolute;top:0;right:0;width:22px;height:22px;background:#c0392b;border-radius:50%;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #060e1f;line-height:1;z-index:10">×</div><div class="pc-name">${p.name}</div></div>`;});
   h+='</div>';inner.innerHTML=h;
   const b=document.createElement('div');b.className='ps-back';b.textContent='← Retour';b.onclick=renderProfileScreen;inner.appendChild(b);
 }
