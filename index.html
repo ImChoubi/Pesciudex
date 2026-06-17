@@ -66,6 +66,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .pattern-coq-med{background-image:url("data:image/svg+xml,%3Csvg width='140' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='25' cy='60' r='9' fill='white' opacity='.07'/%3E%3Cline x1='25' y1='51' x2='25' y2='44' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cline x1='25' y1='69' x2='25' y2='76' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cline x1='16' y1='60' x2='9' y2='60' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cline x1='34' y1='60' x2='41' y2='60' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cline x1='19' y1='54' x2='13' y2='48' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cline x1='31' y1='66' x2='37' y2='72' stroke='white' stroke-width='1.4' opacity='.08'/%3E%3Cpath d='M90,25 Q90,10 103,10 Q116,10 116,25 Q116,38 103,44 Q90,38 90,25Z' fill='white' opacity='.06'/%3E%3Cline x1='103' y1='44' x2='103' y2='10' stroke='rgba(0,50,30,.2)' stroke-width='1'/%3E%3Cline x1='103' y1='44' x2='90' y2='18' stroke='rgba(0,50,30,.2)' stroke-width='1'/%3E%3Cline x1='103' y1='44' x2='116' y2='18' stroke='rgba(0,50,30,.2)' stroke-width='1'/%3E%3C/svg%3E");background-size:140px 100px;animation:bgDrift 16s linear infinite}
 /* seaweed for coq-atl */
 .pattern-coq-atl{background-image:url("data:image/svg+xml,%3Csvg width='150' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20,110 Q15,90 22,70 Q28,50 20,30 Q12,10 18,0' fill='none' stroke='white' stroke-width='2.5' opacity='.08' stroke-linecap='round'/%3E%3Cpath d='M22,70 Q35,65 38,55' fill='none' stroke='white' stroke-width='1.8' opacity='.07'/%3E%3Cpath d='M20,90 Q8,85 6,75' fill='none' stroke='white' stroke-width='1.8' opacity='.07'/%3E%3Cpath d='M90,110 Q95,92 88,72 Q82,52 90,32' fill='none' stroke='white' stroke-width='2' opacity='.06' stroke-linecap='round'/%3E%3Cpath d='M0,80 Q37,72 75,80 Q112,88 150,80' fill='none' stroke='white' stroke-width='1.5' opacity='.05'/%3E%3C/svg%3E");background-size:150px 120px;animation:bgDrift 20s linear infinite}
+/* reeds + ripples for eau douce */
+.pattern-edf{background-image:url("data:image/svg+xml,%3Csvg width='160' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20,120 Q18,90 22,60 Q24,40 20,10' fill='none' stroke='white' stroke-width='2' opacity='.1' stroke-linecap='round'/%3E%3Cellipse cx='20' cy='10' rx='5' ry='8' fill='white' opacity='.1'/%3E%3Cpath d='M22,80 Q32,75 34,65' fill='none' stroke='white' stroke-width='1.5' opacity='.08'/%3E%3Cpath d='M50,120 Q48,95 52,70 Q54,50 50,22' fill='none' stroke='white' stroke-width='1.8' opacity='.08' stroke-linecap='round'/%3E%3Cellipse cx='50' cy='22' rx='4' ry='7' fill='white' opacity='.08'/%3E%3Ccircle cx='100' cy='55' r='14' fill='none' stroke='white' stroke-width='1.2' opacity='.06'/%3E%3Ccircle cx='100' cy='55' r='8' fill='none' stroke='white' stroke-width='1' opacity='.05'/%3E%3Ccircle cx='100' cy='55' r='3' fill='white' opacity='.08'/%3E%3Cpath d='M0,90 Q40,84 80,90 Q120,96 160,90' fill='none' stroke='white' stroke-width='1.2' opacity='.06'/%3E%3C/svg%3E");background-size:160px 120px;animation:bgDrift 14s linear infinite}
 @keyframes bgDrift{from{background-position:0 0}to{background-position:200px 0}}
 
 /* ══ PROFILE SCREEN ══ */
@@ -312,6 +314,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       </div>
       <!-- ZONE + COUNTRY -->
       <div class="ctrl-row">
+        <button class="ctrl-btn" id="zone-edf" onclick="setZone('edf')">🏞 Eau douce</button>
         <button class="ctrl-btn on" id="zone-med" onclick="setZone('med')">🌊 Méditerranée</button>
         <button class="ctrl-btn" id="zone-atl" onclick="setZone('atl')">🌊 Atlantique</button>
         <div class="ctrl-sep"></div>
@@ -453,9 +456,23 @@ const CQFAMS_BASE = {
   'cqfam-crustaces':{label:'Crustacés',icon:'🦀'},
   'cqfam-custom':{label:'Mes ajouts',icon:'✚'}
 };
+const FAMS_EDF = {
+  'fam-salmonides':{label:'Salmonidés',icon:'🐟'},
+  'fam-carnassiers':{label:'Carnassiers',icon:'🦈'},
+  'fam-cyprinides':{label:'Cyprinidés',icon:'🐠'},
+  'fam-edf-autres':{label:'Autres espèces',icon:'🌿'},
+  'fam-custom':{label:'Mes ajouts',icon:'✚'}
+};
+const CQFAMS_EDF = {
+  'cqfam-edf-ecrevisses':{label:'Écrevisses',icon:'🦐'},
+  'cqfam-edf-mollusques':{label:'Mollusques d\'eau douce',icon:'🐚'},
+  'cqfam-custom':{label:'Mes ajouts',icon:'✚'}
+};
 
-const MODES_PESC = [{key:'bateau',label:'Bateau',icon:'⚓'},{key:'bord',label:'Bord',icon:'🌊'},{key:'chasse',label:'Chasse S-M',icon:'🤿'}];
-const MODES_COQ  = [{key:'pied',label:'À pied',icon:'🦶'},{key:'kayak',label:'Kayak',icon:'🛶'},{key:'masque',label:'Masque',icon:'🤿'}];
+const MODES_PESC    = [{key:'bateau',label:'Bateau',icon:'⚓'},{key:'bord',label:'Bord',icon:'🌊'},{key:'chasse',label:'Chasse S-M',icon:'🤿'}];
+const MODES_COQ     = [{key:'pied',label:'À pied',icon:'🦶'},{key:'kayak',label:'Kayak',icon:'🛶'},{key:'masque',label:'Masque',icon:'🤿'}];
+const MODES_EDF     = [{key:'riviere',label:'Rivière',icon:'🏞'},{key:'lac',label:'Lac',icon:'💧'},{key:'coup',label:'Coup',icon:'🎣'}];
+const MODES_CQEDF   = [{key:'main',label:'À main',icon:'🖐'},{key:'nasse',label:'Nasse',icon:'🪤'},{key:'balance',label:'Balance',icon:'⚖'}];
 const IC={LC:{label:'LC — Préoccupation mineure',cls:'t-lc',dot:'🟢'},NT:{label:'NT — Quasi menacé',cls:'t-nt',dot:'🟡'},VU:{label:'VU — Vulnérable',cls:'t-vu',dot:'🟠'},EN:{label:'EN — En danger',cls:'t-en',dot:'🔴'},DD:{label:'DD — Données insuffisantes',cls:'t-dd',dot:'⚪'}};
 
 // ══ PESCIUDEX DATA ══
@@ -686,6 +703,86 @@ const COQUIDEX_DATA = [
    m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:'',med:null},
 ];
 
+// ══ EAU DOUCE — PESCIUDEX ══
+const FRESHWATER_DATA = [
+  // ── Salmonidés ──
+  {id:'truite_fario',fam:'fam-salmonides',name:'Truite fario',latin:'Salmo trutta fario',e:'🐟',
+   m:'23 cm',pm:null,s:'2e sam. mars – 3e dim. sept.',i:'LC',
+   n:'1ère catégorie · Quota : 10/jour · Pêche à la mouche recommandée'},
+  {id:'truite_arenciel',fam:'fam-salmonides',name:'Truite arc-en-ciel',latin:'Oncorhynchus mykiss',e:'🐟',
+   m:'23 cm',pm:null,s:'Selon plan d\'eau',i:'LC',
+   n:'Espèce introduite · Lacs et plans d\'eau aménagés'},
+  {id:'ombre',fam:'fam-salmonides',name:'Ombre commun',latin:'Thymallus thymallus',e:'🐟',
+   m:'30 cm',pm:null,s:'2e sam. mars – 3e dim. sept.',i:'VU',
+   n:'⚠ Vulnérable · Cours d\'eau froids et oxygénés · No-kill recommandé'},
+  {id:'omble',fam:'fam-salmonides',name:'Omble chevalier',latin:'Salvelinus alpinus',e:'🐟',
+   m:'23 cm',pm:null,s:'Variable selon plan d\'eau',i:'LC',
+   n:'Lacs alpins · Alpes, Vosges, Pyrénées'},
+  {id:'saumon',fam:'fam-salmonides',name:'Saumon atlantique',latin:'Salmo salar',e:'🐟',
+   m:'50 cm',pm:null,s:'Variable – réglementation stricte',i:'VU',
+   n:'⚠ Très réglementé · Vérifier arrêtés préfectoraux · Marquage obligatoire'},
+  // ── Carnassiers ──
+  {id:'brochet',fam:'fam-carnassiers',name:'Brochet',latin:'Esox lucius',e:'🐟',
+   m:'50 cm',pm:null,s:"Toute l'année (sauf reproduction : fév–mars)",i:'LC',
+   n:'Quota : 2/jour · No-kill très pratiqué · Grand prédateur'},
+  {id:'sandre',fam:'fam-carnassiers',name:'Sandre',latin:'Sander lucioperca',e:'🐟',
+   m:'40 cm',pm:null,s:"Toute l'année",i:'LC',
+   n:'2ème catégorie · Quota : 3/jour'},
+  {id:'perche',fam:'fam-carnassiers',name:'Perche commune',latin:'Perca fluviatilis',e:'🐡',
+   m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'blackbass',fam:'fam-carnassiers',name:'Black-bass',latin:'Micropterus salmoides',e:'🐟',
+   m:'30 cm',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce introduite · No-kill recommandé · 2ème cat.'},
+  {id:'silure',fam:'fam-carnassiers',name:'Silure glane',latin:'Silurus glanis',e:'🐍',
+   m:'70 cm',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce introduite · Quota : 1/jour dans certains cours d\'eau · Peut dépasser 2 m'},
+  // ── Cyprinidés ──
+  {id:'carpe',fam:'fam-cyprinides',name:'Carpe commune',latin:'Cyprinus carpio',e:'🐠',
+   m:'40 cm',pm:null,s:"Toute l'année",i:'VU',
+   n:'No-kill très répandu · Remettre à l\'eau recommandé · 2ème cat.'},
+  {id:'barbeau',fam:'fam-cyprinides',name:'Barbeau fluviatile',latin:'Barbus barbus',e:'🐠',
+   m:'30 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'chevesne',fam:'fam-cyprinides',name:'Chevesne',latin:'Squalius cephalus',e:'🐠',
+   m:'20 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'gardon',fam:'fam-cyprinides',name:'Gardon',latin:'Rutilus rutilus',e:'🐠',
+   m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'breme',fam:'fam-cyprinides',name:'Brème commune',latin:'Abramis brama',e:'🐠',
+   m:'20 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'tanche',fam:'fam-cyprinides',name:'Tanche',latin:'Tinca tinca',e:'🐠',
+   m:'20 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'rotengle',fam:'fam-cyprinides',name:'Rotengle',latin:'Scardinius erythrophthalmus',e:'🐠',
+   m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  // ── Autres ──
+  {id:'anguille_edf',fam:'fam-edf-autres',name:'Anguille européenne',latin:'Anguilla anguilla',e:'🐍',
+   m:'60 cm',pm:null,s:'Variable – très réglementé',i:'EN',
+   n:'⛔ EN DANGER · Pêche souvent interdite ou très limitée · Vérifier réglementation locale'},
+  {id:'perche_soleil',fam:'fam-edf-autres',name:'Perche-soleil',latin:'Lepomis gibbosus',e:'🐡',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce envahissante introduite · ⚠ Remise à l\'eau interdite'},
+];
+
+// ══ EAU DOUCE — COQUIDEX ══
+const CQ_FRESHWATER_DATA = [
+  {id:'ecrevisse_pp',fam:'cqfam-edf-ecrevisses',name:'Écrevisse à pattes rouges',latin:'Astacus astacus',e:'🦐',
+   m:'9 cm',pm:null,s:'Vérifier arrêté préfectoral',i:'EN',
+   n:'⚠ EN DANGER · Protégée dans de nombreux dép. · Vérifier réglementation locale'},
+  {id:'ecrevisse_pb',fam:'cqfam-edf-ecrevisses',name:'Écrevisse à pieds blancs',latin:'Austropotamobius pallipes',e:'🦐',
+   m:'9 cm',pm:null,s:'Souvent protégée',i:'EN',
+   n:'⚠ EN DANGER · Protégée · Capture interdite dans la majorité des cours d\'eau'},
+  {id:'ecrevisse_signal',fam:'cqfam-edf-ecrevisses',name:'Écrevisse signal',latin:'Pacifastacus leniusculus',e:'🦐',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce envahissante · ⚠ Remise à l\'eau strictement interdite · Capturer et conserver'},
+  {id:'ecrevisse_louisiane',fam:'cqfam-edf-ecrevisses',name:'Écrevisse de Louisiane',latin:'Procambarus clarkii',e:'🦐',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce envahissante · ⚠ Remise à l\'eau interdite · Quotas locaux variables'},
+  {id:'moule_perliere',fam:'cqfam-edf-mollusques',name:'Moule perlière',latin:'Margaritifera margaritifera',e:'🐚',
+   m:'— Protégée',pm:null,s:'Interdite',i:'EN',
+   n:'⛔ PROTÉGÉE en France · Capture strictement interdite'},
+  {id:'mulette_epaisse',fam:'cqfam-edf-mollusques',name:'Mulette épaisse',latin:'Unio crassus',e:'🐚',
+   m:'— Protégée',pm:null,s:'Interdite',i:'EN',
+   n:'⛔ PROTÉGÉE en France · Capture interdite'},
+];
+
 // Wikimedia images — Pesciudex
 const IMGS={
   thon:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Atlantic_Bluefin_Tuna.jpg/300px-Atlantic_Bluefin_Tuna.jpg',
@@ -734,6 +831,26 @@ const IMGS={
   raie_bouclee:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Raja_clavata.jpg/300px-Raja_clavata.jpg',
   raie_past:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dasyatis_pastinaca.jpg/300px-Dasyatis_pastinaca.jpg',
   raie_etoilee:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Raja_asterias.jpg/300px-Raja_asterias.jpg',
+  // Eau douce
+  truite_fario:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Salmo_trutta_Boulenger_1895.jpg/300px-Salmo_trutta_Boulenger_1895.jpg',
+  truite_arenciel:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Rainbow_trout.jpg/300px-Rainbow_trout.jpg',
+  ombre:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Thymallus_thymallus.jpg/300px-Thymallus_thymallus.jpg',
+  omble:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Salvelinus_alpinus_fontinalis_FWS.jpg/300px-Salvelinus_alpinus_fontinalis_FWS.jpg',
+  saumon:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Atlantic_salmon_Atlantic_ocean.jpg/300px-Atlantic_salmon_Atlantic_ocean.jpg',
+  brochet:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Hecht_Esox_lucius.jpg/300px-Hecht_Esox_lucius.jpg',
+  sandre:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Sander_lucioperca.jpg/300px-Sander_lucioperca.jpg',
+  perche:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Perca_fluviatilis.jpg/300px-Perca_fluviatilis.jpg',
+  blackbass:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Largemouth_bass.jpg/300px-Largemouth_bass.jpg',
+  silure:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Silurus_glanis.jpg/300px-Silurus_glanis.jpg',
+  carpe:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Common_carp.jpg/300px-Common_carp.jpg',
+  barbeau:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Barbus_barbus.jpg/300px-Barbus_barbus.jpg',
+  chevesne:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Squalius_cephalus.jpg/300px-Squalius_cephalus.jpg',
+  gardon:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Rutilus_rutilus.jpg/300px-Rutilus_rutilus.jpg',
+  breme:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Abramis_brama.jpg/300px-Abramis_brama.jpg',
+  tanche:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Tinca_tinca.jpg/300px-Tinca_tinca.jpg',
+  rotengle:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Scardinius_erythrophthalmus.jpg/300px-Scardinius_erythrophthalmus.jpg',
+  anguille_edf:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Anguilla_anguilla.jpg/300px-Anguilla_anguilla.jpg',
+  perche_soleil:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Lepomis_gibbosus.jpg/300px-Lepomis_gibbosus.jpg',
 };
 // Wikimedia images — Coquidex
 const CQIMGS={
@@ -758,6 +875,13 @@ const CQIMGS={
   cigale_mer:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Scyllarides_latus.jpg/300px-Scyllarides_latus.jpg',
   crevette_bouquet:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Palaemon_serratus.jpg/300px-Palaemon_serratus.jpg',
   crevette_grise:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Crangon_crangon.jpg/300px-Crangon_crangon.jpg',
+  // Eau douce
+  ecrevisse_pp:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Astacus_astacus.jpg/300px-Astacus_astacus.jpg',
+  ecrevisse_pb:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Austropotamobius_pallipes.jpg/300px-Austropotamobius_pallipes.jpg',
+  ecrevisse_signal:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Pacifastacus_leniusculus.jpg/300px-Pacifastacus_leniusculus.jpg',
+  ecrevisse_louisiane:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Procambarus_clarkii.jpg/300px-Procambarus_clarkii.jpg',
+  moule_perliere:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Margaritifera_margaritifera.jpg/300px-Margaritifera_margaritifera.jpg',
+  mulette_epaisse:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Unio_crassus.jpg/300px-Unio_crassus.jpg',
 };
 
 // ══ STATE ══
@@ -770,7 +894,9 @@ let ZONE='med', MODE='pesc', COUNTRY='fr', FILTER='all', selectedIUCN='LC';
 function stKey(id){return ZONE+':'+COUNTRY+':'+id;}
 
 function getFAMS(){
-  const base=MODE==='pesc'?FAMS_BASE:CQFAMS_BASE;
+  let base;
+  if(ZONE==='edf') base=MODE==='pesc'?FAMS_EDF:CQFAMS_EDF;
+  else base=MODE==='pesc'?FAMS_BASE:CQFAMS_BASE;
   const cf=MODE==='pesc'?CUSTOM_FAMS:CQ_CUSTOM_FAMS;
   const result={...base};
   cf.forEach(f=>result[f.id]={label:f.label,icon:f.icon});
@@ -826,6 +952,10 @@ function getSpecies(f){
   return r;
 }
 function getData(){
+  if(ZONE==='edf'){
+    const base=MODE==='pesc'?[...FRESHWATER_DATA,...CUSTOM]:[...CQ_FRESHWATER_DATA,...CQ_CUSTOM];
+    return base.filter(Boolean);
+  }
   const base=MODE==='pesc'?[...BASE_DATA,...CUSTOM]:[...COQUIDEX_DATA,...CQ_CUSTOM];
   return base.map(getSpecies).filter(Boolean);
 }
@@ -951,6 +1081,7 @@ function setZone(z){
   applyZone();FILTER='all';renderFilters();render();upStats();
 }
 function applyZone(){
+  document.getElementById('zone-edf').classList.toggle('on',ZONE==='edf');
   document.getElementById('zone-med').classList.toggle('on',ZONE==='med');
   document.getElementById('zone-atl').classList.toggle('on',ZONE==='atl');
   updateHeroPattern();updateBrandSub();
@@ -967,13 +1098,13 @@ function applyCountry(){
 }
 function updateBrandSub(){
   const modeLabel=MODE==='coq'?'Coquidex':'Pesciudex';
-  const zoneLabel=ZONE==='med'?'Méditerranée':'Atlantique';
+  const zoneLabel=ZONE==='edf'?'Eau douce':ZONE==='med'?'Méditerranée':'Atlantique';
   const countryLabel=COUNTRY==='es'?'Espagne':'France';
   document.getElementById('brand-sub').textContent=`${modeLabel} · ${zoneLabel} · ${countryLabel}`;
 }
 function updateHeroPattern(){
   const key=`${MODE}-${ZONE}`;
-  const classes={'pesc-med':'pattern-pesc-med','pesc-atl':'pattern-pesc-atl','coq-med':'pattern-coq-med','coq-atl':'pattern-coq-atl'};
+  const classes={'pesc-med':'pattern-pesc-med','pesc-atl':'pattern-pesc-atl','coq-med':'pattern-coq-med','coq-atl':'pattern-coq-atl','pesc-edf':'pattern-edf','coq-edf':'pattern-edf'};
   const p=document.getElementById('hero-pattern');
   p.className='hero-pattern '+(classes[key]||'');
 }
@@ -995,7 +1126,9 @@ function renderFilters(){
   const fams=getFAMS();const isCoq=MODE==='coq';
   const customKey=isCoq?'cqfam-custom':'fam-custom';
   let items=[{f:'all',label:'🎯 Toutes'},{f:'caught',label:'✅ Pêchées'},{f:'todo',label:'⏳ Restantes'},'sep'];
-  if(!isCoq)items.push({f:'bateau',label:'⚓ Bateau'},{f:'bord',label:'🌊 Bord'},{f:'chasse',label:'🤿 Chasse S-M'},'sep');
+  if(ZONE==='edf'&&!isCoq)items.push({f:'riviere',label:'🏞 Rivière'},{f:'lac',label:'💧 Lac'},{f:'coup',label:'🎣 Coup'},'sep');
+  else if(ZONE==='edf'&&isCoq)items.push({f:'main',label:'🖐 À main'},{f:'nasse',label:'🪤 Nasse'},{f:'balance',label:'⚖ Balance'},'sep');
+  else if(!isCoq)items.push({f:'bateau',label:'⚓ Bateau'},{f:'bord',label:'🌊 Bord'},{f:'chasse',label:'🤿 Chasse S-M'},'sep');
   Object.entries(fams).forEach(([k,v])=>{if(k!==customKey)items.push({f:k,label:v.icon+' '+v.label,cls:'fam'});});
   items.push({f:customKey,label:'✚ Mes ajouts',cls:'fam'},'sep',{f:'lc',label:'🟢 LC'},{f:'nt',label:'🟡 NT'},{f:'vu',label:'🟠 VU'},{f:'en',label:'🔴 EN'});
   fi.innerHTML=items.map(it=>{if(it==='sep')return '<div class="fsep"></div>';const cls='fbtn'+(it.cls?' '+it.cls:'')+(it.f===FILTER?' on':'');return `<button class="${cls}" data-f="${it.f}">${it.label}</button>`;}).join('');
@@ -1007,7 +1140,7 @@ function getFilt(){
   return getData().filter(f=>{
     if(FILTER==='caught')return ast[stKey(f.id)]?.caught;
     if(FILTER==='todo')return !ast[stKey(f.id)]?.caught;
-    if(['bateau','bord','chasse','pied','kayak','masque'].includes(FILTER))return ast[stKey(f.id)]?.mode===FILTER;
+    if(['bateau','bord','chasse','pied','kayak','masque','riviere','lac','coup','main','nasse','balance'].includes(FILTER))return ast[stKey(f.id)]?.mode===FILTER;
     if(FILTER.startsWith('fam-')||FILTER.startsWith('cqfam-'))return f.fam===FILTER;
     if(['lc','nt','vu','en','dd'].includes(FILTER))return f.i?.toLowerCase()===FILTER;
     return true;
@@ -1040,7 +1173,7 @@ function rc(id){
   const imgTag=si?`<img class="simg" src="${si}" referrerpolicy="no-referrer" alt="${f.name}" onerror="this.style.display='none'">`:'';
   const th=`${imgTag}<div class="fb">${f.e}</div><div class="tov"></div><div class="ctick">✓</div>`;
   const up=s.photo?`<div class="pprev"><img src="${s.photo}"><button class="dphoto" onclick="event.stopPropagation();dp('${id}')">✕</button></div>`:`<div class="uzone" onclick="event.stopPropagation();document.getElementById('ph-${id}').click()"><input type="file" id="ph-${id}" accept="image/*" onchange="hp('${id}',this)"><div style="font-size:20px">📷</div><div style="font-size:11px;color:var(--txt2)">Ajouter ma photo</div></div>`;
-  const modes=MODE==='pesc'?MODES_PESC:MODES_COQ;
+  const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
   el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}${delBtn}</div>`:''}`;
