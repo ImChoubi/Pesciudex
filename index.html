@@ -850,10 +850,25 @@ function renderProfileScreen(){
 }
 function showCreateForm(){renderCreateForm(document.getElementById('ps-inner'),true);}
 function renderCreateForm(el,back){
-  el.innerHTML=`<div class="ps-form"><div class="ps-av-upload" id="av-wrap" onclick="document.getElementById('av-inp').click()"><span class="cam">📷</span><input type="file" id="av-inp" accept="image/*"></div><input class="ps-inp" id="pname" type="text" placeholder="Ton pseudo de pêcheur" maxlength="22"><button class="ps-btn" onclick="createProfile()">Créer le profil 🎣</button>${back?'<div class="ps-back" onclick="renderProfileScreen()">← Retour</div>':''}</div>`;
+  el.innerHTML=`<div class="ps-form">
+    <div class="ps-av-upload" id="av-wrap" onclick="document.getElementById('av-inp').click()" style="position:relative;overflow:hidden">
+      <span class="cam" id="av-cam">📷</span>
+      <img id="av-preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+    </div>
+    <input type="file" id="av-inp" accept="image/*" style="display:none">
+    <input class="ps-inp" id="pname" type="text" placeholder="Ton pseudo de pêcheur" maxlength="22">
+    <button class="ps-btn" onclick="createProfile()">Créer le profil 🎣</button>
+    ${back?'<div class="ps-back" onclick="renderProfileScreen()">← Retour</div>':''}
+  </div>`;
   document.getElementById('av-inp').addEventListener('change',function(){
     const f=this.files[0];if(!f)return;
-    const r=new FileReader();r.onload=e=>{const w=document.getElementById('av-wrap');w.innerHTML=`<img src="${e.target.result}"><input type="file" id="av-inp" accept="image/*">`;document.getElementById('av-inp').addEventListener('change',arguments.callee.bind(this));};r.readAsDataURL(f);
+    const r=new FileReader();
+    r.onload=e=>{
+      document.getElementById('av-cam').style.display='none';
+      const prev=document.getElementById('av-preview');
+      prev.src=e.target.result;prev.style.display='block';
+    };
+    r.readAsDataURL(f);
   });
 }
 function createProfile(){
@@ -864,7 +879,8 @@ function createProfile(){
     setTimeout(()=>{inp.style.borderColor='';inp.style.animation='';},600);
     return;
   }
-  const photo=document.getElementById('av-wrap')?.querySelector('img')?.src||null;
+  const prev=document.getElementById('av-preview');
+  const photo=(prev&&prev.style.display!=='none')?prev.src:null;
   const pid='p'+Date.now();
   PROFILES.push({id:pid,name,photo});saveProfiles();
   // Animate button → success flash → loading screen
