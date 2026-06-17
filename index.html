@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Pesciudex — Carnet de pêche de Choubi</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sea:#0B2540;--sea2:#103A5E;--sea3:#1A6FA0;
+  --teal:#1AAFA0;--teal3:#0E7A70;
+  --sand:#F5F0E8;--white:#fff;
+  --txt:#0B2540;--txt2:#4A6380;--txt3:#8BA8C0;
+  --r1:8px;--r2:14px;
+  --sh1:0 1px 4px rgba(11,37,64,.08);--sh2:0 4px 16px rgba(11,37,64,.12);
+  --lc-bg:#E8F5E9;--lc-tx:#1B5E20;--nt-bg:#FFF8E1;--nt-tx:#E65100;
+  --vu-bg:#FFF3E0;--vu-tx:#BF360C;--en-bg:#FFEBEE;--en-tx:#B71C1C;
+  --dd-bg:#ECEFF1;--dd-tx:#455A64;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--sand);color:var(--txt);-webkit-font-smoothing:antialiased}
+/* HERO */
+.hero{background:linear-gradient(155deg,var(--sea) 0%,var(--sea2) 55%,var(--sea3) 100%);padding:28px 20px 0;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(26,175,160,.12),transparent 70%);pointer-events:none}
+.hero-inner{max-width:680px;margin:0 auto;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.brand-logo{width:56px;height:56px;border-radius:14px;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.25);box-shadow:0 4px 20px rgba(0,0,0,.35)}
+.brand-logo img{width:100%;height:100%;object-fit:cover}
+.brand-name{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1}
+.brand-sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.stat-chip{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:8px 18px}
+.stat-v{font-size:22px;font-weight:700;color:#fff;line-height:1}
+.stat-l{font-size:11px;color:rgba(255,255,255,.6)}
+.prog-hdr{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-hdr span{font-size:12px;color:rgba(255,255,255,.6)}
+.prog-hdr strong{color:var(--teal);font-size:13px}
+.prog-track{height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),#5FD5CB);border-radius:3px;transition:width .5s;width:0%}
+.wave{display:block;width:calc(100% + 40px);margin-left:-20px;margin-top:20px}
+/* FILTERS */
+.fbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(11,37,64,.08);box-shadow:0 2px 12px rgba(11,37,64,.06)}
+.fi{max-width:680px;margin:0 auto;padding:10px 14px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.fi::-webkit-scrollbar{display:none}
+.fsep{width:1px;height:22px;background:rgba(11,37,64,.12);margin:0 3px;flex-shrink:0}
+.fbtn{font-size:11.5px;font-weight:500;padding:6px 12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.12);background:#fff;color:var(--txt2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.fbtn:hover{border-color:var(--teal);color:var(--teal3)}
+.fbtn.on{background:var(--sea);border-color:var(--sea);color:#fff;box-shadow:0 2px 8px rgba(11,37,64,.2)}
+.fbtn.fam.on{background:var(--teal3);border-color:var(--teal3)}
+/* ADD BTN */
+.add-fab{position:fixed;bottom:24px;right:20px;z-index:100;width:56px;height:56px;border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 4px 20px rgba(26,175,160,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s}
+.add-fab:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(26,175,160,.6)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;padding:24px 20px 40px;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:rgba(11,37,64,.15);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-size:18px;font-weight:700;color:var(--sea);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--txt2);margin-bottom:20px}
+.mfield{margin-bottom:14px}
+.mfield label{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.mfield input,.mfield select,.mfield textarea{width:100%;font-size:14px;padding:10px 12px;border:1.5px solid rgba(11,37,64,.15);border-radius:var(--r1);background:#fff;color:var(--txt);font-family:inherit;transition:border-color .15s}
+.mfield input:focus,.mfield select,.mfield textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,175,160,.12)}
+.mfield select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A6380' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer}
+.mfield textarea{height:60px;resize:none}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.btn-cancel{flex:1;padding:12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-cancel:hover{background:rgba(11,37,64,.05)}
+.btn-add{flex:2;padding:12px;border-radius:50px;border:none;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(26,175,160,.35);transition:all .15s}
+.btn-add:hover{background:var(--teal3);box-shadow:0 4px 14px rgba(26,175,160,.45)}
+.iucn-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.iucn-pill{padding:6px 14px;border-radius:50px;border:1.5px solid rgba(11,37,64,.12);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;color:var(--txt2)}
+.iucn-pill.sel{border-width:2px}
+.iucn-pill[data-v="LC"].sel{background:var(--lc-bg);color:var(--lc-tx);border-color:#1B5E20}
+.iucn-pill[data-v="NT"].sel{background:var(--nt-bg);color:var(--nt-tx);border-color:#E65100}
+.iucn-pill[data-v="VU"].sel{background:var(--vu-bg);color:var(--vu-tx);border-color:#BF360C}
+.iucn-pill[data-v="EN"].sel{background:var(--en-bg);color:var(--en-tx);border-color:#B71C1C}
+.iucn-pill[data-v="DD"].sel{background:var(--dd-bg);color:var(--dd-tx);border-color:#455A64}
+/* MAIN */
+.main{max-width:680px;margin:0 auto;padding:14px 12px 100px}
+.cbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.clbl{font-size:13px;font-weight:600;color:var(--txt2)}
+.chint{font-size:11px;color:var(--txt3)}
+.fam-hdr{display:flex;align-items:center;gap:8px;padding:14px 0 6px;margin-top:4px}
+.fam-title{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.fam-line{flex:1;height:1px;background:rgba(11,37,64,.1)}
+.fam-cnt{font-size:11px;color:var(--txt3);white-space:nowrap}
+.grid{display:flex;flex-direction:column;gap:7px}
+/* CARDS */
+.card{background:#fff;border:1.5px solid rgba(11,37,64,.08);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh1);transition:box-shadow .2s,border-color .2s}
+.card:hover{box-shadow:var(--sh2)}
+.card.caught{border-color:var(--teal)}
+.card.custom{border-style:dashed;border-color:rgba(26,175,160,.4)}
+.card.custom.caught{border-style:solid;border-color:var(--teal)}
+.card-top{display:flex;align-items:center;gap:11px;padding:11px 13px;cursor:pointer;user-select:none}
+.fthumb{width:62px;height:48px;border-radius:9px;flex-shrink:0;background:var(--sand);overflow:hidden;position:relative}
+.fthumb .simg{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:block}
+.fthumb .fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px}
+.tov{position:absolute;inset:0;background:linear-gradient(135deg,transparent 50%,rgba(26,175,160,.3));opacity:0;transition:opacity .2s}
+.card.caught .tov{opacity:1}
+.ctick{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;border:1.5px solid #fff;z-index:2}
+.card.caught .ctick{display:flex}
+.cinfo{flex:1;min-width:0}
+.cname{font-size:14px;font-weight:700;color:var(--txt)}
+.clatin{font-size:11px;color:var(--txt3);font-style:italic;margin-top:1px}
+.tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;white-space:nowrap;line-height:1.5;font-weight:500}
+.tm{background:rgba(16,58,94,.09);color:var(--sea2)}
+.tp{background:#FDF0F3;color:#8B2040}
+.ts{background:rgba(26,175,160,.1);color:var(--teal3)}
+.t-lc{background:var(--lc-bg);color:var(--lc-tx)}.t-nt{background:var(--nt-bg);color:var(--nt-tx)}
+.t-vu{background:var(--vu-bg);color:var(--vu-tx)}.t-en{background:var(--en-bg);color:var(--en-tx)}
+.t-dd{background:var(--dd-bg);color:var(--dd-tx)}
+.chk{width:36px;height:36px;border-radius:50%;border:2px solid rgba(11,37,64,.18);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:15px;color:var(--txt3);transition:all .18s}
+.chk.on{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 2px 10px rgba(26,175,160,.4)}
+.chk:hover:not(.on){border-color:var(--teal);color:var(--teal)}
+/* DETAIL */
+.cdet{display:none;border-top:1px solid rgba(11,37,64,.07);padding:0 13px 14px;animation:sIn .2s ease}
+@keyframes sIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.card.caught .cdet{display:block}
+.nbox{font-size:11.5px;color:var(--txt2);background:rgba(26,175,160,.07);border-left:3px solid var(--teal);border-radius:0 var(--r1) var(--r1) 0;padding:7px 10px;margin-top:11px;line-height:1.6}
+.slbl{font-size:10.5px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em;margin:13px 0 5px}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mbtn{font-size:11px;font-weight:500;padding:8px 4px;border:1.5px solid rgba(11,37,64,.12);border-radius:var(--r1);background:#fff;color:var(--txt2);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s}
+.mbtn .mi{font-size:16px}
+.mbtn:hover:not(.sel){border-color:var(--teal);color:var(--teal3);background:rgba(26,175,160,.05)}
+.mbtn.sel{background:var(--sea);border-color:var(--sea);color:#fff}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+.field label,.ffield label{font-size:10.5px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+.field input,.ffield input,.ffield textarea{width:100%;font-size:13px;padding:7px 9px;border:1.5px solid rgba(11,37,64,.12);border-radius:var(--r1);background:#fff;color:var(--txt);font-family:inherit;transition:border-color .15s}
+.field input:focus,.ffield input:focus,.ffield textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(26,175,160,.12)}
+.ffield{margin-top:8px}
+.ffield textarea{height:52px;resize:none}
+.rrow{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.rbox{flex:1;min-width:75px;background:var(--sand);border-radius:var(--r1);padding:7px 9px}
+.rl{font-size:10px;color:var(--txt2);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.rv{font-size:15px;font-weight:700;color:var(--txt);margin-top:1px}
+.uzone{border:2px dashed rgba(11,37,64,.15);border-radius:var(--r1);padding:14px;text-align:center;cursor:pointer;transition:all .15s;margin-top:4px;background:rgba(26,175,160,.02)}
+.uzone:hover{border-color:var(--teal);background:rgba(26,175,160,.06)}
+.uzone input{display:none}
+.pprev{position:relative;margin-top:4px}
+.pprev img{width:100%;max-height:210px;object-fit:cover;border-radius:var(--r1)}
+.dphoto{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.del-card-btn{font-size:11px;color:#B71C1C;background:none;border:1px solid rgba(183,28,28,.3);border-radius:50px;padding:4px 10px;cursor:pointer;margin-top:10px;transition:all .15s}
+.del-card-btn:hover{background:#FFEBEE}
+.empty{text-align:center;padding:48px 20px;color:var(--txt3)}
+.empty .ei{font-size:44px;display:block;margin-bottom:10px}
+.empty h3{font-size:16px;color:var(--txt2);margin-bottom:4px}
+.legend{background:#fff;border-radius:var(--r2);border:1px solid rgba(11,37,64,.08);padding:14px 16px;margin-top:20px;box-shadow:var(--sh1)}
+.legend h3{font-size:13px;font-weight:700;color:var(--sea);margin-bottom:9px}
+.lgrid{display:flex;flex-wrap:wrap;gap:8px}
+.li{font-size:11.5px;display:flex;align-items:center;gap:5px;color:var(--txt2)}
+.foot{text-align:center;padding:20px 14px;font-size:11px;color:var(--txt3);max-width:680px;margin:0 auto}
+.foot span{color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">
+      <div class="brand-logo"><img id="logo-img" alt="Choubi"></div>
+      <div>
+        <div class="brand-name">Pesciudex</div>
+        <div class="brand-sub">Carnet de p&#234;che de Choubi &middot; M&#233;diterran&#233;e / Corse</div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-chip"><div><div class="stat-v" id="sc">0</div><div class="stat-l">Esp&#232;ces p&#234;ch&#233;es</div></div></div>
+      <div class="stat-chip"><div><div class="stat-v" id="st">38</div><div class="stat-l">Au total</div></div></div>
+      <div class="stat-chip"><div><div class="stat-v" id="sp">0%</div><div class="stat-l">Progression</div></div></div>
+    </div>
+    <div>
+      <div class="prog-hdr"><span>Tableau de chasse</span><strong id="pl">0 / 38</strong></div>
+      <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 36" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,18 C240,36 480,0 720,18 C960,36 1200,0 1440,18 L1440,36 L0,36 Z" fill="#F5F0E8"/>
+  </svg>
+</div>
+<nav class="fbar">
+  <div class="fi" id="filters">
+    <button class="fbtn on" data-f="all">&#127920; Toutes</button>
+    <button class="fbtn" data-f="caught">&#9989; P&#234;ch&#233;es</button>
+    <button class="fbtn" data-f="todo">&#8987; Restantes</button>
+    <div class="fsep"></div>
+    <button class="fbtn" data-f="bateau">&#9875; Bateau</button>
+    <button class="fbtn" data-f="bord">&#127754; Bord</button>
+    <button class="fbtn" data-f="chasse">&#129348; Chasse S-M</button>
+    <div class="fsep"></div>
+    <button class="fbtn fam" data-f="fam-pelagiques">P&#233;lagiques</button>
+    <button class="fbtn fam" data-f="fam-sparides">Sparid&#233;s</button>
+    <button class="fbtn fam" data-f="fam-bar">Bar &amp; Mulets</button>
+    <button class="fbtn fam" data-f="fam-scorpenides">Scorpen&#233;id&#233;s</button>
+    <button class="fbtn fam" data-f="fam-labre">Labres</button>
+    <button class="fbtn fam" data-f="fam-cephalopodes">C&#233;phalopodes</button>
+    <button class="fbtn fam" data-f="fam-fond">Fond</button>
+    <button class="fbtn fam" data-f="fam-raies">Raies</button>
+    <button class="fbtn fam" data-f="fam-custom">&#10010; Mes ajouts</button>
+    <div class="fsep"></div>
+    <button class="fbtn" data-f="lc">&#128994; LC</button>
+    <button class="fbtn" data-f="nt">&#128993; NT</button>
+    <button class="fbtn" data-f="vu">&#128992; VU</button>
+  </div>
+</nav>
+<main class="main">
+  <div class="cbar"><span class="clbl" id="clbl"></span><span class="chint">Cliquer pour cocher &#10003;</span></div>
+  <div class="grid" id="grid"></div>
+  <div class="legend">
+    <h3>&#127807; Statuts de conservation IUCN</h3>
+    <div class="lgrid">
+      <div class="li"><span class="tag t-lc">&#128994; LC</span> Pr&#233;occupation mineure</div>
+      <div class="li"><span class="tag t-nt">&#128993; NT</span> Quasi menac&#233;</div>
+      <div class="li"><span class="tag t-vu">&#128992; VU</span> Vuln&#233;rable</div>
+      <div class="li"><span class="tag t-en">&#128308; EN</span> En danger</div>
+      <div class="li"><span class="tag t-dd">&#9898; DD</span> Donn&#233;es insuffisantes</div>
+    </div>
+  </div>
+  <div class="foot">
+    Pesciudex &middot; Carnet de p&#234;che de Choubi &middot; M&#233;diterran&#233;e / Corse<br>
+    Mailles DIRM 2024 &middot; Statuts IUCN &middot; <span>Donn&#233;es sauvegard&#233;es localement</span>
+  </div>
+</main>
+
+<!-- ADD FAB -->
+<button class="add-fab" onclick="openModal()" title="Ajouter une esp&#232;ce">&#43;</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOut(event)">
+<div class="modal" id="modal">
+  <div class="modal-handle"></div>
+  <div class="modal-title">&#43; Ajouter une esp&#232;ce</div>
+  <div class="modal-sub">Ajoute une esp&#232;ce personnalis&#233;e &#224; ton carnet</div>
+
+  <div class="mfield">
+    <label>Nom de l&#39;esp&#232;ce *</label>
+    <input type="text" id="m-name" placeholder="ex : Mérou brun" maxlength="60">
+  </div>
+  <div class="mfield">
+    <label>Nom latin</label>
+    <input type="text" id="m-latin" placeholder="ex : Epinephelus marginatus">
+  </div>
+  <div class="mrow">
+    <div class="mfield">
+      <label>Famille</label>
+      <select id="m-fam">
+        <option value="fam-pelagiques">&#127754; P&#233;lagiques</option>
+        <option value="fam-sparides">&#127520; Sparid&#233;s</option>
+        <option value="fam-bar">&#127519; Bar &amp; Mulets</option>
+        <option value="fam-scorpenides">&#129424; Scorpen&#233;id&#233;s</option>
+        <option value="fam-labre">&#127520; Labres</option>
+        <option value="fam-cephalopodes">&#128025; C&#233;phalopodes</option>
+        <option value="fam-fond">&#128013; Fond</option>
+        <option value="fam-raies">&#129667; Raies</option>
+        <option value="fam-custom" selected>&#10010; Mes ajouts</option>
+      </select>
+    </div>
+    <div class="mfield">
+      <label>&#201;moji</label>
+      <input type="text" id="m-emoji" placeholder="&#127520;" maxlength="4" value="&#127520;">
+    </div>
+  </div>
+  <div class="mfield">
+    <label>Maille l&#233;gale</label>
+    <input type="text" id="m-maille" placeholder="ex : 30 cm" maxlength="80">
+  </div>
+  <div class="mrow">
+    <div class="mfield">
+      <label>Poids minimal</label>
+      <input type="text" id="m-poids" placeholder="ex : 30 kg">
+    </div>
+    <div class="mfield">
+      <label>P&#233;riode</label>
+      <input type="text" id="m-saison" placeholder="ex : &#201;t&#233;&#8211;Automne">
+    </div>
+  </div>
+  <div class="mfield">
+    <label>Statut IUCN</label>
+    <div class="iucn-pills">
+      <button class="iucn-pill sel" data-v="LC" onclick="selectIUCN(this)">&#128994; LC</button>
+      <button class="iucn-pill" data-v="NT" onclick="selectIUCN(this)">&#128993; NT</button>
+      <button class="iucn-pill" data-v="VU" onclick="selectIUCN(this)">&#128992; VU</button>
+      <button class="iucn-pill" data-v="EN" onclick="selectIUCN(this)">&#128308; EN</button>
+      <button class="iucn-pill" data-v="DD" onclick="selectIUCN(this)">&#9898; DD</button>
+    </div>
+  </div>
+  <div class="mfield">
+    <label>Notes / r&#233;glementation</label>
+    <textarea id="m-note" placeholder="Marquage obligatoire, zones prot&#233;g&#233;es..."></textarea>
+  </div>
+  <div class="modal-actions">
+    <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+    <button class="btn-add" onclick="addSpecies()">&#10003; Ajouter l&#39;esp&#232;ce</button>
+  </div>
+</div>
+</div>
+
+<script>
+document.getElementById("logo-img").src="data:image/jpeg;base64,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";
+const IMGS={
+  thon:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Atlantic_Bluefin_Tuna.jpg/300px-Atlantic_Bluefin_Tuna.jpg',
+  espadon:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Xiphias_gladius1.jpg/300px-Xiphias_gladius1.jpg',
+  seriole:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Greater_amberjack.jpg/300px-Greater_amberjack.jpg',
+  liche:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Lichia_amia.jpg/300px-Lichia_amia.jpg',
+  coryphene:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Coryphaena_hippurus_2.jpg/300px-Coryphaena_hippurus_2.jpg',
+  barracuda:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Sphyraena_sphyraena.jpg/300px-Sphyraena_sphyraena.jpg',
+  bonite:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Sarda_sarda.jpg/300px-Sarda_sarda.jpg',
+  maquereau:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Atlantic_mackerel.jpg/300px-Atlantic_mackerel.jpg',
+  chinchard:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Trachurus_trachurus.jpg/300px-Trachurus_trachurus.jpg',
+  doraderoyale:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Sparus_aurata.jpg/300px-Sparus_aurata.jpg',
+  doradegrise:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Spondyliosoma_cantharus.jpg/300px-Spondyliosoma_cantharus.jpg',
+  doraderose:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Pagellus_bogaraveo.jpg/300px-Pagellus_bogaraveo.jpg',
+  pagre:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Pagrus_pagrus.jpg/300px-Pagrus_pagrus.jpg',
+  denti:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Dentex_dentex.jpg/300px-Dentex_dentex.jpg',
+  sar:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Diplodus_sargus.jpg/300px-Diplodus_sargus.jpg',
+  sarmarbre:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Diplodus_cervinus.jpg/300px-Diplodus_cervinus.jpg',
+  sartambour:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Diplodus_puntazzo.jpg/300px-Diplodus_puntazzo.jpg',
+  beco:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Diplodus_vulgaris_1.jpg/300px-Diplodus_vulgaris_1.jpg',
+  marbre:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lithognathus_mormyrus_1.jpg/300px-Lithognathus_mormyrus_1.jpg',
+  pageot:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Pagellus_erythrinus.jpg/300px-Pagellus_erythrinus.jpg',
+  bar:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Dicentrarchus_labrax.jpg/300px-Dicentrarchus_labrax.jpg',
+  mulet:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Mugil_cephalus.jpg/300px-Mugil_cephalus.jpg',
+  muletdore:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Chelon_auratus.jpg/300px-Chelon_auratus.jpg',
+  rouget:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Mullus_surmuletus.jpg/300px-Mullus_surmuletus.jpg',
+  sole:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Solea_solea.jpg/300px-Solea_solea.jpg',
+  vive:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Trachinus_draco.jpg/300px-Trachinus_draco.jpg',
+  sebaste:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Helicolenus_dactylopterus.jpg/300px-Helicolenus_dactylopterus.jpg',
+  rascasse:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Scorpaena_porcus.jpg/300px-Scorpaena_porcus.jpg',
+  chapon:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Scorpaena_scrofa.jpg/300px-Scorpaena_scrofa.jpg',
+  labre:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Labrus_merula.jpg/300px-Labrus_merula.jpg',
+  serran:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Serranus_scriba.jpg/300px-Serranus_scriba.jpg',
+  poulpe:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Octopus_vulgaris.jpg/300px-Octopus_vulgaris.jpg',
+  seche:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Sepia_officinalis.jpg/300px-Sepia_officinalis.jpg',
+  congre:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Conger_conger.jpg/300px-Conger_conger.jpg',
+  murene:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Muraena_helena.jpg/300px-Muraena_helena.jpg',
+  raie_bouclee:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Raja_clavata.jpg/300px-Raja_clavata.jpg',
+  raie_past:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dasyatis_pastinaca.jpg/300px-Dasyatis_pastinaca.jpg',
+  raie_etoilee:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Raja_asterias.jpg/300px-Raja_asterias.jpg',
+};
+
+const FAMS={
+  'fam-pelagiques':{label:'P\u00e9lagiques & Grands migrateurs',icon:'\u{1F30A}'},
+  'fam-sparides':{label:'Sparid\u00e9s',icon:'\u{1F421}'},
+  'fam-bar':{label:'Bar, Mulets & Rougets',icon:'\u{1F41F}'},
+  'fam-scorpenides':{label:'Scorpen\u00e9id\u00e9s',icon:'\u{1F990}'},
+  'fam-labre':{label:'Labres & Serranid\u00e9s',icon:'\u{1F420}'},
+  'fam-cephalopodes':{label:'C\u00e9phalopodes',icon:'\u{1F419}'},
+  'fam-fond':{label:'Poissons de fond',icon:'\u{1F40D}'},
+  'fam-raies':{label:'Raies',icon:'\u{1FA83}'},
+  'fam-custom':{label:'Mes ajouts',icon:'\u2795'}
+};
+const MODES=[{key:'bateau',label:'Bateau',icon:'\u2693'},{key:'bord',label:'Bord',icon:'\u{1F30A}'},{key:'chasse',label:'Chasse S-M',icon:'\u{1F93F}'}];
+const IC={
+  LC:{label:'LC \u2014 Pr\u00e9occupation mineure',cls:'t-lc',dot:'\u{1F7E2}'},
+  NT:{label:'NT \u2014 Quasi menac\u00e9',cls:'t-nt',dot:'\u{1F7E1}'},
+  VU:{label:'VU \u2014 Vuln\u00e9rable',cls:'t-vu',dot:'\u{1F7E0}'},
+  EN:{label:'EN \u2014 En danger',cls:'t-en',dot:'\u{1F534}'},
+  DD:{label:'DD \u2014 Donn\u00e9es insuffisantes',cls:'t-dd',dot:'\u26AA'}
+};
+const BASE_DATA=[
+  {id:'thon',fam:'fam-pelagiques',name:'Thon rouge',latin:'Thunnus thynnus',e:'\u{1F41F}',m:'110 cm (longueur fourche)',pm:'30 kg',s:'Juil\u2013Oct',i:'LC',n:'\u26A0 Autorisation annuelle \u00b7 Marquage bague \u00b7 D\u00e9claration obligatoire \u00b7 1 thon max/an'},
+  {id:'espadon',fam:'fam-pelagiques',name:'Espadon',latin:'Xiphias gladius',e:'\u{1F41F}',m:'170 cm (LJFL)',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'LC',n:'Mesure : m\u00e2choire inf\u00e9rieure \u2013 fourche caudale'},
+  {id:'seriole',fam:'fam-pelagiques',name:'S\u00e9riole',latin:'Seriola dumerili',e:'\u{1F41F}',m:'65 cm (Cerb\u00e8re)',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'LC',n:'Marquage obligatoire'},
+  {id:'liche',fam:'fam-pelagiques',name:'Liche',latin:'Lichia amia',e:'\u{1F41F}',m:'Pas de maille (50 cm Cerb\u00e8re)',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'DD',n:null},
+  {id:'coryphene',fam:'fam-pelagiques',name:'Dorade coryph\u00e8ne',latin:'Coryphaena hippurus',e:'\u{1F421}',m:'60 cm',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'LC',n:'D\u00e9claration obligatoire \u00b7 Marquage \u00b7 max 3/jour'},
+  {id:'barracuda',fam:'fam-pelagiques',name:'Barracuda (b\u00e9cune)',latin:'Sphyraena sphyraena',e:'\u{1F41F}',m:'65 cm',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'LC',n:null},
+  {id:'bonite',fam:'fam-pelagiques',name:'Bonite (p\u00e9lamide)',latin:'Sarda sarda',e:'\u{1F41F}',m:'40 cm (Cerb\u00e8re)',pm:null,s:'Printemps\u2013Automne',i:'LC',n:null},
+  {id:'maquereau',fam:'fam-pelagiques',name:'Maquereau commun',latin:'Scomber scombrus',e:'\u{1F41F}',m:'18 cm',pm:null,s:'Printemps\u2013\u00c9t\u00e9',i:'LC',n:null},
+  {id:'chinchard',fam:'fam-pelagiques',name:'Chinchard',latin:'Trachurus trachurus',e:'\u{1F41F}',m:'15 cm (20 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'doraderoyale',fam:'fam-sparides',name:'Dorade royale',latin:'Sparus aurata',e:'\u{1F421}',m:'23 cm (30 cm Cerb\u00e8re)',pm:null,s:'Automne\u2013Hiver',i:'LC',n:'D\u00e9claration obligatoire d\u00e8s jan. 2026 \u00b7 Marquage obligatoire'},
+  {id:'doradegrise',fam:'fam-sparides',name:'Dorade grise',latin:'Spondyliosoma cantharus',e:'\u{1F421}',m:'23 cm (25 cm Cerb\u00e8re)',pm:null,s:'Printemps\u2013Automne',i:'LC',n:null},
+  {id:'doraderose',fam:'fam-sparides',name:'Dorade rose',latin:'Pagellus bogaraveo',e:'\u{1F421}',m:'33 cm',pm:null,s:'Automne\u2013Hiver',i:'VU',n:'D\u00e9claration obligatoire \u00b7 Marquage obligatoire'},
+  {id:'pagre',fam:'fam-sparides',name:'Pagre commun',latin:'Pagrus pagrus',e:'\u{1F421}',m:'18 cm (30 cm Cerb\u00e8re)',pm:null,s:'Printemps\u2013\u00c9t\u00e9',i:'VU',n:null},
+  {id:'denti',fam:'fam-sparides',name:'Denti',latin:'Dentex dentex',e:'\u{1F41F}',m:'40 cm (Cerb\u00e8re)',pm:null,s:'Juil\u2013Avr (ferm\u00e9 Mai\u2013Juin)',i:'VU',n:'Marquage obligatoire \u00b7 1 poisson max/p\u00eacheur/jour'},
+  {id:'sar',fam:'fam-sparides',name:'Sar commun',latin:'Diplodus sargus',e:'\u{1F420}',m:'23 cm (25 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'sarmarbre',fam:'fam-sparides',name:'Sar marbre',latin:'Diplodus cervinus',e:'\u{1F420}',m:'23 cm',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'sartambour',fam:'fam-sparides',name:'Sar tambour',latin:'Diplodus puntazzo',e:'\u{1F420}',m:'18 cm (25 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'beco',fam:'fam-sparides',name:'B\u00e9cofin (sar t\u00eate noire)',latin:'Diplodus vulgaris',e:'\u{1F420}',m:'18 cm (25 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'B\u00e9cofin = nom local proven\u00e7al'},
+  {id:'marbre',fam:'fam-sparides',name:'Marbre',latin:'Lithognathus mormyrus',e:'\u{1F420}',m:'20 cm (25 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'pageot',fam:'fam-sparides',name:'Pageot commun',latin:'Pagellus erythrinus',e:'\u{1F421}',m:'15 cm (25 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'bar',fam:'fam-bar',name:'Bar commun',latin:'Dicentrarchus labrax',e:'\u{1F41F}',m:'30 cm (42 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'D\u00e9claration obligatoire d\u00e8s jan. 2026 \u00b7 Marquage obligatoire'},
+  {id:'mulet',fam:'fam-bar',name:'Mulet',latin:'Mugil cephalus',e:'\u{1F420}',m:'Pas de maille en M\u00e9diterran\u00e9e',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'muletdore',fam:'fam-bar',name:'Mulet dor\u00e9',latin:'Liza aurata',e:'\u{1F420}',m:'Pas de maille en M\u00e9diterran\u00e9e',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'rouget',fam:'fam-bar',name:'Rouget barbet',latin:'Mullus surmuletus',e:'\u{1F41F}',m:'15 cm (20 cm Cerb\u00e8re)',pm:null,s:'\u00c9t\u00e9\u2013Automne',i:'LC',n:null},
+  {id:'sole',fam:'fam-bar',name:'Sole',latin:'Solea solea',e:'\u{1F420}',m:'24 cm',pm:null,s:'Printemps\u2013\u00c9t\u00e9',i:'LC',n:null},
+  {id:'vive',fam:'fam-bar',name:'Vive',latin:'Trachinus draco',e:'\u{1F420}',m:'Pas de maille fix\u00e9e',pm:null,s:'\u00c9t\u00e9',i:'LC',n:'\u26A0 \u00c9pines venimeuses \u2014 manipuler avec pr\u00e9caution'},
+  {id:'sebaste',fam:'fam-scorpenides',name:'S\u00e9baste-ch\u00e8vre',latin:'Helicolenus dactylopterus',e:'\u{1F990}',m:'30 cm',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'Poisson rouge \u00e0 grands yeux \u00b7 Fonds > 50 m \u00b7 Marquage obligatoire'},
+  {id:'rascasse',fam:'fam-scorpenides',name:'Rascasse brune',latin:'Scorpaena porcus',e:'\u{1F420}',m:'Pas de maille (15 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'\u26A0 \u00c9pines venimeuses'},
+  {id:'chapon',fam:'fam-scorpenides',name:'Chapon (rascasse rouge)',latin:'Scorpaena scrofa',e:'\u{1F990}',m:'30 cm (35 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'Marquage obligatoire \u00b7 max 2/p\u00eacheur/jour \u00b7 \u26A0 \u00c9pines venimeuses'},
+  {id:'labre',fam:'fam-labre',name:'Labre (merle)',latin:'Labrus merula',e:'\u{1F420}',m:'25 cm (Cerb\u00e8re)',pm:null,s:'Printemps\u2013\u00c9t\u00e9',i:'LC',n:null},
+  {id:'serran',fam:'fam-labre',name:'Serran \u00e9criture',latin:'Serranus scriba',e:'\u{1F420}',m:'Pas de maille (20 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:null},
+  {id:'poulpe',fam:'fam-cephalopodes',name:'Poulpe',latin:'Octopus vulgaris',e:'\u{1F419}',m:'1 kg min (Cerb\u00e8re)',pm:null,s:'Oct\u2013Mai (interdit Juin\u2013Sep Cerb\u00e8re)',i:'LC',n:null},
+  {id:'seche',fam:'fam-cephalopodes',name:'Seiche',latin:'Sepia officinalis',e:'\u{1F991}',m:'Pas de maille fix\u00e9e',pm:null,s:'Printemps\u2013\u00c9t\u00e9',i:'LC',n:null},
+  {id:'congre',fam:'fam-fond',name:'Congre',latin:'Conger conger',e:'\u{1F40D}',m:'60 cm (120 cm Cerb\u00e8re)',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'Max 3/p\u00eacheur/jour Cerb\u00e8re'},
+  {id:'murene',fam:'fam-fond',name:'Mur\u00e8ne',latin:'Muraena helena',e:'\u{1F40D}',m:'Pas de maille fix\u00e9e',pm:null,s:"Toute l'ann\u00e9e",i:'LC',n:'\u26A0 Morsure dangereuse \u2014 manipuler avec pr\u00e9caution'},
+  {id:'raie_bouclee',fam:'fam-raies',name:'Raie boucl\u00e9e',latin:'Raja clavata',e:'\u{1FA83}',m:'Pas de maille fix\u00e9e',pm:null,s:'Automne\u2013Hiver',i:'NT',n:'Comestible \u00b7 Ailes culin\u00e9es \u00b7 \u26A0 Quasi menac\u00e9e IUCN'},
+  {id:'raie_past',fam:'fam-raies',name:'Raie pastenague',latin:'Dasyatis pastinaca',e:'\u{1FA83}',m:'Pas de maille fix\u00e9e',pm:null,s:'Printemps\u2013Automne',i:'LC',n:'Ailes comestibles \u00b7 \u26A0 \u00c9peron caudal venimeux'},
+  {id:'raie_etoilee',fam:'fam-raies',name:'Raie \u00e9toil\u00e9e',latin:'Raja asterias',e:'\u{1FA83}',m:'Pas de maille fix\u00e9e',pm:null,s:"Toute l'ann\u00e9e",i:'NT',n:'End\u00e9mique M\u00e9diterran\u00e9e \u00b7 Ailes comestibles'}
+];
+
+// State management
+let ST={}, F='all', CUSTOM=[], selectedIUCN='LC';
+function loadST(){try{const s=localStorage.getItem('pesciudex-v4');if(s)ST=JSON.parse(s);}catch(e){}}
+function loadCustom(){try{const s=localStorage.getItem('pesciudex-custom-v1');if(s)CUSTOM=JSON.parse(s);}catch(e){}}
+function saveST(){try{localStorage.setItem('pesciudex-v4',JSON.stringify(ST));}catch(e){}}
+function saveCustom(){try{localStorage.setItem('pesciudex-custom-v1',JSON.stringify(CUSTOM));}catch(e){}}
+loadST(); loadCustom();
+
+function getData(){return [...BASE_DATA,...CUSTOM];}
+
+function upStats(){
+  const all=getData();const c=all.filter(f=>ST[f.id]?.caught).length;
+  document.getElementById('sc').textContent=c;
+  document.getElementById('st').textContent=all.length;
+  document.getElementById('sp').textContent=Math.round(c/all.length*100)+'%';
+  document.getElementById('pl').textContent=c+' / '+all.length;
+  document.getElementById('pf').style.width=Math.round(c/all.length*100)+'%';
+}
+
+function setF(f){F=f;document.querySelectorAll('#filters .fbtn').forEach(b=>b.classList.toggle('on',b.dataset.f===f));render();}
+
+function getFilt(){
+  return getData().filter(f=>{
+    if(F==='caught')return ST[f.id]?.caught;
+    if(F==='todo')return !ST[f.id]?.caught;
+    if(F==='bateau')return ST[f.id]?.mode==='bateau';
+    if(F==='bord')return ST[f.id]?.mode==='bord';
+    if(F==='chasse')return ST[f.id]?.mode==='chasse';
+    if(F.startsWith('fam-'))return f.fam===F;
+    if(['lc','nt','vu','en','dd'].includes(F))return f.i?.toLowerCase()===F;
+    return true;
+  });
+}
+
+function tog(id){if(!ST[id])ST[id]={};ST[id].caught=!ST[id].caught;saveST();render();upStats();}
+function sm(id,m){if(!ST[id])ST[id]={};ST[id].mode=ST[id].mode===m?null:m;saveST();rc(id);}
+function sd(id,v){if(!ST[id])ST[id]={};ST[id].date=v;saveST();}
+function ss(id,v){if(!ST[id])ST[id]={};ST[id].size=v;saveST();rc(id);}
+function sw(id,v){if(!ST[id])ST[id]={};ST[id].weight=v;saveST();rc(id);}
+function sn(id,v){if(!ST[id])ST[id]={};ST[id].note=v;saveST();}
+function dp(id){if(ST[id])delete ST[id].photo;saveST();rc(id);}
+function hp(id,inp){const file=inp.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{if(!ST[id])ST[id]={};ST[id].photo=e.target.result;saveST();rc(id);};r.readAsDataURL(file);}
+
+function delCustom(id){
+  CUSTOM=CUSTOM.filter(f=>f.id!==id);
+  delete ST[id];
+  saveCustom();saveST();render();upStats();
+}
+
+// Modal
+function openModal(){document.getElementById('modal-overlay').classList.add('open');document.getElementById('m-name').focus();}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');resetModal();}
+function closeModalOut(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+function resetModal(){
+  document.getElementById('m-name').value='';
+  document.getElementById('m-latin').value='';
+  document.getElementById('m-emoji').value='\u{1F41F}';
+  document.getElementById('m-fam').value='fam-custom';
+  document.getElementById('m-maille').value='';
+  document.getElementById('m-poids').value='';
+  document.getElementById('m-saison').value='';
+  document.getElementById('m-note').value='';
+  selectedIUCN='LC';
+  document.querySelectorAll('.iucn-pill').forEach(p=>p.classList.toggle('sel',p.dataset.v==='LC'));
+}
+function selectIUCN(el){
+  selectedIUCN=el.dataset.v;
+  document.querySelectorAll('.iucn-pill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function addSpecies(){
+  const name=document.getElementById('m-name').value.trim();
+  if(!name){document.getElementById('m-name').focus();document.getElementById('m-name').style.borderColor='#B71C1C';return;}
+  document.getElementById('m-name').style.borderColor='';
+  const id='custom_'+Date.now();
+  CUSTOM.push({
+    id,
+    fam:document.getElementById('m-fam').value||'fam-custom',
+    name,
+    latin:document.getElementById('m-latin').value.trim()||'',
+    e:document.getElementById('m-emoji').value||'\u{1F41F}',
+    m:document.getElementById('m-maille').value.trim()||'Non d\u00e9finie',
+    pm:document.getElementById('m-poids').value.trim()||null,
+    s:document.getElementById('m-saison').value.trim()||"Toute l'ann\u00e9e",
+    i:selectedIUCN,
+    n:document.getElementById('m-note').value.trim()||null,
+    custom:true
+  });
+  saveCustom();
+  closeModal();
+  F='all';
+  document.querySelectorAll('#filters .fbtn').forEach(b=>b.classList.toggle('on',b.dataset.f==='all'));
+  render();upStats();
+}
+
+function rc(id){
+  const data=getData();
+  const f=data.find(x=>x.id===id);const el=document.getElementById('c-'+id);if(!f||!el)return;
+  const s=ST[id]||{};const caught=!!s.caught;
+  el.className='card'+(f.custom?' custom':'')+(caught?' caught':'');
+  const ic=IC[f.i]||IC.DD;
+  const si=IMGS[id];
+  // Use referrerpolicy="no-referrer" to allow Wikimedia images from local files
+  const imgTag=si?`<img class="simg" src="${si}" referrerpolicy="no-referrer" alt="${f.name}" onerror="this.style.display='none'">`:'';
+  const th=`${imgTag}<div class="fb">${f.e}</div><div class="tov"></div><div class="ctick">&#10003;</div>`;
+  const up=s.photo
+    ?`<div class="pprev"><img src="${s.photo}" alt="Ma prise"><button class="dphoto" onclick="event.stopPropagation();dp('${id}')">&#10005;</button></div>`
+    :`<div class="uzone" onclick="event.stopPropagation();document.getElementById('ph-${id}').click()"><input type="file" id="ph-${id}" accept="image/*" onchange="hp('${id}',this)"><div style="font-size:22px;margin-bottom:3px">&#128248;</div><div style="font-size:12px;color:var(--txt2)">Ajouter ma photo</div></div>`;
+  const mb=MODES.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
+  const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">&#128465; Supprimer cette esp&#232;ce</button>`:'';
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?' <span style="font-size:10px;color:var(--teal3);font-weight:400">&#10010; perso</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">&#128207; ${f.m}</span>${f.pm?`<span class="tag tp">&#9878; min. ${f.pm}</span>`:''}<span class="tag ts">&#128197; ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'&#10003;':''}</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">&#8505; ${f.n}</div>`:''}<div class="slbl">Mode de p&#234;che</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>&nbsp;</label></div><div class="field"><label>Taille (cm)</label><input type="number" placeholder="ex: 45" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size} cm</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${MODES.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique...">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}${delBtn}</div>`:''}`;
+}
+
+function render(){
+  const grid=document.getElementById('grid');const list=getFilt();
+  document.getElementById('clbl').textContent=list.length+' esp\u00e8ce'+(list.length>1?'s':'');
+  grid.innerHTML='';
+  if(!list.length){grid.innerHTML='<div class="empty"><span class="ei">&#127754;</span><h3>Aucune esp\u00e8ce ici</h3><p>Essaie un autre filtre ou ajoute une esp\u00e8ce !</p></div>';return;}
+  if(F==='all'){
+    const byF={};list.forEach(f=>{if(!byF[f.fam])byF[f.fam]=[];byF[f.fam].push(f);});
+    Object.entries(byF).forEach(([fk,fs])=>{
+      const fc=FAMS[fk]||{label:fk,icon:'&#127920;'};
+      const cc=fs.filter(f=>ST[f.id]?.caught).length;
+      const h=document.createElement('div');h.className='fam-hdr';
+      h.innerHTML=`<div class="fam-title">${fc.icon} ${fc.label}</div><div class="fam-line"></div><div class="fam-cnt">${cc}/${fs.length}</div>`;
+      grid.appendChild(h);
+      fs.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
+    });
+  } else {
+    list.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
+  }
+}
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('.fbtn');if(b)setF(b.dataset.f);});
+render();upStats();
+</script>
+</body>
+</html>
