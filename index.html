@@ -357,7 +357,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .lb-name{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.55);padding:6px 18px;border-radius:50px;backdrop-filter:blur(8px);white-space:nowrap;max-width:85vw;overflow:hidden;text-overflow:ellipsis}
 .fthumb{cursor:zoom-in}
 /* ══ LANG TOGGLE ══ */
-.lang-toggle{font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.lang-toggle{font-size:11px;font-weight:700;padding:5px 14px;margin-top:10px;border-radius:50px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;letter-spacing:.04em;display:inline-flex;align-items:center}
 .lang-toggle:hover{background:rgba(255,255,255,.22);color:#fff;border-color:rgba(255,255,255,.5)}
 /* ══ MAP OVERLAY ══ */
 #map-overlay{position:fixed;inset:0;z-index:400;background:#e8f4f8;display:none;flex-direction:column}
@@ -710,41 +710,41 @@ const ICON_COQ = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 
 // ══ FAMILIES ══
 const FAMS_BASE = {
-  'fam-pelagiques':{label:'Pélagiques & Grands migrateurs',icon:'🌊'},
-  'fam-sparides':{label:'Sparidés',icon:'🐡'},
-  'fam-bar':{label:'Bar, Mulets & Rougets',icon:'🐟'},
-  'fam-scorpenides':{label:'Scorpénéidés',icon:'🦐'},
-  'fam-labre':{label:'Labres & Serranidés',icon:'🐠'},
-  'fam-cephalopodes':{label:'Céphalopodes',icon:'🐙'},
-  'fam-fond':{label:'Poissons de fond',icon:'🐍'},
-  'fam-raies':{label:'Raies',icon:'🪃'},
-  'fam-custom':{label:'Mes ajouts',icon:'✚'}
+  'fam-pelagiques':{label:'Pélagiques & Grands migrateurs',label_en:'Pelagics & Large Migratory Fish',icon:'🌊'},
+  'fam-sparides':{label:'Sparidés',label_en:'Sea Breams',icon:'🐡'},
+  'fam-bar':{label:'Bar, Mulets & Rougets',label_en:'Bass, Mullets & Red Mullets',icon:'🐟'},
+  'fam-scorpenides':{label:'Scorpénéidés',label_en:'Scorpionfish',icon:'🦐'},
+  'fam-labre':{label:'Labres & Serranidés',label_en:'Wrasses & Groupers',icon:'🐠'},
+  'fam-cephalopodes':{label:'Céphalopodes',label_en:'Cephalopods',icon:'🐙'},
+  'fam-fond':{label:'Poissons de fond',label_en:'Demersal Fish',icon:'🐍'},
+  'fam-raies':{label:'Raies',label_en:'Rays',icon:'🪃'},
+  'fam-custom':{label:'Mes ajouts',label_en:'My additions',icon:'✚'}
 };
 const CQFAMS_BASE = {
-  'cqfam-bivalves':{label:'Bivalves',icon:'🐚'},
-  'cqfam-gastropodes':{label:'Gastéropodes',icon:'🐌'},
-  'cqfam-echinodermes':{label:'Échinodermes',icon:'🌟'},
-  'cqfam-crustaces':{label:'Crustacés',icon:'🦀'},
-  'cqfam-custom':{label:'Mes ajouts',icon:'✚'}
+  'cqfam-bivalves':{label:'Bivalves',label_en:'Bivalves',icon:'🐚'},
+  'cqfam-gastropodes':{label:'Gastéropodes',label_en:'Gastropods',icon:'🐌'},
+  'cqfam-echinodermes':{label:'Échinodermes',label_en:'Echinoderms',icon:'🌟'},
+  'cqfam-crustaces':{label:'Crustacés',label_en:'Crustaceans',icon:'🦀'},
+  'cqfam-custom':{label:'Mes ajouts',label_en:'My additions',icon:'✚'}
 };
 const FAMS_EDF = {
-  'fam-salmonides':{label:'Salmonidés',icon:'🐟'},
-  'fam-carnassiers':{label:'Carnassiers',icon:'🦈'},
-  'fam-cyprinides':{label:'Cyprinidés',icon:'🐠'},
-  'fam-edf-autres':{label:'Autres espèces',icon:'🌿'},
-  'fam-custom':{label:'Mes ajouts',icon:'✚'}
+  'fam-salmonides':{label:'Salmonidés',label_en:'Salmonids',icon:'🐟'},
+  'fam-carnassiers':{label:'Carnassiers',label_en:'Predatory Fish',icon:'🦈'},
+  'fam-cyprinides':{label:'Cyprinidés',label_en:'Cyprinids',icon:'🐠'},
+  'fam-edf-autres':{label:'Autres espèces',label_en:'Other Species',icon:'🌿'},
+  'fam-custom':{label:'Mes ajouts',label_en:'My additions',icon:'✚'}
 };
 const CQFAMS_EDF = {
-  'cqfam-edf-ecrevisses':{label:'Écrevisses',icon:'🦐'},
-  'cqfam-edf-mollusques':{label:'Mollusques d\'eau douce',icon:'🐚'},
-  'cqfam-custom':{label:'Mes ajouts',icon:'✚'}
+  'cqfam-edf-ecrevisses':{label:'Écrevisses',label_en:'Crayfish',icon:'🦐'},
+  'cqfam-edf-mollusques':{label:'Mollusques d\'eau douce',label_en:'Freshwater Molluscs',icon:'🐚'},
+  'cqfam-custom':{label:'Mes ajouts',label_en:'My additions',icon:'✚'}
 };
 
 const MODES_PESC    = [{key:'bateau',label:'Bateau',icon:'⚓'},{key:'bord',label:'Bord',icon:'🌊'},{key:'chasse',label:'Chasse S-M',icon:'🤿'}];
 const MODES_COQ     = [{key:'pied',label:'À pied',icon:'🦶'},{key:'kayak',label:'Kayak',icon:'🛶'},{key:'masque',label:'Masque',icon:'🤿'}];
 const MODES_EDF     = [{key:'riviere',label:'Rivière',icon:'🏞'},{key:'lac',label:'Lac',icon:'💧'},{key:'coup',label:'Coup',icon:'🎣'}];
 const MODES_CQEDF   = [{key:'main',label:'À main',icon:'🖐'},{key:'nasse',label:'Nasse',icon:'🪤'},{key:'balance',label:'Balance',icon:'⚖'}];
-const IC={LC:{label:'LC — Préoccupation mineure',cls:'t-lc',dot:'🟢'},NT:{label:'NT — Quasi menacé',cls:'t-nt',dot:'🟡'},VU:{label:'VU — Vulnérable',cls:'t-vu',dot:'🟠'},EN:{label:'EN — En danger',cls:'t-en',dot:'🔴'},DD:{label:'DD — Données insuffisantes',cls:'t-dd',dot:'⚪'}};
+const IC={LC:{label:'LC — Préoccupation mineure',label_en:'LC — Least Concern',cls:'t-lc',dot:'🟢'},NT:{label:'NT — Quasi menacé',label_en:'NT — Near Threatened',cls:'t-nt',dot:'🟡'},VU:{label:'VU — Vulnérable',label_en:'VU — Vulnerable',cls:'t-vu',dot:'🟠'},EN:{label:'EN — En danger',label_en:'EN — Endangered',cls:'t-en',dot:'🔴'},DD:{label:'DD — Données insuffisantes',label_en:'DD — Data Deficient',cls:'t-dd',dot:'⚪'}};
 
 // ══ PESCIUDEX DATA ══
 // Fields: id, fam, name, latin, e, m, pm, s, i, n
@@ -1287,23 +1287,23 @@ const NAME_EN = {
 
 // ══ COORDONNÉES CARTE ══
 const MAP_COORDS = {
-  thon:[38.5,7.0],espadon:[37.0,12.0],seriole:[41.5,8.5],liche:[43.3,6.5],coryphene:[36.5,13.0],
+  thon:[38.5,7.0],espadon:[37.0,12.0],seriole:[42.0,8.0],liche:[43.3,6.5],coryphene:[36.5,13.0],
   barracuda:[43.0,6.5],bonite:[43.2,6.0],maquereau:[43.5,5.5],chinchard:[43.3,5.0],
   doraderoyale:[43.0,5.8],doradegrise:[43.5,5.2],doraderose:[37.5,9.0],pagre:[42.8,7.0],
-  denti:[42.0,9.2],sar:[43.1,6.3],sarmarbre:[42.5,8.9],sartambour:[43.0,6.8],
+  denti:[42.0,9.8],sar:[43.1,6.3],sarmarbre:[41.5,8.0],sartambour:[43.0,6.8],
   beco:[43.2,7.0],marbre:[43.3,4.8],pageot:[43.1,5.6],bar:[43.3,5.5],
   mulet:[43.5,5.0],muletdore:[43.4,5.1],rouget:[43.2,5.8],sole:[43.4,4.6],
   vive:[43.3,4.5],rascasse:[43.1,5.9],chapon:[43.0,6.0],sebaste:[40.0,8.0],
-  labre:[43.0,5.8],serran:[43.2,6.2],merou:[41.5,8.7],corb:[42.8,6.5],
-  poulpe:[43.1,5.7],seche:[43.4,4.8],congre:[43.0,5.5],murene:[41.8,8.9],
+  labre:[43.0,5.8],serran:[43.2,6.2],merou:[41.2,9.6],corb:[42.8,6.5],
+  poulpe:[43.1,5.7],seche:[43.4,4.8],congre:[43.0,5.5],murene:[42.5,9.8],
   merlu:[43.0,5.0],baudroie:[43.2,4.7],raie_bouclee:[50.0,0.0],raie_past:[43.4,4.4],
-  raie_etoilee:[42.5,9.0],turbot:[47.5,-3.5],barbue:[47.0,-3.0],cabillaud:[47.5,-5.0],
+  raie_etoilee:[41.0,9.2],turbot:[47.5,-3.5],barbue:[47.0,-3.0],cabillaud:[47.5,-5.0],
   lieujane:[48.0,-4.5],saintpierre:[46.5,-2.0],
   palourde:[47.3,-2.2],palourde_jp:[47.0,-2.0],coque:[48.0,-2.0],moule:[47.5,-3.0],
   huitre_plate:[47.5,-3.5],cstjacques:[48.5,-2.5],couteau:[48.0,-2.0],praire:[47.0,-2.5],
   petoncle:[48.5,-3.0],bigorneau:[48.0,-3.0],bulot:[49.0,-1.5],patelle:[43.5,6.0],
   ormeau:[48.0,-4.0],oursin:[43.0,6.0],crabe_vert:[48.0,-2.0],tourteau:[48.0,-3.5],
-  homard:[48.5,-4.0],langouste:[42.0,9.0],cigale_mer:[41.5,8.8],crevette_bouquet:[47.0,-2.0],
+  homard:[48.5,-4.0],langouste:[40.5,8.0],cigale_mer:[40.5,9.8],crevette_bouquet:[47.0,-2.0],
   crevette_grise:[50.5,1.5],truite_fario:[44.5,6.0],truite_arenciel:[45.0,4.0],
   ombre:[44.8,6.5],omble:[45.5,6.5],saumon:[46.0,-1.2],brochet:[47.5,2.0],
   sandre:[46.5,4.0],perche:[47.0,2.5],blackbass:[44.0,2.0],silure:[44.5,0.5],
@@ -1311,6 +1311,65 @@ const MAP_COORDS = {
   breme:[47.0,2.0],tanche:[46.0,2.0],rotengle:[46.5,2.5],anguille_edf:[47.0,1.0],
   perche_soleil:[45.5,1.5],ecrevisse_pp:[45.0,4.0],ecrevisse_pb:[44.5,5.0],
   ecrevisse_signal:[46.0,3.0],ecrevisse_louisiane:[43.5,3.0],moule_perliere:[45.0,3.5],mulette_epaisse:[46.5,5.0],
+};
+
+// ══ PROFONDEUR & HABITAT ══
+// Depth range + seabed type for map popups
+const DEPTH = {
+  thon:'0–300 m · Pélagique',espadon:'0–800 m · Pélagique',seriole:'0–80 m · Pélagique',
+  liche:'0–100 m · Pélagique',coryphene:'0–85 m · Pélagique',barracuda:'0–100 m · Roche/Pélagique',
+  bonite:'0–200 m · Pélagique',maquereau:'0–250 m · Pélagique',chinchard:'0–500 m · Pélagique',
+  doraderoyale:'0–150 m · Sable/Posidonie',doradegrise:'0–150 m · Sable/Posidonie',
+  doraderose:'10–200 m · Sable/Roche',pagre:'30–200 m · Roche/Sable',
+  denti:'15–200 m · Roche',sar:'0–50 m · Roche/Posidonie',sarmarbre:'0–50 m · Roche',
+  sartambour:'0–50 m · Roche',beco:'10–50 m · Roche',marbre:'0–30 m · Roche/Posidonie',
+  pageot:'20–200 m · Sable/Roche',bar:'0–100 m · Roche/Sable',
+  mulet:'0–25 m · Côtier/Estuaire',muletdore:'0–25 m · Côtier',rouget:'10–500 m · Sable/Vase',
+  sole:'0–120 m · Sable/Vase',vive:'0–50 m · Sable',baudroie:'20–1000 m · Sable/Vase',
+  merlu:'30–1000 m · Vase/Sable',rascasse:'0–500 m · Roche/Posidonie',
+  chapon:'0–50 m · Roche',sebaste:'100–1000 m · Roche',labre:'0–200 m · Roche/Posidonie',
+  serran:'10–500 m · Roche/Coralligène',merou:'5–300 m · Roche',corb:'0–80 m · Sable/Roche',
+  poulpe:'0–200 m · Fonds variés',seche:'0–200 m · Sable/Roche',
+  congre:'1–500 m · Roche/Anfractuosités',murene:'1–50 m · Roche',
+  raie_bouclee:'20–200 m · Sable/Gravier',raie_past:'0–60 m · Sable',raie_etoilee:'5–70 m · Sable/Gravier',
+  turbot:'0–70 m · Sable/Gravier',barbue:'0–75 m · Sable',cabillaud:'0–600 m · Roche/Sable',
+  lieujane:'0–400 m · Pélagique/Fond',saintpierre:'5–400 m · Fonds variés',
+  palourde:'0–5 m · Sable/Vase',palourde_jp:'0–5 m · Sable/Vase',coque:'0–5 m · Sable/Vase',
+  moule:'0–20 m · Roche/Substrat dur',huitre_plate:'0–10 m · Roche',
+  cstjacques:'0–400 m · Sable/Gravier',couteau:'0–10 m · Sable',praire:'10–100 m · Gravelle',
+  petoncle:'0–200 m · Sable',bigorneau:'0–10 m · Roche',bulot:'0–50 m · Sable/Roche',
+  patelle:'0–10 m · Roche',ormeau:'0–30 m · Roche',oursin:'0–30 m · Roche',
+  crabe_vert:'0–10 m · Roche/Sable',tourteau:'0–100 m · Roche/Sable',
+  homard:'0–60 m · Roche',langouste:'10–80 m · Roche',cigale_mer:'15–80 m · Sable/Roche',
+  crevette_bouquet:'0–40 m · Sable/Roche',crevette_grise:'0–40 m · Sable/Vase',
+};
+const DEPTH_EN = {
+  thon:'0–300 m · Pelagic',espadon:'0–800 m · Pelagic',seriole:'0–80 m · Pelagic',
+  liche:'0–100 m · Pelagic',coryphene:'0–85 m · Pelagic',barracuda:'0–100 m · Rocky/Pelagic',
+  bonite:'0–200 m · Pelagic',maquereau:'0–250 m · Pelagic',chinchard:'0–500 m · Pelagic',
+  doraderoyale:'0–150 m · Sand/Posidonia',doradegrise:'0–150 m · Sand/Posidonia',
+  doraderose:'10–200 m · Sand/Rock',pagre:'30–200 m · Rocky/Sand',
+  denti:'15–200 m · Rocky',sar:'0–50 m · Rocky/Posidonia',sarmarbre:'0–50 m · Rocky',
+  sartambour:'0–50 m · Rocky',beco:'10–50 m · Rocky',marbre:'0–30 m · Rocky/Posidonia',
+  pageot:'20–200 m · Sand/Rock',bar:'0–100 m · Rocky/Sand',
+  mulet:'0–25 m · Coastal/Estuary',muletdore:'0–25 m · Coastal',rouget:'10–500 m · Sand/Mud',
+  sole:'0–120 m · Sand/Mud',vive:'0–50 m · Sand',baudroie:'20–1000 m · Sand/Mud',
+  merlu:'30–1000 m · Mud/Sand',rascasse:'0–500 m · Rocky/Posidonia',
+  chapon:'0–50 m · Rocky',sebaste:'100–1000 m · Rocky',labre:'0–200 m · Rocky/Posidonia',
+  serran:'10–500 m · Rocky/Coralligenous',merou:'5–300 m · Rocky',corb:'0–80 m · Sand/Rock',
+  poulpe:'0–200 m · Mixed bottom',seche:'0–200 m · Sand/Rock',
+  congre:'1–500 m · Rocky/Crevices',murene:'1–50 m · Rocky',
+  raie_bouclee:'20–200 m · Sand/Gravel',raie_past:'0–60 m · Sand',raie_etoilee:'5–70 m · Sand/Gravel',
+  turbot:'0–70 m · Sand/Gravel',barbue:'0–75 m · Sand',cabillaud:'0–600 m · Rocky/Sand',
+  lieujane:'0–400 m · Pelagic/Demersal',saintpierre:'5–400 m · Mixed bottom',
+  palourde:'0–5 m · Sand/Mud',palourde_jp:'0–5 m · Sand/Mud',coque:'0–5 m · Sand/Mud',
+  moule:'0–20 m · Hard substrate',huitre_plate:'0–10 m · Rocky',
+  cstjacques:'0–400 m · Sand/Gravel',couteau:'0–10 m · Sand',praire:'10–100 m · Gravel',
+  petoncle:'0–200 m · Sand',bigorneau:'0–10 m · Rocky',bulot:'0–50 m · Sand/Rock',
+  patelle:'0–10 m · Rocky',ormeau:'0–30 m · Rocky',oursin:'0–30 m · Rocky',
+  crabe_vert:'0–10 m · Rocky/Sand',tourteau:'0–100 m · Rocky/Sand',
+  homard:'0–60 m · Rocky',langouste:'10–80 m · Rocky',cigale_mer:'15–80 m · Sand/Rock',
+  crevette_bouquet:'0–40 m · Sand/Rock',crevette_grise:'0–40 m · Sand/Mud',
 };
 
 // ══ RECETTES ══ (à compléter par l'auteur — HTML libre)
@@ -1329,7 +1388,13 @@ const I18N={
       map_title:'🗺 Carte de pêche — Méditerranée & Atlantique',
       desc_tab:'Description',recipe_tab:'🍳 Recette',map_tab:'🗺 Carte',
       recipe_soon:'Recette originale à venir — retrouvez bientôt les créations exclusives de Pesciudex 🍽',
-      map_link:'Voir sur la carte de pêche'},
+      map_link:'Voir sur la carte de pêche',
+      mode_lbl:'Mode',catch_lbl:'Ma prise',photo_lbl:'Ma photo',photo_add:'Ajouter ma photo',
+      notes_lbl:'Notes',sz_qty:'Taille / Qté',weight_lbl:'Poids (kg)',notes_ph:'Lieu, profondeur, technique…',
+      size_lbl:'Taille',weight_short:'Poids',clbl_one:'espèce',clbl_many:'espèces',
+      flt_riviere:'🏞 Rivière',flt_lac:'💧 Lac',flt_coup:'🎣 Coup',
+      flt_main:'🖐 À main',flt_nasse:'🪤 Nasse',flt_balance:'⚖ Balance',
+      flt_bateau:'⚓ Bateau',flt_bord:'🌊 Bord',flt_chasse:'🤿 Chasse S-M',flt_mes_ajouts:'✚ Mes ajouts'},
   en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
       stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
@@ -1338,7 +1403,13 @@ const I18N={
       map_title:'🗺 Fishing Map — Mediterranean & Atlantic',
       desc_tab:'Description',recipe_tab:'🍳 Recipe',map_tab:'🗺 Map',
       recipe_soon:'Original recipe coming soon — exclusive Pesciudex creations 🍽',
-      map_link:'View on fishing map'},
+      map_link:'View on fishing map',
+      mode_lbl:'Mode',catch_lbl:'My catch',photo_lbl:'My photo',photo_add:'Add my photo',
+      notes_lbl:'Notes',sz_qty:'Size / Qty',weight_lbl:'Weight (kg)',notes_ph:'Location, depth, technique…',
+      size_lbl:'Size',weight_short:'Weight',clbl_one:'species',clbl_many:'species',
+      flt_riviere:'🏞 River',flt_lac:'💧 Lake',flt_coup:'🎣 Float fishing',
+      flt_main:'🖐 By hand',flt_nasse:'🪤 Trap',flt_balance:'⚖ Balance net',
+      flt_bateau:'⚓ Boat',flt_bord:'🌊 Shore',flt_chasse:'🤿 Spearfishing',flt_mes_ajouts:'✚ My additions'},
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
 function toggleLang(){
@@ -1360,6 +1431,7 @@ function toggleLang(){
   document.querySelector('#itab-desc').textContent=T('desc_tab');
   document.querySelector('#itab-recette').textContent=T('recipe_tab');
   document.querySelector('#itab-carte').textContent=T('map_tab');
+  updateBrandSub();
   renderFilters();render();
 }
 
@@ -1651,9 +1723,9 @@ function applyCountry(){
   updateBrandSub();
 }
 function updateBrandSub(){
-  const modeLabel=MODE==='coq'?'Coquidex':'Pesciudex';
-  const zoneLabel=ZONE==='edf'?'Eau douce':ZONE==='med'?'Méditerranée':'Atlantique';
-  const countryLabel=COUNTRY==='es'?'Espagne':'France';
+  const modeLabel=MODE==='coq'?(LANG==='en'?'Shelldex':'Coquidex'):'Pesciudex';
+  const zoneLabel=ZONE==='edf'?T('zone_edf').replace(/^[^\s]+\s/,''):ZONE==='med'?T('zone_med').replace(/^[^\s]+\s/,''):T('zone_atl').replace(/^[^\s]+\s/,'');
+  const countryLabel=COUNTRY==='es'?(LANG==='en'?'Spain':'Espagne'):(LANG==='en'?'France':'France');
   document.getElementById('brand-sub').textContent=`${modeLabel} · ${zoneLabel} · ${countryLabel}`;
 }
 function updateHeroPattern(){
@@ -1679,12 +1751,12 @@ function renderFilters(){
   const fi=document.getElementById('filters');
   const fams=getFAMS();const isCoq=MODE==='coq';
   const customKey=isCoq?'cqfam-custom':'fam-custom';
-  let items=[{f:'all',label:'🎯 Toutes'},{f:'caught',label:'✅ Pêchées'},{f:'todo',label:'⏳ Restantes'},'sep'];
-  if(ZONE==='edf'&&!isCoq)items.push({f:'riviere',label:'🏞 Rivière'},{f:'lac',label:'💧 Lac'},{f:'coup',label:'🎣 Coup'},'sep');
-  else if(ZONE==='edf'&&isCoq)items.push({f:'main',label:'🖐 À main'},{f:'nasse',label:'🪤 Nasse'},{f:'balance',label:'⚖ Balance'},'sep');
-  else if(!isCoq)items.push({f:'bateau',label:'⚓ Bateau'},{f:'bord',label:'🌊 Bord'},{f:'chasse',label:'🤿 Chasse S-M'},'sep');
-  Object.entries(fams).forEach(([k,v])=>{if(k!==customKey)items.push({f:k,label:v.icon+' '+v.label,cls:'fam'});});
-  items.push({f:customKey,label:'✚ Mes ajouts',cls:'fam'},'sep',{f:'lc',label:'🟢 LC'},{f:'nt',label:'🟡 NT'},{f:'vu',label:'🟠 VU'},{f:'en',label:'🔴 EN'});
+  let items=[{f:'all',label:T('filter_all')},{f:'caught',label:T('filter_caught')},{f:'todo',label:T('filter_todo')},'sep'];
+  if(ZONE==='edf'&&!isCoq)items.push({f:'riviere',label:T('flt_riviere')},{f:'lac',label:T('flt_lac')},{f:'coup',label:T('flt_coup')},'sep');
+  else if(ZONE==='edf'&&isCoq)items.push({f:'main',label:T('flt_main')},{f:'nasse',label:T('flt_nasse')},{f:'balance',label:T('flt_balance')},'sep');
+  else if(!isCoq)items.push({f:'bateau',label:T('flt_bateau')},{f:'bord',label:T('flt_bord')},{f:'chasse',label:T('flt_chasse')},'sep');
+  Object.entries(fams).forEach(([k,v])=>{if(k!==customKey){const lbl=LANG==='en'?(v.label_en||v.label):v.label;items.push({f:k,label:v.icon+' '+lbl,cls:'fam'});}});
+  items.push({f:customKey,label:T('flt_mes_ajouts'),cls:'fam'},'sep',{f:'lc',label:'🟢 LC'},{f:'nt',label:'🟡 NT'},{f:'vu',label:'🟠 VU'},{f:'en',label:'🔴 EN'});
   fi.innerHTML=items.map(it=>{if(it==='sep')return '<div class="fsep"></div>';const cls='fbtn'+(it.cls?' '+it.cls:'')+(it.f===FILTER?' on':'');return `<button class="${cls}" data-f="${it.f}">${it.label}</button>`;}).join('');
 }
 document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('.fbtn');if(b){FILTER=b.dataset.f;renderFilters();render();}});
@@ -1692,7 +1764,10 @@ document.getElementById('filters').addEventListener('click',e=>{const b=e.target
 function getFilt(){
   const ast=getActiveST();
   if(SEARCH){
-    return getData().filter(f=>f.name.toLowerCase().includes(SEARCH)||(f.latin||'').toLowerCase().includes(SEARCH));
+    return getData().filter(f=>{
+      const nm=(LANG==='en'&&NAME_EN[f.id])||f.name;
+      return nm.toLowerCase().includes(SEARCH)||(f.latin||'').toLowerCase().includes(SEARCH)||(LANG==='en'?false:f.name.toLowerCase().includes(SEARCH));
+    });
   }
   return getData().filter(f=>{
     if(FILTER==='caught')return ast[stKey(f.id)]?.caught;
@@ -2115,24 +2190,30 @@ let _infoId=null;
 function openInfo(id){
   const f=getData().find(x=>x.id===id);if(!f)return;
   _infoId=id;
-  document.getElementById('info-name').textContent=f.name;
-  document.getElementById('info-name-en').textContent=NAME_EN[id]||f.latin||'';
+  document.getElementById('info-name').textContent=(LANG==='en'&&NAME_EN[id])||f.name;
+  document.getElementById('info-name-en').textContent=LANG==='en'?f.name:(NAME_EN[id]||f.latin||'');
   // Photo
   const wrap=document.getElementById('info-photo-wrap');
   const existing=wrap.querySelector('img');if(existing)existing.remove();
   const emojiEl=document.getElementById('info-photo-emoji');
   emojiEl.textContent=f.e||'🐟';
   emojiEl.style.display='flex';
-  const imgSrc=(getActiveST()[stKey(id)]||{}).photo||(MODE==='coq'?CQIMGS[id]:IMGS[id])||WIKI_CACHE[(f.latin||'').trim().split(/\s+/).slice(0,2).join('_')]||localStorage.getItem('wimg:'+(f.latin||'').trim().split(/\s+/).slice(0,2).join('_'))||'';
-  if(imgSrc){
-    const img=document.createElement('img');img.src=imgSrc;img.referrerPolicy='no-referrer';
-    img.onerror=()=>{img.remove();emojiEl.style.display='flex';};
+  function tryPhoto(url,tryWiki){
+    const img=document.createElement('img');
+    img.src=url;img.referrerPolicy='no-referrer';
     img.onload=()=>{emojiEl.style.display='none';};
+    img.onerror=()=>{
+      img.remove();emojiEl.style.display='flex';
+      if(tryWiki)wikiImg(f.latin).then(wurl=>{if(wurl&&_infoId===id)tryPhoto(wurl,false);});
+    };
     wrap.insertBefore(img,emojiEl);
   }
+  const wikiKey=(f.latin||'').trim().split(/\s+/).slice(0,2).join('_');
+  const cachedUrl=(getActiveST()[stKey(id)]||{}).photo||(MODE==='coq'?CQIMGS[id]:IMGS[id])||WIKI_CACHE[wikiKey]||localStorage.getItem('wimg:'+wikiKey)||'';
+  if(cachedUrl){tryPhoto(cachedUrl,true);}
+  else{wikiImg(f.latin).then(wurl=>{if(wurl&&_infoId===id)tryPhoto(wurl,false);});}
   // Description
-  const descLang=LANG==='en'&&DESC[id]?DESC[id]:DESC[id]||'';
-  document.getElementById('info-desc-text').textContent=descLang||'Aucune description disponible.';
+  document.getElementById('info-desc-text').textContent=DESC[id]||'Aucune description disponible.';
   // Recipe
   const recipeEl=document.getElementById('info-recipe-content');
   if(RECIPES[id]){recipeEl.innerHTML='<div class="info-recipe-content">'+RECIPES[id]+'</div>';}
@@ -2163,7 +2244,11 @@ function openMap(){
     if(!window.L){document.getElementById('map-title').textContent='🗺 Leaflet non chargé — connexion requise';return;}
     if(!_leafletMap){
       _leafletMap=L.map('leaflet-map',{zoomControl:true}).setView([44.5,4],5);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:13,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'}).addTo(_leafletMap);
+      const osmBase=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'});
+      const seamarkOverlay=L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{maxZoom:18,opacity:0.85,attribution:'© <a href="https://www.openseamap.org">OpenSeaMap</a>'});
+      osmBase.addTo(_leafletMap);
+      seamarkOverlay.addTo(_leafletMap);
+      L.control.layers({},{'🗺 Cartes nautiques / Nautical charts':seamarkOverlay},{position:'topright',collapsed:false}).addTo(_leafletMap);
       const zoneColor={med:'#1AAFA0',atl:'#1565C0',edf:'#2E7D32',cq:'#795548'};
       const getZoneOf=id=>{
         const edf=['truite_fario','truite_arenciel','ombre','omble','saumon','brochet','sandre','perche','blackbass','silure','carpe','barbeau','chevesne','gardon','breme','tanche','rotengle','anguille_edf','perche_soleil','ecrevisse_pp','ecrevisse_pb','ecrevisse_signal','ecrevisse_louisiane','moule_perliere','mulette_epaisse'];
@@ -2176,8 +2261,11 @@ function openMap(){
         const sp=allData.find(x=>x.id===id);if(!sp)return;
         const z=getZoneOf(id);
         const circle=L.circleMarker(coords,{radius:7,fillColor:zoneColor[z]||'#1AAFA0',color:'#fff',weight:1.5,opacity:1,fillOpacity:0.85}).addTo(_leafletMap);
-        const enName=NAME_EN[id]?` <em style="color:#888;font-size:11px">${NAME_EN[id]}</em>`:'';
-        circle.bindPopup(`<b>${sp.name}</b>${enName}<br><span style="font-size:11px;color:#666;font-style:italic">${sp.latin||''}</span>`);
+        const displayName=LANG==='en'&&NAME_EN[id]?NAME_EN[id]:sp.name;
+        const subName=LANG==='en'?`<em style="color:#888;font-size:11px">${sp.name}</em>`:(NAME_EN[id]?`<em style="color:#888;font-size:11px">${NAME_EN[id]}</em>`:'');
+        const depthObj=LANG==='en'?DEPTH_EN:DEPTH;
+        const depthStr=depthObj[id]?`<br><span style="font-size:11px;color:#1565C0">⚓ ${depthObj[id]}</span>`:'';
+        circle.bindPopup(`<b>${displayName}</b> ${subName}<br><span style="font-size:11px;color:#666;font-style:italic">${sp.latin||''}</span>${depthStr}`);
       });
     } else {
       _leafletMap.invalidateSize();
@@ -2197,6 +2285,16 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+function tSeason(s){
+  if(!s||LANG==='fr')return s;
+  return s
+    .replace(/Toute l'année/gi,'Year-round').replace(/Toutes zones/gi,'All zones')
+    .replace(/Printemps/gi,'Spring').replace(/Été/gi,'Summer')
+    .replace(/Automne/gi,'Autumn').replace(/Hiver/gi,'Winter')
+    .replace(/\bJuin\b/g,'Jun').replace(/\bJuil\b/g,'Jul').replace(/\bAoût\b/g,'Aug')
+    .replace(/\bFév\b/g,'Feb').replace(/\bAvr\b/g,'Apr').replace(/\bMai\b/g,'May')
+    .replace(/\bDéc\b/g,'Dec');
+}
 // ══ CARD RENDER ══
 function rc(id){
   const f=getData().find(x=>x.id===id);
@@ -2204,14 +2302,15 @@ function rc(id){
   const ast=getActiveST();const s=ast[stKey(id)]||{};const caught=!!s.caught;
   el.className='card'+(f.custom?' custom':'')+(caught?' caught':'');
   const ic=IC[f.i]||IC.DD;
+  const cname=(LANG==='en'&&NAME_EN[id])||f.name;
   const si=IMGS[id]||CQIMGS[id];
-  const imgTag=si?`<img class="simg" src="${si}" referrerpolicy="no-referrer" alt="${f.name}" onerror="this.remove()">`:'';
+  const imgTag=si?`<img class="simg" src="${si}" referrerpolicy="no-referrer" alt="${cname}" onerror="this.remove()">`:'';
   const th=`${imgTag}<div class="fb">${f.e}</div><div class="tov"></div><div class="ctick">✓</div>`;
-  const up=s.photo?`<div class="pprev"><img src="${s.photo}"><button class="dphoto" onclick="event.stopPropagation();dp('${id}')">✕</button></div>`:`<div class="uzone" onclick="event.stopPropagation();document.getElementById('ph-${id}').click()"><input type="file" id="ph-${id}" accept="image/*" onchange="hp('${id}',this)"><div style="font-size:20px">📷</div><div style="font-size:11px;color:var(--txt2)">Ajouter ma photo</div></div>`;
+  const up=s.photo?`<div class="pprev"><img src="${s.photo}"><button class="dphoto" onclick="event.stopPropagation();dp('${id}')">✕</button></div>`:`<div class="uzone" onclick="event.stopPropagation();document.getElementById('ph-${id}').click()"><input type="file" id="ph-${id}" accept="image/*" onchange="hp('${id}',this)"><div style="font-size:20px">📷</div><div style="font-size:11px;color:var(--txt2)">${T('photo_add')}</div></div>`;
   const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${f.name.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div>${delBtn}</div>`:''}`;
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div>${delBtn}</div>`:''}`;
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
@@ -2220,25 +2319,36 @@ function rc(id){
 function render(){
   const grid=document.getElementById('grid');
   const list=getFilt();const fams=getFAMS();const ast=getActiveST();
-  document.getElementById('clbl').textContent=list.length+' espèce'+(list.length>1?'s':'');
+  document.getElementById('clbl').textContent=list.length+' '+(list.length>1?T('clbl_many'):T('clbl_one'));
   grid.innerHTML='';
   if(!list.length){grid.innerHTML='<div class="empty"><span class="ei">🌊</span><h3>Aucune espèce ici</h3><p>Essaie un autre filtre !</p></div>';return;}
   if(FILTER==='all'&&!SEARCH){
     const byF={};list.forEach(f=>{if(!byF[f.fam])byF[f.fam]=[];byF[f.fam].push(f);});
     const sortedFams=Object.entries(byF).sort(([ak],[bk])=>{
-      return (fams[ak]?.label||ak).localeCompare(fams[bk]?.label||bk,'fr',{sensitivity:'base'});
+      const la=(LANG==='en'?(fams[ak]?.label_en||fams[ak]?.label):fams[ak]?.label)||ak;
+      const lb=(LANG==='en'?(fams[bk]?.label_en||fams[bk]?.label):fams[bk]?.label)||bk;
+      return la.localeCompare(lb,LANG==='en'?'en':'fr',{sensitivity:'base'});
     });
     sortedFams.forEach(([fk,fs])=>{
-      fs.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
+      fs.sort((a,b)=>{
+        const na=(LANG==='en'&&NAME_EN[a.id])||a.name;
+        const nb=(LANG==='en'&&NAME_EN[b.id])||b.name;
+        return na.localeCompare(nb,LANG==='en'?'en':'fr',{sensitivity:'base'});
+      });
       const fc=fams[fk]||{label:fk,icon:'🎯'};
+      const famLabel=LANG==='en'?(fc.label_en||fc.label):fc.label;
       const cc=fs.filter(f=>ast[stKey(f.id)]?.caught).length;
       const h=document.createElement('div');h.className='fam-hdr';
-      h.innerHTML=`<div class="fam-title">${fc.icon} ${fc.label}</div><div class="fam-line"></div><div class="fam-cnt">${cc}/${fs.length}</div>`;
+      h.innerHTML=`<div class="fam-title">${fc.icon} ${famLabel}</div><div class="fam-line"></div><div class="fam-cnt">${cc}/${fs.length}</div>`;
       grid.appendChild(h);
       fs.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
     });
   } else {
-    list.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
+    list.sort((a,b)=>{
+      const na=(LANG==='en'&&NAME_EN[a.id])||a.name;
+      const nb=(LANG==='en'&&NAME_EN[b.id])||b.name;
+      return na.localeCompare(nb,LANG==='en'?'en':'fr',{sensitivity:'base'});
+    });
     list.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
   }
 }
