@@ -1600,7 +1600,7 @@ const PROTECTED_SPECIES={
 const METEO_SPOTS={
   med:[{name:'Marseille',lat:43.30,lon:5.37},{name:'Toulon',lat:43.12,lon:5.93},{name:'Nice',lat:43.71,lon:7.26},{name:'Perpignan',lat:42.70,lon:2.89}],
   atl:[{name:'Brest',lat:48.39,lon:-4.49},{name:'La Rochelle',lat:46.16,lon:-1.15},{name:'Bayonne',lat:43.49,lon:-1.47},{name:'Lorient',lat:47.75,lon:-3.37}],
-  cor:[{name:'Ajaccio',lat:41.92,lon:8.74},{name:'Bastia',lat:42.70,lon:9.45},{name:'Bonifacio',lat:41.39,lon:9.16}],
+  cor:[{name:'Ajaccio',lat:41.92,lon:8.74},{name:'Bastia',lat:42.70,lon:9.45},{name:'Bonifacio',lat:41.39,lon:9.16},{name:'G. St-Florent',lat:42.68,lon:9.30},{name:'Tignosu 🔴',lat:42.10,lon:8.45,buoy:true}],
   edf:[{name:'Paris (Seine)',lat:48.86,lon:2.35},{name:'Lyon (Rhône)',lat:45.76,lon:4.84},{name:'Bordeaux',lat:44.84,lon:-0.58},{name:'Toulouse',lat:43.60,lon:1.44}]
 };
 let _wZone='med',_wSpot=null;
@@ -2859,6 +2859,7 @@ function _renderWCards(weather,marine,isAtl,isEdf){
     </div>`;
   });
   if(isAtl)html+=`<div class="weather-note">ℹ️ ${fr?'Coefficients de marée calculés d\'après la phase lunaire (approximatif). Pour les coefficients officiels, consultez le SHOM (shom.fr).':'Tidal coefficients based on lunar phase (approximate). For official data, see SHOM (shom.fr).'}</div>`;
+  if(_wSpot?.buoy)html+=`<div class="weather-note">🔴 ${fr?'Bouée Tignosu (Météo-France) — données de prévision au point de grille le plus proche. Pour les mesures en temps réel de la bouée, consultez <strong>meteofrance.com/previsions-meteo-marine</strong>.':'Tignosu buoy (Météo-France) — forecast data from nearest grid point. For real-time buoy sensor readings, see <strong>meteofrance.com/previsions-meteo-marine</strong>.'}</div>`;
   document.getElementById('weather-cards').innerHTML=html;
 }
 
