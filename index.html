@@ -928,7 +928,28 @@ function getFAMS(){
 
 function lsKey(k){return k+(ACTIVE_PID?'-'+ACTIVE_PID:'')}
 function loadProfiles(){try{PROFILES=JSON.parse(localStorage.getItem('pesc-profiles')||'[]');}catch(e){PROFILES=[];}}
-function saveProfiles(){localStorage.setItem('pesc-profiles',JSON.stringify(PROFILES));}
+function saveProfiles(){
+  try{localStorage.setItem('pesc-profiles',JSON.stringify(PROFILES));}
+  catch(e){
+    // localStorage plein : sauvegarder sans les photos
+    const slim=PROFILES.map(p=>({...p,photo:null}));
+    try{localStorage.setItem('pesc-profiles',JSON.stringify(slim));}catch(e2){}
+  }
+}
+// Compresse une photo en canvas 200×200 JPEG (< 30 KB) avant stockage localStorage
+function compressPhoto(dataUrl,cb){
+  const img=new Image();
+  img.onload=()=>{
+    const MAX=200;
+    let w=img.width,h=img.height;
+    if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    cb(c.toDataURL('image/jpeg',0.72));
+  };
+  img.onerror=()=>cb(dataUrl); // fallback si décodage échoue
+  img.src=dataUrl;
+}
 function loadProfileState(){
   if(!ACTIVE_PID)return;
   const g=(k,d)=>{try{return JSON.parse(localStorage.getItem(lsKey(k))||d);}catch(e){return JSON.parse(d);}};
@@ -1017,9 +1038,11 @@ function renderCreateForm(el,back){
     const f=this.files[0];if(!f)return;
     const r=new FileReader();
     r.onload=e=>{
-      document.getElementById('av-cam').style.display='none';
-      const prev=document.getElementById('av-preview');
-      prev.src=e.target.result;prev.style.display='block';
+      compressPhoto(e.target.result,compressed=>{
+        document.getElementById('av-cam').style.display='none';
+        const prev=document.getElementById('av-preview');
+        prev.src=compressed;prev.style.display='block';
+      });
     };
     r.readAsDataURL(f);
   });
