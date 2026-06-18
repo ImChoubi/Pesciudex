@@ -411,6 +411,68 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 /* ══ STORY BUTTON ══ */
 .story-btn{width:100%;padding:11px;border-radius:50px;border:1.5px solid rgba(26,175,160,.4);background:rgba(26,175,160,.08);color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;transition:all .15s}
 .story-btn:hover{background:rgba(26,175,160,.18);border-color:var(--acc)}
+/* ══ WEATHER MODAL ══ */
+#weather-overlay{position:fixed;inset:0;z-index:400;background:#e8f4f8;display:none;flex-direction:column}
+#weather-overlay.open{display:flex}
+.weather-topbar{background:linear-gradient(135deg,#0B2540 0%,#1A6FA0 100%);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.weather-topbar-title{font-size:15px;font-weight:700;flex:1}
+.weather-close-btn{padding:6px 14px;border-radius:50px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.weather-body{flex:1;overflow-y:auto;padding:14px 16px 80px;max-width:680px;margin:0 auto;width:100%}
+.weather-zone-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.weather-spot-btns{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.wbtn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.wbtn.sel{background:var(--sea);border-color:var(--sea);color:#fff}
+.weather-cards{display:flex;flex-direction:column;gap:10px}
+.wcard{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:var(--sh1);display:flex;align-items:flex-start;gap:12px}
+.wcard-date{min-width:64px;text-align:center;flex-shrink:0}
+.wcard-day{font-size:13px;font-weight:700;color:var(--sea)}
+.wcard-dow{font-size:10px;color:var(--txt3)}
+.wcard-icon{font-size:24px;margin-top:4px}
+.wcard-body{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:flex-start}
+.wstat{background:var(--bg-page);border-radius:8px;padding:6px 9px;min-width:72px}
+.wstat-icon{font-size:13px}
+.wstat-val{font-size:13px;font-weight:700;color:var(--sea);white-space:nowrap}
+.wstat-lbl{font-size:10px;color:var(--txt3)}
+.wtide{background:rgba(26,175,160,.09);border:1px solid rgba(26,175,160,.22);border-radius:8px;padding:6px 9px;min-width:72px}
+.wtide-val{font-size:13px;font-weight:700;color:var(--teal3)}
+.wtide-lbl{font-size:10px;color:var(--txt3)}
+.wsec-title{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px;display:flex;align-items:center;gap:5px}
+.weather-note{font-size:11px;color:var(--txt3);padding:8px 4px;line-height:1.6;font-style:italic}
+.weather-loading{text-align:center;padding:40px 20px;color:var(--txt3);font-size:13px}
+.weather-error{background:#FFF3E0;color:#BF360C;border-radius:10px;padding:12px 14px;font-size:13px;margin:12px 0}
+/* ══ STATS MODAL ══ */
+#stats-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:450;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#stats-overlay.open{display:flex}
+.stats-modal{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;padding:22px 18px 40px;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.scard{background:var(--bg-page);border-radius:12px;padding:12px 14px}
+.scard-icon{font-size:22px;margin-bottom:4px}
+.scard-val{font-size:20px;font-weight:800;color:var(--sea);line-height:1.1}
+.scard-lbl{font-size:11px;color:var(--txt2);margin-top:3px}
+.scard-sub{font-size:11px;color:var(--acc2);font-weight:600;margin-top:3px}
+.scard.wide{grid-column:1/-1}
+.catch-tl{display:flex;flex-direction:column;gap:7px}
+.catch-tl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-page);border-radius:10px}
+.catch-tl-e{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.catch-tl-info{flex:1;min-width:0}
+.catch-tl-name{font-size:13px;font-weight:700;color:var(--sea);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.catch-tl-detail{font-size:11px;color:var(--txt3);margin-top:1px}
+.catch-tl-date{font-size:11px;font-weight:600;color:var(--acc2);white-space:nowrap;flex-shrink:0}
+/* ══ FMF PROTECTION WARNING ══ */
+.fmf-protection-box{background:linear-gradient(135deg,#FFF3E0,#FFEBEE);border:1.5px solid rgba(183,28,28,.3);border-radius:12px;padding:14px;margin-top:12px}
+.fmf-protection-title{font-size:14px;font-weight:800;color:#B71C1C;margin-bottom:6px}
+.fmf-protection-text{font-size:12px;color:#7f1010;line-height:1.65}
+.fmf-protection-penalty{font-size:11px;color:var(--txt3);margin-top:6px;font-style:italic}
+.fmf-tuna-btn{width:100%;padding:11px;border-radius:50px;border:none;background:linear-gradient(135deg,#B71C1C,#E53935);color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px}
+/* ══ TUNA DECLARATION MODAL ══ */
+#tuna-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#tuna-overlay.open{display:flex}
+.tuna-modal{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;padding:22px 18px 40px;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.tuna-step{display:flex;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(11,37,64,.07)}
+.tuna-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.tuna-step-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#B71C1C,#E53935);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.tuna-step-title{font-size:13px;font-weight:700;color:var(--sea);margin-bottom:4px}
+.tuna-step-text{font-size:12px;color:var(--txt2);line-height:1.65}
 </style>
 </head>
 <body>
@@ -483,6 +545,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       </div>
       <div class="hero-btns">
         <button class="pdf-export-btn" onclick="openMap()">🗺 Carte de pêche</button>
+        <button class="pdf-export-btn" id="weather-btn" onclick="openWeather()">🌊 Météo</button>
+        <button class="pdf-export-btn" id="stats-btn" onclick="openStats()">📊 Stats</button>
         <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
       </div>
     </div>
@@ -684,6 +748,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     </div>
   </div>
 </div>
+</div>
+
+<!-- WEATHER MODAL -->
+<div id="weather-overlay">
+  <div class="weather-topbar">
+    <span class="weather-topbar-title" id="weather-title">🌊 Météo marine — 7 jours</span>
+    <button class="weather-close-btn" onclick="closeWeather()">✕ Fermer</button>
+  </div>
+  <div class="weather-body">
+    <div class="weather-zone-tabs" id="weather-zone-tabs"></div>
+    <div class="weather-spot-btns" id="weather-spot-btns"></div>
+    <div class="weather-cards" id="weather-cards"></div>
+  </div>
+</div>
+
+<!-- STATS MODAL -->
+<div id="stats-overlay" onclick="closeStatsOut(event)">
+  <div class="stats-modal">
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:17px;font-weight:800;color:var(--sea)" id="stats-title">📊 Mes statistiques</div>
+      <button class="info-close-btn" onclick="closeStats()">✕</button>
+    </div>
+    <div id="stats-body"></div>
+  </div>
+</div>
+
+<!-- TUNA DECLARATION MODAL -->
+<div id="tuna-overlay" onclick="closeTunaOut(event)">
+  <div class="tuna-modal">
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:17px;font-weight:800;color:#B71C1C">🔴 Thon rouge — Guide officiel</div>
+      <button class="info-close-btn" onclick="closeTuna()">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:18px">Déclaration ICCAT &amp; FranceAgrimer</div>
+    <div id="tuna-body"></div>
+  </div>
 </div>
 
 <!-- LIGHTBOX -->
@@ -1482,6 +1584,27 @@ const RECIPES = {
 
 // ══ LANGUAGE ══
 let LANG=(()=>{const s=localStorage.getItem('pesc-lang');if(s)return s;const nl=(navigator.language||navigator.userLanguage||'fr').toLowerCase();return nl.startsWith('en')?'en':'fr';})();
+// ══ PROTECTED / REGULATED SPECIES ══
+const PROTECTED_SPECIES={
+  'Epinephelus marginatus':{name_fr:'Mérou brun',law_fr:'⛔ Espèce PROTÉGÉE en France depuis 1993 (arrêté 26/11/1993). Capture, transport, détention et vente STRICTEMENT INTERDITS.',law_en:'⛔ PROTECTED species in France since 1993. Capture, transport, possession and sale STRICTLY FORBIDDEN.',penalty_fr:'Amende jusqu\'à 22 500 € et confiscation du matériel de pêche',penalty_en:'Fine up to €22,500 and confiscation of fishing equipment',strict:true},
+  'Sciaena umbra':{name_fr:'Corb',law_fr:'⛔ Espèce PROTÉGÉE en France depuis 2013 (arrêté 05/06/2013). Capture STRICTEMENT INTERDITE.',law_en:'⛔ PROTECTED species in France since 2013. Capture STRICTLY FORBIDDEN.',penalty_fr:'Amende jusqu\'à 22 500 €',penalty_en:'Fine up to €22,500',strict:true},
+  'Thunnus thynnus':{name_fr:'Thon rouge',law_fr:'⚠️ Autorisation ICCAT OBLIGATOIRE avant la pêche. Marquage et déclaration FranceAgrimer dans les 48h. 1 poisson maximum/pêcheur/an.',law_en:'⚠️ ICCAT permit MANDATORY before fishing. Tag + FranceAgrimer declaration within 48h. Max 1 fish/angler/year.',penalty_fr:'Pêche sans autorisation = amende + saisie immédiate',penalty_en:'Fishing without permit = fine + immediate seizure',strict:false,tuna_guide:true},
+  'Dentex dentex':{name_fr:'Denti',law_fr:'⚠️ Fermeture Mai–Juin. Maximum 1 poisson/pêcheur/jour. Marquage obligatoire.',law_en:'⚠️ Closed season May–June. Max 1 fish/angler/day. Mandatory tagging.',penalty_fr:null,penalty_en:null,strict:false},
+  'Pagellus bogaraveo':{name_fr:'Dorade rose',law_fr:'⚠️ Déclaration et marquage obligatoires. Quotas annuels stricts. Remise à l\'eau des sous-tailles.',law_en:'⚠️ Mandatory declaration and tagging. Strict annual quotas. Release undersized fish.',penalty_fr:null,penalty_en:null,strict:false},
+  'Coryphaena hippurus':{name_fr:'Dorade coryphène',law_fr:'⚠️ Déclaration obligatoire. Marquage requis. Maximum 3 poissons/jour/navire.',law_en:'⚠️ Mandatory declaration. Tagging required. Max 3 fish/day/vessel.',penalty_fr:null,penalty_en:null,strict:false},
+  'Dicentrarchus labrax':{name_fr:'Bar commun',law_fr:'⚠️ Max 3/pêcheur/jour en Atlantique. Taille min. 42 cm (Atl) ou 30 cm (Med). Déclaration obligatoire dès 2026.',law_en:'⚠️ Max 3/angler/day in Atlantic. Min 42cm (Atl) or 30cm (Med). Mandatory declaration from 2026.',penalty_fr:null,penalty_en:null,strict:false},
+  'Thunnus alalunga':{name_fr:'Germon',law_fr:'⚠️ Quota annuel ICCAT. Déclaration obligatoire si capture.',law_en:'⚠️ Annual ICCAT quota. Mandatory declaration if caught.',penalty_fr:null,penalty_en:null,strict:false}
+};
+
+// ══ WEATHER SPOTS ══
+const METEO_SPOTS={
+  med:[{name:'Marseille',lat:43.30,lon:5.37},{name:'Toulon',lat:43.12,lon:5.93},{name:'Nice',lat:43.71,lon:7.26},{name:'Perpignan',lat:42.70,lon:2.89}],
+  atl:[{name:'Brest',lat:48.39,lon:-4.49},{name:'La Rochelle',lat:46.16,lon:-1.15},{name:'Bayonne',lat:43.49,lon:-1.47},{name:'Lorient',lat:47.75,lon:-3.37}],
+  cor:[{name:'Ajaccio',lat:41.92,lon:8.74},{name:'Bastia',lat:42.70,lon:9.45},{name:'Bonifacio',lat:41.39,lon:9.16}],
+  edf:[{name:'Paris (Seine)',lat:48.86,lon:2.35},{name:'Lyon (Rhône)',lat:45.76,lon:4.84},{name:'Bordeaux',lat:44.84,lon:-0.58},{name:'Toulouse',lat:43.60,lon:1.44}]
+};
+let _wZone='med',_wSpot=null;
+
 const I18N={
   fr:{langBtn:'EN',zone_edf:'🏞 Eau douce',zone_med:'🌊 Méditerranée',zone_atl:'🌊 Atlantique',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Espagne',stat_caught:'Espèces pêchées',
@@ -1507,7 +1630,9 @@ const I18N={
       modal_add_title:'+ Ajouter une espèce',modal_add_sub:'Ajoute une espèce personnalisée à ton carnet',
       modal_tab_sp:'🐟 Espèce',modal_tab_fam:'📁 Famille',
       btn_cancel:'Annuler',btn_add:'✓ Ajouter',btn_close:'Fermer',btn_create:'✓ Créer la famille',
-      story_btn:'📸 Créer une Story Instagram'},
+      story_btn:'📸 Créer une Story Instagram',
+      weather_btn:'🌊 Météo',stats_btn:'📊 Stats',
+      stats_title:'📊 Mes statistiques',weather_title:'🌊 Météo marine — 7 jours'},
   en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
       stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
@@ -1532,7 +1657,9 @@ const I18N={
       modal_add_title:'+ Add a species',modal_add_sub:'Add a custom species to your logbook',
       modal_tab_sp:'🐟 Species',modal_tab_fam:'📁 Family',
       btn_cancel:'Cancel',btn_add:'✓ Add',btn_close:'Close',btn_create:'✓ Create family',
-      story_btn:'📸 Create Instagram Story'},
+      story_btn:'📸 Create Instagram Story',
+      weather_btn:'🌊 Weather',stats_btn:'📊 Stats',
+      stats_title:'📊 My statistics',weather_title:'🌊 Marine weather — 7 days'},
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
 function applyLang(){
@@ -1560,6 +1687,10 @@ function applyLang(){
   const mts=document.getElementById('modal-sub');if(mts)mts.textContent=T('modal_add_sub');
   const tsp=document.getElementById('tab-sp');if(tsp)tsp.textContent=T('modal_tab_sp');
   const tfm=document.getElementById('tab-fam');if(tfm)tfm.textContent=T('modal_tab_fam');
+  const wb=document.getElementById('weather-btn');if(wb)wb.textContent=T('weather_btn');
+  const sb=document.getElementById('stats-btn');if(sb)sb.textContent=T('stats_btn');
+  const wt=document.getElementById('weather-title');if(wt)wt.textContent=T('weather_title');
+  const st2=document.getElementById('stats-title');if(st2)st2.textContent=T('stats_title');
   updateBrandSub();
 }
 function toggleLang(){
@@ -2264,6 +2395,20 @@ async function _fmfAnalyzeINat(){
   }
 }
 
+function _fmfProtectionHTML(latin){
+  if(!latin)return'';
+  const p=PROTECTED_SPECIES[latin];if(!p)return'';
+  const law=LANG==='en'?p.law_en:p.law_fr;
+  const penalty=LANG==='en'?p.penalty_en:p.penalty_fr;
+  const title=p.strict?(LANG==='fr'?'⛔ ESPÈCE PROTÉGÉE':'⛔ PROTECTED SPECIES'):(LANG==='fr'?'⚠️ RÉGLEMENTATION':'⚠️ REGULATIONS');
+  return`<div class="fmf-protection-box">
+    <div class="fmf-protection-title">${title}</div>
+    <div class="fmf-protection-text">${law}</div>
+    ${penalty?`<div class="fmf-protection-penalty">⚖️ ${penalty}</div>`:''}
+    ${p.tuna_guide?`<button class="fmf-tuna-btn" onclick="openTunaDeclaration()">📋 ${LANG==='fr'?'Guide déclaration ICCAT & FranceAgrimer':'ICCAT & FranceAgrimer Declaration Guide'}</button>`:''}
+  </div>`;
+}
+
 function _fmfShowINatResult(results){
   if(!results.length){
     document.getElementById('fmf-body').innerHTML=`
@@ -2291,6 +2436,7 @@ function _fmfShowINatResult(results){
       </div>
       ${alts?`<div class="fmf-result-desc" style="font-size:12px;color:var(--txt3)">${T('fmf_alts')} : ${alts}</div>`:''}
     </div>
+    ${_fmfProtectionHTML(latin)}
     <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
 }
 
@@ -2317,6 +2463,7 @@ function _fmfShowResult(r){
       </div>
       ${r.description?`<div class="fmf-result-desc">${r.description}</div>`:''}
     </div>
+    ${_fmfProtectionHTML(r.latin||'')}
     <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
 }
 
@@ -2456,78 +2603,326 @@ async function exportStory(id){
   const W=1080,H=1920;
   const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
   const ctx=canvas.getContext('2d');
-  // Background
+  const cname=(LANG==='en'&&NAME_EN[id])||f.name;
+  const ic=IC[f.i]||IC.DD;
+  const zoneTxt=ZONE==='edf'?T('zone_edf'):ZONE==='med'?T('zone_med'):T('zone_atl');
+  // Background gradient
   const grad=ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,'#030d1a');grad.addColorStop(0.55,'#0B2540');grad.addColorStop(1,'#0a3356');
+  grad.addColorStop(0,'#030d1a');grad.addColorStop(0.45,'#0B2540');grad.addColorStop(1,'#0a3356');
   ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
-  // Dot pattern
-  ctx.fillStyle='rgba(26,175,160,0.06)';
-  for(let i=0;i<22;i++)for(let j=0;j<44;j++){ctx.beginPath();ctx.arc(i*50+25,j*45+22,3.5,0,Math.PI*2);ctx.fill();}
+  // Dot pattern overlay
+  ctx.fillStyle='rgba(26,175,160,0.05)';
+  for(let i=0;i<22;i++)for(let j=0;j<44;j++){ctx.beginPath();ctx.arc(i*50+25,j*45+22,3,0,Math.PI*2);ctx.fill();}
   // Top bar
   ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,0,W,130);
-  ctx.font='bold 58px system-ui,sans-serif';ctx.fillStyle='rgba(255,255,255,0.85)';ctx.textAlign='left';
-  ctx.fillText('🎣 Pesciudex',55,90);
-  ctx.font='32px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.8)';
-  ctx.fillText('pesciudex · imchoubi.github.io',55,128);
-  // Glow behind emoji
-  const glowGrad=ctx.createRadialGradient(W/2,470,0,W/2,470,260);
-  glowGrad.addColorStop(0,'rgba(26,175,160,0.22)');glowGrad.addColorStop(1,'rgba(26,175,160,0)');
-  ctx.fillStyle=glowGrad;ctx.beginPath();ctx.arc(W/2,470,260,0,Math.PI*2);ctx.fill();
-  // Emoji
-  ctx.font='240px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText(f.e||'🐟',W/2,610);
-  // Species name
-  const cname=(LANG==='en'&&NAME_EN[id])||f.name;
-  ctx.font='bold 88px system-ui,sans-serif';ctx.fillStyle='#ffffff';ctx.textAlign='center';
-  ctx.fillText(cname.length>18?cname.substring(0,16)+'…':cname,W/2,780);
-  // Latin name
-  ctx.font='italic 46px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.85)';
-  ctx.fillText(f.latin||'',W/2,848);
-  // Divider
-  ctx.strokeStyle='rgba(26,175,160,0.4)';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(140,900);ctx.lineTo(W-140,900);ctx.stroke();
-  // Catch info boxes
-  const details=[];
-  if(s.date)details.push({icon:'📅',lbl:'Date',val:s.date});
-  if(s.size)details.push({icon:'📏',lbl:LANG==='en'?'Size':'Taille',val:s.size});
-  if(s.weight)details.push({icon:'⚖️',lbl:LANG==='en'?'Weight':'Poids',val:s.weight+' kg'});
-  if(details.length){
-    const bw=details.length===1?460:details.length===2?460:310;
-    const bg=details.length===1?320:details.length===2?40:22;
-    let bx=details.length===1?W/2-bw/2:(W-(details.length*bw+(details.length-1)*bg))/2;
-    details.forEach(d=>{
-      ctx.fillStyle='rgba(255,255,255,0.07)';_rrect(ctx,bx,940,bw,150,24);
-      ctx.font='50px system-ui';ctx.fillStyle='white';ctx.textAlign='center';ctx.fillText(d.icon,bx+bw/2,998);
-      ctx.font='28px system-ui';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText(d.lbl,bx+bw/2,1033);
-      ctx.font='bold 40px system-ui';ctx.fillStyle='white';ctx.fillText(d.val.length>14?d.val.substring(0,13)+'…':d.val,bx+bw/2,1078);
-      bx+=bw+bg;
+  ctx.font='bold 56px system-ui,sans-serif';ctx.fillStyle='rgba(255,255,255,0.88)';ctx.textAlign='left';
+  ctx.fillText('🎣 Pesciudex',55,88);
+  ctx.font='30px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.8)';
+  ctx.fillText('imchoubi.github.io/Pesciudex',55,126);
+
+  if(s.photo){
+    // ── WITH PHOTO LAYOUT ──
+    await new Promise(resolve=>{
+      const img=new Image();
+      img.onload=()=>{
+        const PX=55,PY=150,PW=W-110,PH=640;
+        ctx.save();
+        ctx.beginPath();_rrect(ctx,PX,PY,PW,PH,24);ctx.clip();
+        const ia=img.width/img.height,pa=PW/PH;
+        let sx=0,sy=0,sw=img.width,sh=img.height;
+        if(ia>pa){sw=sh*pa;sx=(img.width-sw)/2;}else{sh=sw/pa;sy=(img.height-sh)/2;}
+        ctx.drawImage(img,sx,sy,sw,sh,PX,PY,PW,PH);
+        // Gradient overlay bottom of photo for readability
+        const ov=ctx.createLinearGradient(0,PY,0,PY+PH);
+        ov.addColorStop(0,'rgba(0,0,0,0)');ov.addColorStop(0.55,'rgba(0,0,0,0.22)');ov.addColorStop(1,'rgba(11,37,64,0.9)');
+        ctx.fillStyle=ov;ctx.fillRect(PX,PY,PW,PH);
+        ctx.restore();
+        // Emoji badge top-right corner of photo
+        ctx.font='90px system-ui,sans-serif';ctx.textAlign='right';ctx.fillText(f.e||'🐟',W-75,PY+115);
+        // Species name over bottom of photo
+        ctx.font='bold 72px system-ui,sans-serif';ctx.fillStyle='#ffffff';ctx.textAlign='center';
+        const cnShort=cname.length>20?cname.substring(0,18)+'…':cname;
+        ctx.fillText(cnShort,W/2,PY+510);
+        ctx.font='italic 38px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.9)';
+        ctx.fillText(f.latin||'',W/2,PY+565);
+        resolve();
+      };
+      img.onerror=()=>resolve();
+      img.src=s.photo;
     });
+    // Divider
+    const DY=150+640+28;
+    ctx.strokeStyle='rgba(26,175,160,0.4)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(140,DY);ctx.lineTo(W-140,DY);ctx.stroke();
+    // Catch detail boxes
+    const details=[];
+    if(s.date)details.push({icon:'📅',lbl:'Date',val:s.date});
+    if(s.size)details.push({icon:'📏',lbl:LANG==='en'?'Size':'Taille',val:s.size});
+    if(s.weight)details.push({icon:'⚖️',lbl:LANG==='en'?'Weight':'Poids',val:s.weight+' kg'});
+    const BY=DY+28;
+    if(details.length){
+      const bw=details.length===1?460:details.length===2?440:300;
+      const bg=details.length===1?0:details.length===2?60:30;
+      let bx=details.length===1?W/2-bw/2:(W-(details.length*bw+(details.length-1)*bg))/2;
+      details.forEach(d=>{
+        ctx.fillStyle='rgba(255,255,255,0.08)';_rrect(ctx,bx,BY,bw,140,22);
+        ctx.font='44px system-ui';ctx.fillStyle='white';ctx.textAlign='center';ctx.fillText(d.icon,bx+bw/2,BY+52);
+        ctx.font='26px system-ui';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText(d.lbl,bx+bw/2,BY+85);
+        ctx.font='bold 36px system-ui';ctx.fillStyle='white';ctx.fillText(d.val.length>14?d.val.substring(0,13)+'…':d.val,bx+bw/2,BY+122);
+        bx+=bw+bg;
+      });
+    }
+    // IUCN
+    ctx.font='32px system-ui';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='center';
+    ctx.fillText(ic.dot+' '+(LANG==='en'?(ic.label_en||ic.label):ic.label),W/2,BY+195);
+    // Zone badge
+    ctx.fillStyle='rgba(26,175,160,0.15)';_rrect(ctx,W/2-210,BY+214,420,56,28);
+    ctx.font='bold 30px system-ui';ctx.fillStyle='rgba(26,175,160,0.9)';ctx.fillText(zoneTxt,W/2,BY+251);
+    // Note if present
+    if(s.note){
+      ctx.font='italic 28px system-ui';ctx.fillStyle='rgba(255,255,255,0.38)';ctx.textAlign='center';
+      const nt=s.note.length>65?s.note.substring(0,63)+'…':s.note;
+      ctx.fillText('📝 '+nt,W/2,BY+320);
+    }
+  } else {
+    // ── NO PHOTO LAYOUT (original) ──
+    const glowGrad=ctx.createRadialGradient(W/2,470,0,W/2,470,260);
+    glowGrad.addColorStop(0,'rgba(26,175,160,0.22)');glowGrad.addColorStop(1,'rgba(26,175,160,0)');
+    ctx.fillStyle=glowGrad;ctx.beginPath();ctx.arc(W/2,470,260,0,Math.PI*2);ctx.fill();
+    ctx.font='240px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText(f.e||'🐟',W/2,610);
+    ctx.font='bold 88px system-ui,sans-serif';ctx.fillStyle='#ffffff';ctx.textAlign='center';
+    ctx.fillText(cname.length>18?cname.substring(0,16)+'…':cname,W/2,780);
+    ctx.font='italic 46px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.85)';
+    ctx.fillText(f.latin||'',W/2,848);
+    ctx.strokeStyle='rgba(26,175,160,0.4)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(140,900);ctx.lineTo(W-140,900);ctx.stroke();
+    const details=[];
+    if(s.date)details.push({icon:'📅',lbl:'Date',val:s.date});
+    if(s.size)details.push({icon:'📏',lbl:LANG==='en'?'Size':'Taille',val:s.size});
+    if(s.weight)details.push({icon:'⚖️',lbl:LANG==='en'?'Weight':'Poids',val:s.weight+' kg'});
+    if(details.length){
+      const bw=details.length===1?460:details.length===2?460:310;
+      const bg=details.length===1?320:details.length===2?40:22;
+      let bx=details.length===1?W/2-bw/2:(W-(details.length*bw+(details.length-1)*bg))/2;
+      details.forEach(d=>{
+        ctx.fillStyle='rgba(255,255,255,0.07)';_rrect(ctx,bx,940,bw,150,24);
+        ctx.font='50px system-ui';ctx.fillStyle='white';ctx.textAlign='center';ctx.fillText(d.icon,bx+bw/2,998);
+        ctx.font='28px system-ui';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText(d.lbl,bx+bw/2,1033);
+        ctx.font='bold 40px system-ui';ctx.fillStyle='white';ctx.fillText(d.val.length>14?d.val.substring(0,13)+'…':d.val,bx+bw/2,1078);
+        bx+=bw+bg;
+      });
+    }
+    ctx.font='34px system-ui';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='center';
+    ctx.fillText(ic.dot+' '+(LANG==='en'?(ic.label_en||ic.label):ic.label),W/2,1165);
+    ctx.fillStyle='rgba(26,175,160,0.15)';_rrect(ctx,W/2-200,1195,400,60,30);
+    ctx.font='bold 32px system-ui';ctx.fillStyle='rgba(26,175,160,0.9)';ctx.fillText(zoneTxt,W/2,1235);
   }
-  // IUCN status
-  const ic=IC[f.i]||IC.DD;
-  ctx.font='34px system-ui';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='center';
-  ctx.fillText(ic.dot+' '+(LANG==='en'?(ic.label_en||ic.label):ic.label),W/2,1165);
-  // Zone badge
-  const zoneTxt=ZONE==='edf'?T('zone_edf'):ZONE==='med'?T('zone_med'):T('zone_atl');
-  ctx.fillStyle='rgba(26,175,160,0.15)';_rrect(ctx,W/2-200,1195,400,60,30);
-  ctx.font='bold 32px system-ui';ctx.fillStyle='rgba(26,175,160,0.9)';ctx.fillText(zoneTxt,W/2,1235);
-  // Bottom bar
-  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,H-380,W,380);
+
+  // ── BOTTOM BAR (shared) ──
+  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,H-360,W,360);
   ctx.font='bold 42px system-ui';ctx.fillStyle='rgba(255,255,255,0.65)';ctx.textAlign='center';
-  ctx.fillText(LANG==='en'?'Caught with Pesciudex 🎣':'Pêché avec Pesciudex 🎣',W/2,H-298);
-  // QR Code
+  ctx.fillText(LANG==='en'?'Caught with Pesciudex 🎣':'Pêché avec Pesciudex 🎣',W/2,H-282);
   try{
     if(typeof QRCode!=='undefined'){
       const qrc=document.createElement('canvas');
       await QRCode.toCanvas(qrc,'https://imchoubi.github.io/Pesciudex',{width:210,margin:1,color:{dark:'#ffffff',light:'#00000000'}});
-      ctx.drawImage(qrc,W/2-105,H-268,210,210);
+      ctx.drawImage(qrc,W/2-105,H-258,210,210);
     }
   }catch(e){}
-  ctx.font='26px system-ui';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='center';
-  ctx.fillText('imchoubi.github.io/Pesciudex',W/2,H-28);
-  // Download
+  ctx.font='26px system-ui';ctx.fillStyle='rgba(255,255,255,0.3)';ctx.textAlign='center';
+  ctx.fillText('imchoubi.github.io/Pesciudex',W/2,H-22);
   const link=document.createElement('a');
   link.download=`pesciudex-${id}.png`;link.href=canvas.toDataURL('image/png');link.click();
 }
+// ══ TUNA DECLARATION MODAL ══
+function openTunaDeclaration(){
+  const fr=LANG==='fr';
+  const steps=fr?[
+    {n:'1',t:'AVANT de partir — Obtenir l\'autorisation ICCAT',txt:'Demande ton autorisation annuelle auprès de la DDTM (Direction Départementale des Territoires et de la Mer) ou via FranceAgrimer. Cette autorisation est OBLIGATOIRE avant toute capture de thon rouge.'},
+    {n:'2',t:'Dès la capture — Attacher la bague ICCAT immédiatement',txt:'Fixe la bague ICCAT fournie avec ton autorisation à la nageoire caudale du poisson. Cette étape est obligatoire AVANT tout débarquement ou déplacement du poisson.'},
+    {n:'3',t:'Dans les 48h — Déclarer sur FranceAgrimer',txt:'Déclare ta capture sur le portail FranceAgrimer (franceagrimer.fr). Renseigne : date de capture, zone de pêche (FAO), poids estimé, port de débarquement, numéro de bague ICCAT.'},
+    {n:'4',t:'Au débarquement — Peser et certifier',txt:'Le poisson doit être pesé chez un mareyeur ou criée agréés. Le certificat de pesée doit accompagner le poisson. Conserver tous les documents 3 ans minimum.'},
+    {n:'5',t:'Rappel quotas et tailles',txt:'Max 1 thon rouge par pêcheur et par an. Taille minimale : 115 cm (mesure en fourche). Saison : Juillet–Octobre en Méditerranée, Juin–Novembre en Atlantique.'}
+  ]:[
+    {n:'1',t:'BEFORE fishing — Get ICCAT permit',txt:'Apply for your annual permit at your regional DDTM or via FranceAgrimer. This permit is MANDATORY before any bluefin tuna fishing.'},
+    {n:'2',t:'At capture — Attach ICCAT tag immediately',txt:'Attach the ICCAT tag provided with your permit to the caudal fin BEFORE any landing or movement of the fish.'},
+    {n:'3',t:'Within 48h — Declare on FranceAgrimer',txt:'Declare your catch on the FranceAgrimer portal. Include: catch date, FAO fishing zone, estimated weight, landing port, ICCAT tag number.'},
+    {n:'4',t:'At landing — Weigh and certify',txt:'Fish must be weighed at an approved market or fishmonger. Keep the weighing certificate and all documents for at least 3 years.'},
+    {n:'5',t:'Quota reminder',txt:'Max 1 bluefin tuna per angler per year. Minimum size: 115cm (fork length). Season: July–October (Med), June–November (Atlantic).'}
+  ];
+  document.getElementById('tuna-body').innerHTML=steps.map(s=>`<div class="tuna-step"><div class="tuna-step-num">${s.n}</div><div><div class="tuna-step-title">${s.t}</div><div class="tuna-step-text">${s.txt}</div></div></div>`).join('')+
+  `<div style="background:rgba(26,175,160,.07);border-radius:10px;padding:12px 14px;margin-top:4px">
+    <div style="font-size:12px;font-weight:700;color:var(--sea);margin-bottom:6px">🔗 ${fr?'Liens officiels':'Official links'}</div>
+    <div style="font-size:12px;color:var(--txt2);line-height:1.9">
+      📋 FranceAgrimer : <strong>franceagrimer.fr</strong><br>
+      📋 ICCAT : <strong>iccat.int</strong><br>
+      📞 DPMA : <strong>01 49 55 82 00</strong><br>
+      📧 ${fr?'Email DPMA':'DPMA Email'} : <strong>dpma.secretariat@agriculture.gouv.fr</strong>
+    </div>
+  </div>`;
+  document.getElementById('tuna-overlay').classList.add('open');
+}
+function closeTuna(){document.getElementById('tuna-overlay').classList.remove('open');}
+function closeTunaOut(e){if(e.target===document.getElementById('tuna-overlay'))closeTuna();}
+
+// ══ WEATHER ══
+function openWeather(){
+  _wZone=ZONE==='atl'?'atl':ZONE==='edf'?'edf':'med';
+  _wSpot=METEO_SPOTS[_wZone][0];
+  document.getElementById('weather-overlay').classList.add('open');
+  _renderWeatherUI();
+}
+function closeWeather(){document.getElementById('weather-overlay').classList.remove('open');}
+function _renderWeatherUI(){
+  const zl={med:LANG==='fr'?'🌊 Méditerranée':'🌊 Mediterranean',atl:'🌊 Atlantique',cor:LANG==='fr'?'🏝 Corse':'🏝 Corsica',edf:LANG==='fr'?'🏞 Eau douce':'🏞 Freshwater'};
+  let ztabs='';
+  ['med','atl','cor','edf'].forEach(z=>{ztabs+=`<button class="wbtn${_wZone===z?' sel':''}" onclick="_wSetZone('${z}')">${zl[z]}</button>`;});
+  document.getElementById('weather-zone-tabs').innerHTML=ztabs;
+  let sbtns='';
+  (METEO_SPOTS[_wZone]||[]).forEach(s=>{sbtns+=`<button class="wbtn${_wSpot?.name===s.name?' sel':''}" onclick="_wSetSpot('${s.name}')">${s.name}</button>`;});
+  document.getElementById('weather-spot-btns').innerHTML=sbtns;
+  _fetchWeather();
+}
+function _wSetZone(z){_wZone=z;_wSpot=(METEO_SPOTS[z]||[])[0];_renderWeatherUI();}
+function _wSetSpot(n){_wSpot=(METEO_SPOTS[_wZone]||[]).find(s=>s.name===n)||_wSpot;_renderWeatherUI();}
+function _wIcon(c){if(c<=1)return'☀️';if(c<=3)return'⛅';if(c<=49)return'🌫️';if(c<=67)return'🌧️';if(c<=77)return'❄️';if(c<=82)return'🌦️';if(c<=86)return'❄️';return'⛈️';}
+function _wWindDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8];}
+function _lunarPhase(dateStr){
+  const ref=new Date('2026-01-17T00:00:00Z');
+  const d=new Date(dateStr+'T12:00:00Z');
+  const days=(d-ref)/86400000;
+  const cycle=29.530588;
+  return((days%cycle)+cycle)%cycle;
+}
+function _tidalCoeff(dateStr){
+  const phase=_lunarPhase(dateStr);
+  const raw=Math.cos(2*Math.PI*phase/29.530588);
+  return Math.round(67.5+raw*47.5);
+}
+function _moonEmoji(phase){
+  const p=phase/29.530588;
+  if(p<0.063||p>0.937)return'🌑';if(p<0.188)return'🌒';if(p<0.313)return'🌓';if(p<0.438)return'🌔';
+  if(p<0.563)return'🌕';if(p<0.688)return'🌖';if(p<0.813)return'🌗';return'🌘';
+}
+async function _fetchWeather(){
+  if(!_wSpot)return;
+  const cardsEl=document.getElementById('weather-cards');
+  cardsEl.innerHTML=`<div class="weather-loading">🌊 ${LANG==='fr'?'Chargement des données météo…':'Loading weather data…'}</div>`;
+  const isAtl=_wZone==='atl';const isEdf=_wZone==='edf';
+  try{
+    let marine=null;
+    if(!isEdf){
+      const mr=await fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${_wSpot.lat}&longitude=${_wSpot.lon}&daily=wave_height_max,wind_wave_height_max,swell_wave_height_max&timezone=Europe%2FParis&forecast_days=7`);
+      if(mr.ok)marine=await mr.json();
+    }
+    const wr=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${_wSpot.lat}&longitude=${_wSpot.lon}&daily=weather_code,wind_speed_10m_max,wind_direction_10m_dominant,temperature_2m_max&timezone=Europe%2FParis&forecast_days=7`);
+    if(!wr.ok)throw new Error('HTTP '+wr.status);
+    const weather=await wr.json();
+    _renderWCards(weather,marine,isAtl,isEdf);
+  }catch(e){
+    cardsEl.innerHTML=`<div class="weather-error">❌ ${LANG==='fr'?'Erreur de chargement. Vérifiez votre connexion.':'Loading error. Check your connection.'}</div>`;
+  }
+}
+function _renderWCards(weather,marine,isAtl,isEdf){
+  const d=weather.daily;if(!d||!d.time){document.getElementById('weather-cards').innerHTML=`<div class="weather-error">${LANG==='fr'?'Données indisponibles':'Data unavailable'}</div>`;return;}
+  const fr=LANG==='fr';
+  const dows=fr?['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const mons=fr?['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const secTitle=isEdf?(fr?'Conditions fluviales 7 jours':'River conditions 7 days'):isAtl?(fr?'Conditions marines — Atlantique':'Marine conditions — Atlantic'):(fr?'Conditions marines — Méditerranée':'Marine conditions — Mediterranean');
+  let html=`<div class="wsec-title">📅 ${secTitle} — ${_wSpot.name}</div>`;
+  d.time.forEach((dateStr,i)=>{
+    const dt=new Date(dateStr+'T12:00:00');
+    const dow=dows[dt.getDay()];
+    const day=dt.getDate();const mon=mons[dt.getMonth()];
+    const wc=d.weather_code?.[i]||0;
+    const wind=Math.round(d.wind_speed_10m_max?.[i]||0);
+    const wdir=_wWindDir(d.wind_direction_10m_dominant?.[i]||0);
+    const temp=Math.round(d.temperature_2m_max?.[i]||0);
+    const waveH=marine?.daily?.wave_height_max?.[i];
+    const windH=marine?.daily?.wind_wave_height_max?.[i];
+    const swellH=marine?.daily?.swell_wave_height_max?.[i];
+    const coeff=isAtl?_tidalCoeff(dateStr):null;
+    const tideH=isAtl?((coeff/120)*5+2).toFixed(1):null;
+    const moon=isAtl?_moonEmoji(_lunarPhase(dateStr)):'';
+    const coeffLbl=coeff?coeff>=70?(fr?'🔴 Vive-eau':'🔴 Spring'):coeff>=45?(fr?'🟡 Moyen':'🟡 Medium'):(fr?'🔵 Morte-eau':'🔵 Neap'):'';
+    html+=`<div class="wcard">
+      <div class="wcard-date"><div class="wcard-day">${day} ${mon}</div><div class="wcard-dow">${dow}</div><div class="wcard-icon">${_wIcon(wc)}</div></div>
+      <div class="wcard-body">
+        <div class="wstat"><div class="wstat-icon">💨</div><div class="wstat-val">${wind} km/h</div><div class="wstat-lbl">${wdir}</div></div>
+        <div class="wstat"><div class="wstat-icon">🌡️</div><div class="wstat-val">${temp}°C</div><div class="wstat-lbl">${fr?'Temp.':'Temp.'}</div></div>
+        ${!isEdf&&waveH!=null?`<div class="wstat"><div class="wstat-icon">🌊</div><div class="wstat-val">${waveH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Hauteur':'Height'}</div></div>`:''}
+        ${!isAtl&&!isEdf&&windH!=null?`<div class="wstat"><div class="wstat-icon">🌬️</div><div class="wstat-val">${windH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Mer vent':'Wind sea'}</div></div>`:''}
+        ${!isAtl&&!isEdf&&swellH!=null?`<div class="wstat"><div class="wstat-icon">🏄</div><div class="wstat-val">${swellH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Houle':'Swell'}</div></div>`:''}
+        ${isAtl&&coeff?`<div class="wtide"><div class="wtide-val">${moon} ${coeff}</div><div class="wtide-lbl">${coeffLbl}</div></div>`:''}
+        ${isAtl&&tideH?`<div class="wtide"><div class="wtide-val">~${tideH} m</div><div class="wtide-lbl">${fr?'Marée':'Tide'}</div></div>`:''}
+      </div>
+    </div>`;
+  });
+  if(isAtl)html+=`<div class="weather-note">ℹ️ ${fr?'Coefficients de marée calculés d\'après la phase lunaire (approximatif). Pour les coefficients officiels, consultez le SHOM (shom.fr).':'Tidal coefficients based on lunar phase (approximate). For official data, see SHOM (shom.fr).'}</div>`;
+  document.getElementById('weather-cards').innerHTML=html;
+}
+
+// ══ STATS ══
+function openStats(){
+  document.getElementById('stats-overlay').classList.add('open');
+  renderStats();
+}
+function closeStats(){document.getElementById('stats-overlay').classList.remove('open');}
+function closeStatsOut(e){if(e.target===document.getElementById('stats-overlay'))closeStats();}
+function renderStats(){
+  if(!ACTIVE_PID){document.getElementById('stats-body').innerHTML='';return;}
+  const allSpecies=[...BASE_DATA,...FRESHWATER_DATA,...COQUIDEX_DATA,...CQ_FRESHWATER_DATA,...CUSTOM,...CQ_CUSTOM];
+  const allCatches=[];
+  [[ST,'pesc'],[CQ_ST,'coq']].forEach(([stObj,modeKey])=>{
+    Object.entries(stObj).forEach(([key,sv])=>{
+      if(!sv||!sv.caught)return;
+      const parts=key.split(':');if(parts.length<3)return;
+      const spId=parts[2];
+      const sp=allSpecies.find(x=>x.id===spId);
+      if(!sp)return;
+      allCatches.push({id:spId,sp,s:sv,mode:modeKey,zone:parts[0]});
+    });
+  });
+  const totalCaught=allCatches.length;
+  const totalAll=allSpecies.length;
+  let heaviest=null,biggest=null,rarest=null;
+  const iRank={EN:4,VU:3,NT:2,DD:1,LC:0};
+  allCatches.forEach(c=>{
+    if(c.s.weight){const w=parseFloat(c.s.weight);if(!heaviest||w>parseFloat(heaviest.s.weight))heaviest=c;}
+    if(c.s.size){const n=parseFloat(c.s.size);if(!isNaN(n)&&(!biggest||n>parseFloat(biggest.s.size)))biggest=c;}
+    const r=iRank[c.sp.i]||0;if(!rarest||(iRank[rarest.sp.i]||0)<r)rarest=c;
+  });
+  const zoneCounts={med:0,atl:0,edf:0};
+  allCatches.forEach(c=>{if(zoneCounts[c.zone]!==undefined)zoneCounts[c.zone]++;});
+  const topZoneEntry=Object.entries(zoneCounts).sort((a,b)=>b[1]-a[1])[0];
+  const withDate=allCatches.filter(c=>c.s.date).sort((a,b)=>b.s.date.localeCompare(a.s.date));
+  const profile=PROFILES.find(p=>p.id===ACTIVE_PID);
+  const fr=LANG==='fr';
+  const pct=totalAll?Math.round(totalCaught/totalAll*100):0;
+  const zoneLabels={med:'🌊 Méditerranée',atl:'🌊 Atlantique',edf:'🏞 Eau douce'};
+  let html=`<div style="font-size:12px;color:var(--txt2);margin-bottom:14px">${fr?'Profil :':'Profile:'} <strong style="color:var(--sea)">${profile?.name||'—'}</strong></div>
+  <div class="stats-grid">
+    <div class="scard"><div class="scard-icon">🐟</div><div class="scard-val">${totalCaught}</div><div class="scard-lbl">${fr?'Espèces cochées':'Checked species'}</div></div>
+    <div class="scard"><div class="scard-icon">📊</div><div class="scard-val">${pct}%</div><div class="scard-lbl">${fr?'Progression':'Progress'}</div><div class="scard-sub">${totalCaught} / ${totalAll}</div></div>`;
+  if(heaviest){const cn=(LANG==='en'&&NAME_EN[heaviest.id])||heaviest.sp.name;html+=`<div class="scard"><div class="scard-icon">⚖️</div><div class="scard-val">${heaviest.s.weight} kg</div><div class="scard-lbl">${fr?'Record poids':'Weight record'}</div><div class="scard-sub">${heaviest.sp.e} ${cn}</div></div>`;}
+  if(biggest){const cn=(LANG==='en'&&NAME_EN[biggest.id])||biggest.sp.name;html+=`<div class="scard"><div class="scard-icon">📏</div><div class="scard-val">${biggest.s.size}</div><div class="scard-lbl">${fr?'Record taille':'Size record'}</div><div class="scard-sub">${biggest.sp.e} ${cn}</div></div>`;}
+  if(rarest){const cn=(LANG==='en'&&NAME_EN[rarest.id])||rarest.sp.name;const ic2=IC[rarest.sp.i]||IC.DD;html+=`<div class="scard"><div class="scard-icon">${ic2.dot}</div><div class="scard-val" style="font-size:15px">${ic2.dot} ${rarest.sp.i}</div><div class="scard-lbl">${fr?'Espèce la plus rare':'Rarest species'}</div><div class="scard-sub">${rarest.sp.e} ${cn}</div></div>`;}
+  if(topZoneEntry&&topZoneEntry[1]>0)html+=`<div class="scard"><div class="scard-icon">🗺️</div><div class="scard-val" style="font-size:14px">${topZoneEntry[1]}</div><div class="scard-lbl">${fr?'Zone favorite':'Favorite zone'}</div><div class="scard-sub">${zoneLabels[topZoneEntry[0]]||topZoneEntry[0]}</div></div>`;
+  html+=`</div>`;
+  if(withDate.length){
+    html+=`<div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin:4px 0 9px">📅 ${fr?'Dernières prises':'Recent catches'}</div><div class="catch-tl">`;
+    withDate.slice(0,12).forEach(c=>{
+      const cn=(LANG==='en'&&NAME_EN[c.id])||c.sp.name;
+      const det=[];if(c.s.size)det.push(`📏 ${c.s.size}`);if(c.s.weight)det.push(`⚖️ ${c.s.weight} kg`);
+      html+=`<div class="catch-tl-item"><div class="catch-tl-e">${c.sp.e}</div><div class="catch-tl-info"><div class="catch-tl-name">${cn}</div><div class="catch-tl-detail">${det.join(' · ')||'—'}</div></div><div class="catch-tl-date">${c.s.date}</div></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div style="text-align:center;padding:28px 20px;color:var(--txt3)"><div style="font-size:36px;margin-bottom:10px">🎣</div><div style="font-size:13px">${fr?'Coche des espèces pour voir tes stats !':'Check species to see your stats!'}</div></div>`;
+  }
+  document.getElementById('stats-body').innerHTML=html;
+}
+
 function tSeason(s){
   if(!s||LANG==='fr')return s;
   return s
