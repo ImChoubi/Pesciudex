@@ -1355,7 +1355,6 @@ function delFamily(id){
 
 // ══ INIT ══
 loadProfiles();migrateOld();
-const savedPid=localStorage.getItem('pesc-active');
 const doStart=pid=>{
   ACTIVE_PID=pid;loadProfileState();
   document.getElementById('loading').classList.add('hidden');
@@ -1364,15 +1363,12 @@ const doStart=pid=>{
   applyMode();applyZone();applyCountry();updateProfileChip();
   renderFilters();render();upStats();
 };
-if(savedPid&&PROFILES.find(p=>p.id===savedPid)){
-  setTimeout(()=>doStart(savedPid),1800);
-} else {
-  setTimeout(()=>{
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('ps').classList.remove('hidden');
-    renderProfileScreen();
-  },1800);
-}
+// Toujours afficher le choix du profil au lancement
+setTimeout(()=>{
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('ps').classList.remove('hidden');
+  renderProfileScreen();
+},1800);
 </script>
 </body>
 </html>
