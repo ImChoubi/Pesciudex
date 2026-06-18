@@ -1382,11 +1382,12 @@ function loadThumb(id,latin){wikiImg(latin).then(url=>setThumb(id,url));}
 // ══ FIND MY FISH ══
 let _fmfImg=null;
 let _fmfProvider=localStorage.getItem('fmf-provider')||'inat';
+const _INAT_DEFAULT='eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoxMDY4MjE2MCwiZXhwIjoxNzgxODU4ODYyfQ.9cFXXu_KdCET-jJcZ5sKbqzCkD4ED6jJ8X6TCahEYc-rcW9NnKGdHjI6RX6wodcGhhN8oDunA3m6g9Xf3jhvFQ';
 
 function openFMF(){
   document.getElementById('fmf-overlay').classList.add('open');
   document.getElementById('fmf-api-key').value=localStorage.getItem('fmf-key')||'';
-  document.getElementById('fmf-inat-token').value=localStorage.getItem('fmf-inat-token')||'';
+  document.getElementById('fmf-inat-token').value=localStorage.getItem('fmf-inat-token')||_INAT_DEFAULT;
   _fmfSetProvider(_fmfProvider,false);
   _fmfRenderUpload();
 }
