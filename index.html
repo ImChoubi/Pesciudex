@@ -1493,31 +1493,33 @@ function exportPDF(){
     {zone:'edf',country:'fr',label:'🏞 Eau douce'},
   ];
 
-  function getImgUrl(f,mode){
-    const hardImg=mode==='coq'?CQIMGS[f.id]:IMGS[f.id];
-    if(hardImg)return hardImg;
-    const key=(f.latin||'').trim().split(/\s+/).slice(0,2).join('_');
-    return WIKI_CACHE[key]||localStorage.getItem('wimg:'+key)||'';
-  }
   function gridHtml(species,stateMap,zk,mode){
     const sorted=[...species].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
     return sorted.map(f=>{
-      const caught=!!stateMap[zk+':'+f.id]?.caught;
-      const imgUrl=getImgUrl(f,mode);
+      const s=stateMap[zk+':'+f.id]||{};
+      const caught=!!s.caught;
+      // Priority: user photo > hardcoded IMGS > wiki cache (memory) > wiki cache (localStorage)
+      const wikiKey=(f.latin||'').trim().split(/\s+/).slice(0,2).join('_');
+      const imgUrl=s.photo||(mode==='coq'?CQIMGS[f.id]:IMGS[f.id])||WIKI_CACHE[wikiKey]||localStorage.getItem('wimg:'+wikiKey)||'';
       let thumbInner;
       if(imgUrl){
-        // Images: filter:brightness(0) on <img> is universally supported → true black silhouette
-        thumbInner=caught
-          ?`<img src="${imgUrl}" referrerpolicy="no-referrer">`
-          :`<img src="${imgUrl}" referrerpolicy="no-referrer" style="filter:brightness(0);opacity:0.55">`;
+        if(caught){
+          thumbInner=`<img src="${imgUrl}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover">`;
+        }else{
+          // filter:brightness(0) on <img> = universally supported black silhouette
+          thumbInner=`<img src="${imgUrl}" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;filter:brightness(0);opacity:0.6">`;
+        }
       }else{
-        // No image: show emoji — caught=color, uncaught=dark background + hidden emoji
-        thumbInner=caught
-          ?`<span>${f.e}</span>`
-          :`<span style="filter:grayscale(1) opacity(0.35)">${f.e}</span>`;
+        if(caught){
+          thumbInner=`<span style="font-size:20px">${f.e}</span>`;
+        }else{
+          // opacity on span = universally supported, creates ghost silhouette
+          thumbInner=`<span style="font-size:20px;opacity:0.18">${f.e}</span>`;
+        }
       }
+      const thumbCls=(!caught&&!imgUrl)?' style="background:#d0d0d0"':'';
       return `<div class="pdf-card${caught?' caught':''}">
-        <div class="pdf-thumb${caught?'':' pdf-thumb-sil'}">${thumbInner}</div>
+        <div class="pdf-thumb"${thumbCls}>${thumbInner}</div>
         <div class="pdf-name">${f.name}</div>
         ${caught?'<div class="pdf-dot"></div>':''}
       </div>`;
