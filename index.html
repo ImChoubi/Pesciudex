@@ -261,6 +261,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .custom-fam-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .custom-fam-chip{display:flex;align-items:center;gap:5px;background:rgba(26,175,160,.08);border:1px solid rgba(26,175,160,.2);border-radius:50px;padding:4px 10px;font-size:12px}
 .custom-fam-chip button{border:none;background:none;cursor:pointer;color:#B71C1C;font-size:13px;line-height:1;padding:0 2px}
+/* ══ FIND MY FISH ══ */
+.fmf-fab{position:fixed;bottom:86px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;transition:transform .15s;padding:0}
+.fmf-fab:hover{transform:scale(1.08) rotate(-8deg)}
+.fmf-fab svg{width:40px;height:40px}
+#fmf-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#fmf-overlay.open{display:flex}
+.fmf-modal{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;padding:22px 18px 38px;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.fmf-header{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.fmf-header svg{width:26px;height:26px;flex-shrink:0}
+.fmf-title{font-size:18px;font-weight:800;color:var(--sea)}
+.fmf-sub{font-size:12px;color:var(--txt2);margin-bottom:18px;padding-left:2px}
+.fmf-upload-zone{border:2px dashed rgba(11,37,64,.18);border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .18s;background:rgba(26,175,160,.03)}
+.fmf-upload-zone:hover{border-color:var(--acc);background:rgba(26,175,160,.08)}
+.fmf-upload-icon{font-size:40px;margin-bottom:8px}
+.fmf-upload-text{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.fmf-upload-sub{font-size:12px;color:var(--txt3)}
+.fmf-preview-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:12px;background:#f0f0f0}
+.fmf-preview-wrap img{width:100%;max-height:260px;object-fit:cover;display:block}
+.fmf-change-btn{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.58);color:#fff;border:none;border-radius:50px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer}
+.fmf-analyze-btn{width:100%;padding:14px;border-radius:50px;border:none;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;transition:opacity .15s}
+.fmf-analyze-btn:disabled{opacity:.45;cursor:not-allowed}
+.fmf-loading{text-align:center;padding:32px 20px}
+.fmf-loading .fmf-fish-spin{font-size:40px;display:inline-block;animation:ldJump 2.2s cubic-bezier(.4,0,.2,1) infinite}
+.fmf-loading p{font-size:13px;color:var(--txt2);margin-top:14px;line-height:1.6}
+.fmf-result-card{background:var(--bg-page);border-radius:14px;padding:16px 14px;margin-top:12px}
+.fmf-result-name{font-size:19px;font-weight:800;color:var(--sea);margin-bottom:2px}
+.fmf-result-latin{font-size:12px;color:var(--txt3);font-style:italic;margin-bottom:10px}
+.fmf-result-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.fmf-result-desc{font-size:13px;color:var(--txt2);line-height:1.65}
+.fmf-retry-btn{width:100%;padding:12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+.fmf-error-box{background:#FFF3E0;color:#BF360C;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
+.fmf-not-found{background:#FFFDE7;color:#E65100;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
+.fmf-key-row{margin-top:16px;padding-top:14px;border-top:1px solid rgba(11,37,64,.07)}
+.fmf-key-lbl{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.fmf-key-input{width:100%;font-size:12px;padding:9px 12px;border:1.5px solid rgba(11,37,64,.15);border-radius:8px;font-family:monospace;color:var(--txt);background:#fafafa;box-sizing:border-box}
+.fmf-key-input:focus{outline:none;border-color:var(--acc)}
+.fmf-key-hint{font-size:11px;color:var(--txt3);margin-top:5px;line-height:1.5}
 /* ══ LIGHTBOX ══ */
 #lightbox{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);animation:lbIn .18s ease}
 #lightbox.open{display:flex}
@@ -366,7 +403,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
   </main>
 </div>
 
+<button class="fmf-fab hidden" id="fmf-fab" onclick="openFMF()" title="Find My Fish">
+  <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="20" cy="20" r="18" fill="white" stroke="#1a1a2e" stroke-width="2.2"/>
+    <path d="M2.4,20 A17.6,17.6 0 0,1 37.6,20 Z" fill="#e53935"/>
+    <rect x="2.2" y="18.9" width="35.6" height="2.2" rx="1.1" fill="#1a1a2e"/>
+    <circle cx="20" cy="20" r="5.5" fill="#1a1a2e"/>
+    <circle cx="20" cy="20" r="3.4" fill="white"/>
+    <circle cx="20" cy="20" r="1.5" fill="#e8e8e8"/>
+  </svg>
+</button>
 <button class="add-fab hidden" id="add-fab" onclick="openModal()">+</button>
+
+<!-- FIND MY FISH MODAL -->
+<div id="fmf-overlay" onclick="fmfCloseOut(event)">
+  <div class="fmf-modal">
+    <div class="modal-handle"></div>
+    <div class="fmf-header">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="white" stroke="#1a1a2e" stroke-width="2.2"/>
+        <path d="M2.4,20 A17.6,17.6 0 0,1 37.6,20 Z" fill="#e53935"/>
+        <rect x="2.2" y="18.9" width="35.6" height="2.2" rx="1.1" fill="#1a1a2e"/>
+        <circle cx="20" cy="20" r="5.5" fill="#1a1a2e"/>
+        <circle cx="20" cy="20" r="3.4" fill="white"/>
+        <circle cx="20" cy="20" r="1.5" fill="#e8e8e8"/>
+      </svg>
+      <div class="fmf-title">Find My Fish</div>
+    </div>
+    <div class="fmf-sub">Photo ou galerie → l'IA identifie l'espèce automatiquement</div>
+    <div id="fmf-body"></div>
+    <div class="fmf-key-row">
+      <div class="fmf-key-lbl">🔑 Clé API Anthropic</div>
+      <input class="fmf-key-input" id="fmf-api-key" type="password" placeholder="sk-ant-api03-…" autocomplete="off">
+      <div class="fmf-key-hint">Obtenir une clé sur <strong>console.anthropic.com</strong> — stockée uniquement sur cet appareil, jamais transmise ailleurs.</div>
+    </div>
+  </div>
+</div>
 
 <!-- ADD MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOut(event)">
@@ -1008,6 +1080,7 @@ function getData(){
 function showProfileScreen(){
   document.getElementById('app').classList.add('hidden');
   document.getElementById('add-fab').classList.add('hidden');
+  document.getElementById('fmf-fab').classList.add('hidden');
   document.getElementById('ps').classList.remove('hidden');
   renderProfileScreen();
 }
@@ -1085,6 +1158,7 @@ function launchWithLoading(pid){
     ld.classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     document.getElementById('add-fab').classList.remove('hidden');
+    document.getElementById('fmf-fab').classList.remove('hidden');
     applyMode();applyZone();applyCountry();updateProfileChip();
     renderFilters();render();upStats();
   },1600);
@@ -1284,6 +1358,154 @@ function setThumb(id,url){
   if(img.src!==url)img.src=url;
 }
 function loadThumb(id,latin){wikiImg(latin).then(url=>setThumb(id,url));}
+
+// ══ FIND MY FISH ══
+let _fmfImg=null;
+
+function openFMF(){
+  const overlay=document.getElementById('fmf-overlay');
+  overlay.classList.add('open');
+  const saved=localStorage.getItem('fmf-key')||'';
+  document.getElementById('fmf-api-key').value=saved;
+  _fmfRenderUpload();
+}
+function closeFMF(){
+  document.getElementById('fmf-overlay').classList.remove('open');
+  _fmfImg=null;
+}
+function fmfCloseOut(e){if(e.target===document.getElementById('fmf-overlay'))closeFMF();}
+
+function _fmfRenderUpload(){
+  _fmfImg=null;
+  document.getElementById('fmf-body').innerHTML=`
+    <div class="fmf-upload-zone" onclick="document.getElementById('_fmf-inp').click()">
+      <div class="fmf-upload-icon">📸</div>
+      <div class="fmf-upload-text">Ajouter une photo</div>
+      <div class="fmf-upload-sub">Galerie · Caméra · Fichier PNG/JPG</div>
+    </div>
+    <input type="file" id="_fmf-inp" accept="image/*" style="display:none" onchange="_fmfCapture(this)">
+    <button class="fmf-analyze-btn" disabled>🔍 Identifier l'espèce</button>`;
+}
+
+function _fmfCapture(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    _fmfCompress(e.target.result,({base64,mediaType})=>{
+      _fmfImg={base64,mediaType};
+      document.getElementById('fmf-body').innerHTML=`
+        <div class="fmf-preview-wrap">
+          <img src="data:${mediaType};base64,${base64}" alt="Aperçu">
+          <button class="fmf-change-btn" onclick="_fmfRenderUpload()">↩ Changer</button>
+        </div>
+        <input type="file" id="_fmf-inp" accept="image/*" style="display:none" onchange="_fmfCapture(this)">
+        <button class="fmf-analyze-btn" onclick="_fmfAnalyze()">🔍 Identifier l'espèce</button>`;
+    });
+  };
+  r.readAsDataURL(f);
+}
+
+function _fmfCompress(dataUrl,cb){
+  const img=new Image();
+  img.onload=()=>{
+    const MAX=1024;
+    let w=img.width,h=img.height;
+    if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    const out=c.toDataURL('image/jpeg',0.82);
+    cb({base64:out.split(',')[1],mediaType:'image/jpeg'});
+  };
+  img.onerror=()=>cb({base64:dataUrl.split(',')[1]||'',mediaType:'image/jpeg'});
+  img.src=dataUrl;
+}
+
+async function _fmfAnalyze(){
+  const key=(document.getElementById('fmf-api-key').value||'').trim();
+  if(key)localStorage.setItem('fmf-key',key);
+  if(!key){
+    const inp=document.getElementById('fmf-api-key');
+    inp.style.borderColor='#e53935';inp.focus();
+    inp.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(!_fmfImg)return;
+
+  document.getElementById('fmf-body').innerHTML=`
+    <div class="fmf-loading">
+      <div class="fmf-fish-spin">🐟</div>
+      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">L'IA identifie l'espèce</span></p>
+    </div>`;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:700,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'image',source:{type:'base64',media_type:_fmfImg.mediaType,data:_fmfImg.base64}},
+            {type:'text',text:'Identifie l\'espèce dans cette photo (poisson, crustacé, mollusque ou autre animal marin/aquatique). Réponds UNIQUEMENT en JSON valide sans markdown, exactement:\n{"found":true,"name":"Nom français","latin":"Nom latin complet","family":"Famille taxonomique","zone":"med|atl|edf|all","size_range":"ex: 30–80 cm","description":"2 phrases sur habitat et caractéristiques distinctives","confidence":"high|medium|low"}\nSi pas d\'animal aquatique reconnaissable: {"found":false,"message":"explication en français"}'}
+          ]
+        }]
+      })
+    });
+
+    if(!res.ok){
+      const err=await res.json().catch(()=>null);
+      const msg=err?.error?.message||`Erreur HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+
+    const data=await res.json();
+    const raw=(data.content[0]?.text||'{}').replace(/```json|```/g,'').trim();
+    let result;
+    try{result=JSON.parse(raw);}
+    catch(_){throw new Error('Réponse inattendue de l\'IA. Réessaie.');}
+    _fmfShowResult(result);
+
+  }catch(err){
+    document.getElementById('fmf-body').innerHTML=`
+      <div class="fmf-error-box">❌ ${err.message||'Erreur lors de l\'analyse. Vérifie ta clé API et ta connexion.'}</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Recommencer</button>`;
+  }
+}
+
+function _fmfShowResult(r){
+  if(!r||!r.found){
+    document.getElementById('fmf-body').innerHTML=`
+      <div class="fmf-not-found">🤔 ${r?.message||'Aucun animal aquatique reconnu dans cette image.'}</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
+    return;
+  }
+  const zoneMap={med:'🌊 Méditerranée',atl:'🌊 Atlantique',edf:'🏞 Eau douce',all:'🌍 Toutes zones'};
+  const confMap={high:'✅ Élevée',medium:'🟡 Moyenne',low:'🟠 Faible'};
+  const zl=zoneMap[r.zone]||r.zone||'';
+  const cl=confMap[r.confidence]||'';
+  document.getElementById('fmf-body').innerHTML=`
+    <div class="fmf-result-card">
+      <div class="fmf-result-name">${r.name||'Espèce inconnue'}</div>
+      <div class="fmf-result-latin">${r.latin||''}</div>
+      <div class="fmf-result-tags">
+        ${zl?`<span class="tag tm">${zl}</span>`:''}
+        ${r.size_range?`<span class="tag ts">📏 ${r.size_range}</span>`:''}
+        ${r.family?`<span class="tag t-dd">📂 ${r.family}</span>`:''}
+        ${cl?`<span class="tag t-lc" style="font-size:10px">Confiance : ${cl}</span>`:''}
+      </div>
+      ${r.description?`<div class="fmf-result-desc">${r.description}</div>`:''}
+    </div>
+    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">📸 Nouvelle photo</button>`;
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('fmf-overlay').classList.contains('open'))closeFMF();});
 
 // ══ CARD RENDER ══
 function rc(id){
