@@ -1092,9 +1092,40 @@ function launchWithLoading(pid){
 function renderManage(){
   const inner=document.getElementById('ps-inner');
   let h='<div class="ps-cards" style="margin-bottom:14px">';
-  PROFILES.forEach(p=>{const av=p.photo?`<img src="${p.photo}">`:`<span>${p.name[0]?.toUpperCase()||'🎣'}</span>`;h+=`<div class="pc" style="position:relative"><div class="pc-av" style="border-color:rgba(180,0,0,.4)">${av}</div><div onclick="delProfile('${p.id}')" style="position:absolute;top:0;right:0;width:22px;height:22px;background:#c0392b;border-radius:50%;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #060e1f;line-height:1;z-index:10">×</div><div class="pc-name">${p.name}</div></div>`;});
+  PROFILES.forEach(p=>{
+    const av=p.photo?`<img src="${p.photo}">`:`<span>${p.name[0]?.toUpperCase()||'🎣'}</span>`;
+    h+=`<div class="pc" style="position:relative">
+      <div class="pc-av" onclick="editProfilePhoto('${p.id}')" style="cursor:pointer;border-color:rgba(255,255,255,.3);position:relative;overflow:hidden">
+        ${av}
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s" class="pc-av-cam-ov">📷</div>
+      </div>
+      <div onclick="delProfile('${p.id}')" style="position:absolute;top:0;right:0;width:22px;height:22px;background:#c0392b;border-radius:50%;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #060e1f;line-height:1;z-index:10">×</div>
+      <div class="pc-name">${p.name}</div>
+    </div>`;
+  });
   h+='</div>';inner.innerHTML=h;
+  // Afficher l'overlay 📷 au hover
+  inner.querySelectorAll('.pc-av').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{const ov=el.querySelector('.pc-av-cam-ov');if(ov)ov.style.opacity='1';});
+    el.addEventListener('mouseleave',()=>{const ov=el.querySelector('.pc-av-cam-ov');if(ov)ov.style.opacity='0';});
+  });
   const b=document.createElement('div');b.className='ps-back';b.textContent='← Retour';b.onclick=renderProfileScreen;inner.appendChild(b);
+}
+function editProfilePhoto(pid){
+  const inp=document.createElement('input');
+  inp.type='file';inp.accept='image/*';
+  inp.onchange=function(){
+    const f=this.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=e=>{
+      compressPhoto(e.target.result,compressed=>{
+        const p=PROFILES.find(p=>p.id===pid);
+        if(p){p.photo=compressed;saveProfiles();renderManage();}
+      });
+    };
+    r.readAsDataURL(f);
+  };
+  inp.click();
 }
 function delProfile(pid){if(!confirm('Supprimer ce profil ?'))return;PROFILES=PROFILES.filter(p=>p.id!==pid);saveProfiles();renderProfileScreen();}
 function updateProfileChip(){
