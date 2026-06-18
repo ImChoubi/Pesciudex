@@ -2812,7 +2812,7 @@ async function _fetchWeather(){
   try{
     let marine=null;
     if(!isEdf){
-      const mr=await fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${_wSpot.lat}&longitude=${_wSpot.lon}&daily=wave_height_max,wind_wave_height_max,swell_wave_height_max&timezone=Europe%2FParis&forecast_days=7`);
+      const mr=await fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${_wSpot.lat}&longitude=${_wSpot.lon}&daily=wave_height_max,wind_wave_height_max,swell_wave_height_max,sea_surface_temperature_mean&timezone=Europe%2FParis&forecast_days=7`);
       if(mr.ok)marine=await mr.json();
     }
     const wr=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${_wSpot.lat}&longitude=${_wSpot.lon}&daily=weather_code,wind_speed_10m_max,wind_direction_10m_dominant,temperature_2m_max&timezone=Europe%2FParis&forecast_days=7`);
@@ -2841,6 +2841,7 @@ function _renderWCards(weather,marine,isAtl,isEdf){
     const waveH=marine?.daily?.wave_height_max?.[i];
     const windH=marine?.daily?.wind_wave_height_max?.[i];
     const swellH=marine?.daily?.swell_wave_height_max?.[i];
+    const seaT=marine?.daily?.sea_surface_temperature_mean?.[i];
     const coeff=isAtl?_tidalCoeff(dateStr):null;
     const tideH=isAtl?((coeff/120)*5+2).toFixed(1):null;
     const moon=isAtl?_moonEmoji(_lunarPhase(dateStr)):'';
@@ -2850,6 +2851,7 @@ function _renderWCards(weather,marine,isAtl,isEdf){
       <div class="wcard-body">
         <div class="wstat"><div class="wstat-icon">💨</div><div class="wstat-val">${wind} km/h</div><div class="wstat-lbl">${wdir}</div></div>
         <div class="wstat"><div class="wstat-icon">🌡️</div><div class="wstat-val">${temp}°C</div><div class="wstat-lbl">${fr?'Temp.':'Temp.'}</div></div>
+        ${!isEdf&&seaT!=null?`<div class="wstat" style="background:rgba(26,175,160,.12)"><div class="wstat-icon">🌡️</div><div class="wstat-val" style="color:var(--teal3)">${seaT.toFixed(1)}°C</div><div class="wstat-lbl">${fr?'T° mer':'Sea temp'}</div></div>`:''}
         ${!isEdf&&waveH!=null?`<div class="wstat"><div class="wstat-icon">🌊</div><div class="wstat-val">${waveH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Hauteur':'Height'}</div></div>`:''}
         ${!isAtl&&!isEdf&&windH!=null?`<div class="wstat"><div class="wstat-icon">🌬️</div><div class="wstat-val">${windH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Mer vent':'Wind sea'}</div></div>`:''}
         ${!isAtl&&!isEdf&&swellH!=null?`<div class="wstat"><div class="wstat-icon">🏄</div><div class="wstat-val">${swellH.toFixed(1)} m</div><div class="wstat-lbl">${fr?'Houle':'Swell'}</div></div>`:''}
