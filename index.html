@@ -137,9 +137,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),#8de8c8);border-radius:3px;transition:width .5s;width:0%}
 .wave{display:block;width:calc(100% + 40px);margin-left:-20px;margin-top:17px}
 
-/* ══ FILTERS ══ */
+/* ══ FILTERS + SEARCH ══ */
 .fbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(11,37,64,.08);box-shadow:0 2px 12px rgba(11,37,64,.06)}
-.fi{max-width:680px;margin:0 auto;padding:8px 12px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.fsearch-wrap{max-width:900px;margin:0 auto;padding:8px 14px 4px;display:flex;align-items:center;gap:8px}
+.fsearch{flex:1;font-size:13px;padding:7px 14px 7px 36px;border:1.5px solid rgba(11,37,64,.12);border-radius:50px;outline:none;background:#f8f8f8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7e95' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center;background-size:14px;color:var(--txt);transition:border-color .15s;width:100%}
+.fsearch:focus{border-color:var(--acc);background-color:#fff}
+.fsearch-clear{display:none;background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3);padding:0 4px;line-height:1}
+.fi{max-width:900px;margin:0 auto;padding:4px 14px 8px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;align-items:center}
 .fi::-webkit-scrollbar{display:none}
 .fsep{width:1px;height:20px;background:rgba(11,37,64,.12);margin:0 2px;flex-shrink:0}
 .fbtn{font-size:11px;font-weight:500;padding:5px 11px;border-radius:50px;border:1.5px solid rgba(11,37,64,.12);background:#fff;color:var(--txt2);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
@@ -148,7 +152,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .fbtn.fam.on{background:var(--acc2);border-color:var(--acc2)}
 
 /* ══ MAIN ══ */
-.main{max-width:680px;margin:0 auto;padding:12px 12px 100px}
+.main{max-width:900px;margin:0 auto;padding:12px 16px 100px}
 .cbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .clbl{font-size:13px;font-weight:600;color:var(--txt2)}
 .chint{font-size:11px;color:var(--txt3)}
@@ -304,6 +308,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .fmf-key-input{width:100%;font-size:12px;padding:9px 12px;border:1.5px solid rgba(11,37,64,.15);border-radius:8px;font-family:monospace;color:var(--txt);background:#fafafa;box-sizing:border-box}
 .fmf-key-input:focus{outline:none;border-color:var(--acc)}
 .fmf-key-hint{font-size:11px;color:var(--txt3);margin-top:5px;line-height:1.5}
+/* ══ PDF EXPORT ══ */
+.pdf-export-btn{margin-top:10px;font-size:11px;font-weight:600;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:5px 14px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.pdf-export-btn:hover{background:rgba(255,255,255,.2);color:#fff}
+#pdf-overlay{position:fixed;inset:0;z-index:700;background:#e5e8ed;overflow-y:auto;display:none;padding:0 0 40px}
+#pdf-overlay.open{display:block}
+.pdf-topbar{position:sticky;top:0;z-index:1;background:#fff;border-bottom:1px solid #e0e0e0;padding:10px 20px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.pdf-topbar-title{flex:1;font-size:15px;font-weight:800;color:var(--sea)}
+.pdf-print-btn{padding:8px 22px;border-radius:50px;border:none;background:var(--acc);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.pdf-close-btn{padding:8px 16px;border-radius:50px;border:1.5px solid rgba(11,37,64,.18);background:#fff;color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer}
+.pdf-page{max-width:900px;margin:24px auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);padding:32px 28px}
+.pdf-doc-title{font-size:26px;font-weight:900;color:var(--sea);margin-bottom:3px}
+.pdf-doc-sub{font-size:12px;color:var(--txt3);margin-bottom:8px}
+.pdf-legend{display:flex;gap:18px;margin-bottom:24px;flex-wrap:wrap}
+.pdf-legend span{font-size:11px;color:var(--txt2);display:flex;align-items:center;gap:5px}
+.pdf-section{margin-bottom:28px}
+.pdf-section-title{font-size:13px;font-weight:800;color:#fff;padding:8px 14px;background:var(--sea);border-radius:8px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.pdf-section-count{font-size:11px;font-weight:500;opacity:.75}
+.pdf-subsec-lbl{font-size:10px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em;margin:8px 0 6px;padding-left:2px}
+.pdf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-bottom:4px}
+.pdf-card{text-align:center;padding:7px 4px;border-radius:8px;border:1px solid #f0f0f0;transition:all .15s}
+.pdf-card.caught{border-color:rgba(26,175,160,.4);background:rgba(26,175,160,.04)}
+.pdf-thumb{width:50px;height:38px;border-radius:6px;overflow:hidden;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-size:20px;transition:filter .15s}
+.pdf-thumb img{width:100%;height:100%;object-fit:cover}
+.pdf-card:not(.caught) .pdf-thumb{filter:grayscale(1) brightness(0);opacity:.14}
+.pdf-name{font-size:9px;font-weight:600;color:var(--txt);line-height:1.3;word-break:break-word}
+.pdf-card:not(.caught) .pdf-name{color:#ccc}
+.pdf-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);margin:3px auto 0}
+@media print{
+  body>*:not(#pdf-overlay){display:none!important}
+  #pdf-overlay{position:static!important;padding:0!important;background:white!important;display:block!important}
+  .pdf-topbar{display:none!important}
+  .pdf-page{box-shadow:none!important;border-radius:0!important;padding:12px!important;margin:0!important;max-width:100%!important}
+  .pdf-grid{grid-template-columns:repeat(8,1fr)!important}
+}
 /* ══ LIGHTBOX ══ */
 #lightbox{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);animation:lbIn .18s ease}
 #lightbox.open{display:flex}
@@ -384,13 +422,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <div class="prog-hdr"><span>Tableau de chasse</span><strong id="pl">0 / 0</strong></div>
         <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
       </div>
+      <div style="text-align:right">
+        <button class="pdf-export-btn" onclick="exportPDF()">📄 Exporter PDF</button>
+      </div>
     </div>
     <svg class="wave" viewBox="0 0 1440 36" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <path id="wave-path" d="M0,18 C240,36 480,0 720,18 C960,36 1200,0 1440,18 L1440,36 L0,36 Z" fill="#F5F0E8"/>
     </svg>
   </div>
 
-  <nav class="fbar"><div class="fi" id="filters"></div></nav>
+  <nav class="fbar">
+    <div class="fsearch-wrap">
+      <input type="search" id="fsearch" class="fsearch" placeholder="Rechercher une espèce…" oninput="onSearch(this.value)" autocomplete="off">
+      <button class="fsearch-clear" id="fsearch-clear" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="fi" id="filters"></div>
+  </nav>
 
   <main class="main">
     <div class="cbar"><span class="clbl" id="clbl"></span><span class="chint">Cliquer pour cocher ✓</span></div>
@@ -458,6 +505,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       </div>
     </div>
   </div>
+</div>
+
+<!-- PDF EXPORT OVERLAY -->
+<div id="pdf-overlay">
+  <div class="pdf-topbar">
+    <div class="pdf-topbar-title">📒 Export Pokédex</div>
+    <button class="pdf-print-btn" onclick="window.print()">🖨 Imprimer / PDF</button>
+    <button class="pdf-close-btn" onclick="closePDF()">✕ Fermer</button>
+  </div>
+  <div class="pdf-page" id="pdf-content"></div>
 </div>
 
 <!-- ADD MODAL -->
@@ -1003,7 +1060,7 @@ const CQIMGS={
 let PROFILES=[], ACTIVE_PID=null;
 let ST={}, CQ_ST={}, CUSTOM=[], CQ_CUSTOM=[];
 let CUSTOM_FAMS=[], CQ_CUSTOM_FAMS=[];
-let ZONE='med', MODE='pesc', COUNTRY='fr', FILTER='all', selectedIUCN='LC';
+let ZONE='med', MODE='pesc', COUNTRY='fr', FILTER='all', SEARCH='', selectedIUCN='LC';
 
 // State key = zone + country + species id → catches are independent per context
 function stKey(id){return ZONE+':'+COUNTRY+':'+id;}
@@ -1194,7 +1251,10 @@ function renderManage(){
         <div style="position:absolute;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s" class="pc-av-cam-ov">📷</div>
       </div>
       <div onclick="delProfile('${p.id}')" style="position:absolute;top:0;right:0;width:22px;height:22px;background:#c0392b;border-radius:50%;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid #060e1f;line-height:1;z-index:10">×</div>
-      <div class="pc-name">${p.name}</div>
+      <div class="pc-name" style="display:flex;align-items:center;gap:4px;justify-content:center">
+        <span id="pname-${p.id}">${p.name}</span>
+        <button onclick="event.stopPropagation();editProfileName('${p.id}')" style="background:none;border:none;cursor:pointer;font-size:11px;color:rgba(255,255,255,.45);padding:0 2px;line-height:1" title="Renommer">✏</button>
+      </div>
     </div>`;
   });
   h+='</div>';inner.innerHTML=h;
@@ -1220,6 +1280,22 @@ function editProfilePhoto(pid){
     r.readAsDataURL(f);
   };
   inp.click();
+}
+function editProfileName(pid){
+  const p=PROFILES.find(p=>p.id===pid);if(!p)return;
+  const span=document.getElementById('pname-'+pid);if(!span)return;
+  const inp=document.createElement('input');
+  inp.value=p.name;
+  inp.style.cssText='font-size:11px;width:80px;border:1px solid rgba(26,175,160,.8);border-radius:6px;padding:3px 6px;text-align:center;color:#fff;background:rgba(255,255,255,.15);outline:none;font-family:inherit';
+  span.replaceWith(inp);
+  inp.focus();inp.select();
+  function save(){
+    const n=inp.value.trim();
+    if(n&&n!==p.name){p.name=n;saveProfiles();}
+    renderManage();
+  }
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();save();}if(e.key==='Escape')renderManage();});
 }
 function delProfile(pid){if(!confirm('Supprimer ce profil ?'))return;PROFILES=PROFILES.filter(p=>p.id!==pid);saveProfiles();renderProfileScreen();}
 function updateProfileChip(){
@@ -1308,6 +1384,9 @@ document.getElementById('filters').addEventListener('click',e=>{const b=e.target
 
 function getFilt(){
   const ast=getActiveST();
+  if(SEARCH){
+    return getData().filter(f=>f.name.toLowerCase().includes(SEARCH)||(f.latin||'').toLowerCase().includes(SEARCH));
+  }
   return getData().filter(f=>{
     if(FILTER==='caught')return ast[stKey(f.id)]?.caught;
     if(FILTER==='todo')return !ast[stKey(f.id)]?.caught;
@@ -1316,6 +1395,18 @@ function getFilt(){
     if(['lc','nt','vu','en','dd'].includes(FILTER))return f.i?.toLowerCase()===FILTER;
     return true;
   });
+}
+function onSearch(v){
+  SEARCH=v.toLowerCase().trim();
+  const clr=document.getElementById('fsearch-clear');
+  if(clr)clr.style.display=SEARCH?'block':'none';
+  render();
+}
+function clearSearch(){
+  SEARCH='';
+  const inp=document.getElementById('fsearch');if(inp)inp.value='';
+  const clr=document.getElementById('fsearch-clear');if(clr)clr.style.display='none';
+  render();
 }
 
 // ══ ACTIONS ══
@@ -1378,6 +1469,86 @@ function setThumb(id,url){
   if(img.src!==url)img.src=url;
 }
 function loadThumb(id,latin){wikiImg(latin).then(url=>setThumb(id,url));}
+
+// ══ PDF EXPORT ══
+function _getDataCtx(zone,country,mode){
+  const sz=ZONE,sc=COUNTRY,sm=MODE;
+  ZONE=zone;COUNTRY=country;MODE=mode;
+  const d=getData();
+  ZONE=sz;COUNTRY=sc;MODE=sm;
+  return d;
+}
+
+function exportPDF(){
+  const prof=PROFILES.find(p=>p.id===ACTIVE_PID);
+  const profName=prof?.name||'Mon carnet';
+  const content=document.getElementById('pdf-content');
+
+  const sections=[
+    {zone:'med',country:'fr',label:'🌊 Méditerranée · 🇫🇷 France'},
+    {zone:'med',country:'es',label:'🌊 Méditerranée · 🇪🇸 Espagne'},
+    {zone:'atl',country:'fr',label:'🌊 Atlantique · 🇫🇷 France'},
+    {zone:'atl',country:'es',label:'🌊 Atlantique · 🇪🇸 Espagne'},
+    {zone:'edf',country:'fr',label:'🏞 Eau douce'},
+  ];
+
+  function thumbHtml(f,isCoq){
+    const imgUrl=(isCoq?CQIMGS:IMGS)[f.id]||WIKI_CACHE[(f.latin||'').trim().split(/\s+/).slice(0,2).join('_')]||'';
+    return imgUrl?`<img src="${imgUrl}" referrerpolicy="no-referrer">`:`<span>${f.e}</span>`;
+  }
+  function gridHtml(species,stateMap,zk){
+    const sorted=[...species].sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
+    return sorted.map(f=>{
+      const caught=!!stateMap[zk+':'+f.id]?.caught;
+      const isCoq=!IMGS[f.id]&&!!CQIMGS[f.id];
+      return `<div class="pdf-card${caught?' caught':''}">
+        <div class="pdf-thumb">${thumbHtml(f,isCoq)}</div>
+        <div class="pdf-name">${f.name}</div>
+        ${caught?'<div class="pdf-dot"></div>':''}
+      </div>`;
+    }).join('');
+  }
+
+  let html='';
+  sections.forEach(sec=>{
+    const zk=sec.zone+':'+sec.country;
+    const pescSp=_getDataCtx(sec.zone,sec.country,'pesc');
+    const coqSp=_getDataCtx(sec.zone,sec.country,'coq');
+    if(!pescSp.length&&!coqSp.length)return;
+    const pescCaught=pescSp.filter(f=>ST[zk+':'+f.id]?.caught).length;
+    const coqCaught=coqSp.filter(f=>CQ_ST[zk+':'+f.id]?.caught).length;
+    const total=pescSp.length+coqSp.length;
+    const caught=pescCaught+coqCaught;
+    html+=`<div class="pdf-section">
+      <div class="pdf-section-title">${sec.label}<span class="pdf-section-count">✓ ${caught} / ${total}</span></div>`;
+    if(pescSp.length){
+      html+=`<div class="pdf-subsec-lbl">🐟 Pesciudex</div><div class="pdf-grid">${gridHtml(pescSp,ST,zk)}</div>`;
+    }
+    if(coqSp.length){
+      html+=`<div class="pdf-subsec-lbl">🐚 Coquidex</div><div class="pdf-grid">${gridHtml(coqSp,CQ_ST,zk)}</div>`;
+    }
+    html+='</div>';
+  });
+
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  content.innerHTML=`
+    <div class="pdf-doc-title">📒 ${profName}</div>
+    <div class="pdf-doc-sub">Pesciudex & Coquidex · ${dateStr}</div>
+    <div class="pdf-legend">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--acc);margin-right:3px"></span>Espèce pêchée</span>
+      <span style="opacity:.45"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ccc;margin-right:3px"></span>Non pêchée (silhouette)</span>
+    </div>
+    ${html}`;
+
+  document.getElementById('pdf-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closePDF(){
+  document.getElementById('pdf-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 // ══ FIND MY FISH ══
 let _fmfImg=null;
@@ -1644,9 +1815,13 @@ function render(){
   document.getElementById('clbl').textContent=list.length+' espèce'+(list.length>1?'s':'');
   grid.innerHTML='';
   if(!list.length){grid.innerHTML='<div class="empty"><span class="ei">🌊</span><h3>Aucune espèce ici</h3><p>Essaie un autre filtre !</p></div>';return;}
-  if(FILTER==='all'){
+  if(FILTER==='all'&&!SEARCH){
     const byF={};list.forEach(f=>{if(!byF[f.fam])byF[f.fam]=[];byF[f.fam].push(f);});
-    Object.entries(byF).forEach(([fk,fs])=>{
+    const sortedFams=Object.entries(byF).sort(([ak],[bk])=>{
+      return (fams[ak]?.label||ak).localeCompare(fams[bk]?.label||bk,'fr',{sensitivity:'base'});
+    });
+    sortedFams.forEach(([fk,fs])=>{
+      fs.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
       const fc=fams[fk]||{label:fk,icon:'🎯'};
       const cc=fs.filter(f=>ast[stKey(f.id)]?.caught).length;
       const h=document.createElement('div');h.className='fam-hdr';
@@ -1655,6 +1830,7 @@ function render(){
       fs.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
     });
   } else {
+    list.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));
     list.forEach(f=>{const d=document.createElement('div');d.id='c-'+f.id;grid.appendChild(d);rc(f.id);});
   }
 }
