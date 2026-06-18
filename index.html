@@ -293,8 +293,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .fmf-retry-btn{width:100%;padding:12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
 .fmf-error-box{background:#FFF3E0;color:#BF360C;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
 .fmf-not-found{background:#FFFDE7;color:#E65100;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
-.fmf-key-row{margin-top:16px;padding-top:14px;border-top:1px solid rgba(11,37,64,.07)}
-.fmf-key-lbl{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.fmf-prov-row{margin-top:16px;padding-top:14px;border-top:1px solid rgba(11,37,64,.07)}
+.fmf-prov-lbl{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.fmf-prov-pills{display:flex;gap:8px;margin-bottom:14px}
+.fmf-prov-btn{flex:1;padding:9px 6px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.fmf-prov-btn.sel{border-color:var(--acc);background:rgba(26,175,160,.08);color:var(--sea)}
+.fmf-key-block{display:none}
+.fmf-key-block.show{display:block}
+.fmf-key-lbl{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
 .fmf-key-input{width:100%;font-size:12px;padding:9px 12px;border:1.5px solid rgba(11,37,64,.15);border-radius:8px;font-family:monospace;color:var(--txt);background:#fafafa;box-sizing:border-box}
 .fmf-key-input:focus{outline:none;border-color:var(--acc)}
 .fmf-key-hint{font-size:11px;color:var(--txt3);margin-top:5px;line-height:1.5}
@@ -432,10 +438,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     </div>
     <div class="fmf-sub">Photo ou galerie → l'IA identifie l'espèce automatiquement</div>
     <div id="fmf-body"></div>
-    <div class="fmf-key-row">
-      <div class="fmf-key-lbl">🔑 Clé API Anthropic</div>
-      <input class="fmf-key-input" id="fmf-api-key" type="password" placeholder="sk-ant-api03-…" autocomplete="off">
-      <div class="fmf-key-hint">Obtenir une clé sur <strong>console.anthropic.com</strong> — stockée uniquement sur cet appareil, jamais transmise ailleurs.</div>
+    <div class="fmf-prov-row">
+      <div class="fmf-prov-lbl">Moteur d'identification</div>
+      <div class="fmf-prov-pills">
+        <button class="fmf-prov-btn" id="fmf-btn-inat" data-p="inat" onclick="_fmfSetProvider('inat')">🆓 iNaturalist</button>
+        <button class="fmf-prov-btn" id="fmf-btn-claude" data-p="claude" onclick="_fmfSetProvider('claude')">🤖 Claude AI</button>
+      </div>
+      <!-- iNaturalist token -->
+      <div class="fmf-key-block" id="fmf-block-inat">
+        <div class="fmf-key-lbl">🔑 Token iNaturalist</div>
+        <input class="fmf-key-input" id="fmf-inat-token" type="password" placeholder="eyJ0eXAiOiJKV1Qi…" autocomplete="off">
+        <div class="fmf-key-hint">Compte <strong>gratuit</strong> sur inaturalist.org → Compte → <strong>inaturalist.org/users/api_token</strong> — stocké uniquement sur cet appareil.</div>
+      </div>
+      <!-- Claude API key -->
+      <div class="fmf-key-block" id="fmf-block-claude">
+        <div class="fmf-key-lbl">🔑 Clé API Anthropic</div>
+        <input class="fmf-key-input" id="fmf-api-key" type="password" placeholder="sk-ant-api03-…" autocomplete="off">
+        <div class="fmf-key-hint">Obtenir une clé sur <strong>console.anthropic.com</strong> (min $5) — résultats en français, plus précis. Stockée uniquement sur cet appareil.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1361,13 +1381,22 @@ function loadThumb(id,latin){wikiImg(latin).then(url=>setThumb(id,url));}
 
 // ══ FIND MY FISH ══
 let _fmfImg=null;
+let _fmfProvider=localStorage.getItem('fmf-provider')||'inat';
 
 function openFMF(){
-  const overlay=document.getElementById('fmf-overlay');
-  overlay.classList.add('open');
-  const saved=localStorage.getItem('fmf-key')||'';
-  document.getElementById('fmf-api-key').value=saved;
+  document.getElementById('fmf-overlay').classList.add('open');
+  document.getElementById('fmf-api-key').value=localStorage.getItem('fmf-key')||'';
+  document.getElementById('fmf-inat-token').value=localStorage.getItem('fmf-inat-token')||'';
+  _fmfSetProvider(_fmfProvider,false);
   _fmfRenderUpload();
+}
+
+function _fmfSetProvider(p,save=true){
+  _fmfProvider=p;
+  if(save)localStorage.setItem('fmf-provider',p);
+  document.querySelectorAll('.fmf-prov-btn').forEach(b=>b.classList.toggle('sel',b.dataset.p===p));
+  document.getElementById('fmf-block-inat').classList.toggle('show',p==='inat');
+  document.getElementById('fmf-block-claude').classList.toggle('show',p==='claude');
 }
 function closeFMF(){
   document.getElementById('fmf-overlay').classList.remove('open');
@@ -1420,7 +1449,12 @@ function _fmfCompress(dataUrl,cb){
   img.src=dataUrl;
 }
 
-async function _fmfAnalyze(){
+function _fmfAnalyze(){
+  if(_fmfProvider==='inat')return _fmfAnalyzeINat();
+  return _fmfAnalyzeClaude();
+}
+
+async function _fmfAnalyzeClaude(){
   const key=(document.getElementById('fmf-api-key').value||'').trim();
   if(key)localStorage.setItem('fmf-key',key);
   if(!key){
@@ -1434,7 +1468,7 @@ async function _fmfAnalyze(){
   document.getElementById('fmf-body').innerHTML=`
     <div class="fmf-loading">
       <div class="fmf-fish-spin">🐟</div>
-      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">L'IA identifie l'espèce</span></p>
+      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">Claude AI identifie l'espèce</span></p>
     </div>`;
 
   try{
@@ -1461,8 +1495,7 @@ async function _fmfAnalyze(){
 
     if(!res.ok){
       const err=await res.json().catch(()=>null);
-      const msg=err?.error?.message||`Erreur HTTP ${res.status}`;
-      throw new Error(msg);
+      throw new Error(err?.error?.message||`Erreur HTTP ${res.status}`);
     }
 
     const data=await res.json();
@@ -1477,6 +1510,83 @@ async function _fmfAnalyze(){
       <div class="fmf-error-box">❌ ${err.message||'Erreur lors de l\'analyse. Vérifie ta clé API et ta connexion.'}</div>
       <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Recommencer</button>`;
   }
+}
+
+async function _fmfAnalyzeINat(){
+  const token=(document.getElementById('fmf-inat-token').value||'').trim();
+  if(token)localStorage.setItem('fmf-inat-token',token);
+  if(!token){
+    const inp=document.getElementById('fmf-inat-token');
+    inp.style.borderColor='#e53935';inp.focus();
+    inp.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(!_fmfImg)return;
+
+  document.getElementById('fmf-body').innerHTML=`
+    <div class="fmf-loading">
+      <div class="fmf-fish-spin">🐟</div>
+      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">iNaturalist identifie l'espèce</span></p>
+    </div>`;
+
+  try{
+    // base64 → Blob
+    const bytes=atob(_fmfImg.base64);
+    const arr=new Uint8Array(bytes.length);
+    for(let i=0;i<bytes.length;i++)arr[i]=bytes.charCodeAt(i);
+    const blob=new Blob([arr],{type:_fmfImg.mediaType});
+    const fd=new FormData();
+    fd.append('image',blob,'fish.jpg');
+
+    const res=await fetch('https://api.inaturalist.org/v1/computervision/score_image',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token},
+      body:fd
+    });
+
+    if(!res.ok){
+      const err=await res.json().catch(()=>null);
+      throw new Error(err?.error||`Erreur HTTP ${res.status}`);
+    }
+
+    const data=await res.json();
+    _fmfShowINatResult(data.results||[]);
+
+  }catch(err){
+    document.getElementById('fmf-body').innerHTML=`
+      <div class="fmf-error-box">❌ ${err.message||'Erreur iNaturalist. Vérifie ton token et ta connexion.'}</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Recommencer</button>`;
+  }
+}
+
+function _fmfShowINatResult(results){
+  if(!results.length){
+    document.getElementById('fmf-body').innerHTML=`
+      <div class="fmf-not-found">🤔 Aucune espèce reconnue dans cette image.</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
+    return;
+  }
+  const top=results[0];
+  const tx=top.taxon;
+  const score=Math.round((top.score||0)*100);
+  const name=tx.preferred_common_name||tx.name;
+  const latin=tx.name;
+  let family='';
+  if(Array.isArray(tx.ancestors)){const fa=tx.ancestors.find(a=>a.rank==='family');if(fa)family=fa.name;}
+  const conf=score>=70?'high':score>=40?'medium':'low';
+  const confMap={high:'✅ Élevée',medium:'🟡 Moyenne',low:'🟠 Faible'};
+  const alts=results.slice(1,4).map(r=>r.taxon.name).filter(Boolean).join(', ');
+  document.getElementById('fmf-body').innerHTML=`
+    <div class="fmf-result-card">
+      <div class="fmf-result-name">${name}</div>
+      <div class="fmf-result-latin">${latin}</div>
+      <div class="fmf-result-tags">
+        ${family?`<span class="tag t-dd">📂 ${family}</span>`:''}
+        <span class="tag t-lc" style="font-size:10px">Confiance : ${confMap[conf]} (${score}%)</span>
+      </div>
+      ${alts?`<div class="fmf-result-desc" style="font-size:12px;color:var(--txt3)">Autres possibilités : ${alts}</div>`:''}
+    </div>
+    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">📸 Nouvelle photo</button>`;
 }
 
 function _fmfShowResult(r){
