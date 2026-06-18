@@ -261,6 +261,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .custom-fam-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .custom-fam-chip{display:flex;align-items:center;gap:5px;background:rgba(26,175,160,.08);border:1px solid rgba(26,175,160,.2);border-radius:50px;padding:4px 10px;font-size:12px}
 .custom-fam-chip button{border:none;background:none;cursor:pointer;color:#B71C1C;font-size:13px;line-height:1;padding:0 2px}
+/* ══ LIGHTBOX ══ */
+#lightbox{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px);animation:lbIn .18s ease}
+#lightbox.open{display:flex}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+.lb-img{max-width:92vw;max-height:78vh;border-radius:16px;object-fit:contain;box-shadow:0 12px 60px rgba(0,0,0,.7);animation:lbImgIn .22s cubic-bezier(.4,0,.2,1)}
+@keyframes lbImgIn{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.lb-close{position:fixed;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:601;transition:background .15s;line-height:1}
+.lb-close:hover{background:rgba(255,255,255,.35)}
+.lb-name{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.55);padding:6px 18px;border-radius:50px;backdrop-filter:blur(8px);white-space:nowrap;max-width:85vw;overflow:hidden;text-overflow:ellipsis}
+.fthumb{cursor:zoom-in}
 </style>
 </head>
 <body>
@@ -416,6 +426,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
+  <img class="lb-img" id="lb-img" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-name" id="lb-name"></div>
+</div>
+
 <script>
 // ══ SVG BRAND ICONS ══
 const ICON_PESC = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -486,7 +503,9 @@ const BASE_DATA = [
    n:'⚠ Autorisation annuelle ICCAT · Marquage + déclaration obligatoire · 1/an',
    atl:{s:'Juin–Nov',n:'⚠ Autorisation annuelle · Marquage · Déclaration · 1/an'}},
   {id:'espadon',fam:'fam-pelagiques',name:'Espadon',latin:'Xiphias gladius',e:'🐟',
-   m:'125 cm (LJFL)',pm:null,s:'Été–Automne',i:'LC',n:'Mesure : mâchoire inf. – fourche caudale'},
+   m:'170 cm (LJFL)',pm:null,s:'Été–Automne',i:'LC',
+   n:'Mesure : mâchoire inf. – fourche caudale · Marquage obligatoire',
+   med:null},
   {id:'seriole',fam:'fam-pelagiques',name:'Sériole',latin:'Seriola dumerili',e:'🐟',
    m:'65 cm',pm:null,s:'Été–Automne',i:'LC',n:'Marquage obligatoire',
    atl:null},
@@ -610,6 +629,10 @@ const BASE_DATA = [
    m:'20 cm (Med)',pm:null,s:"Toute l'année",i:'LC',n:null,
    atl:{m:'27 cm'}},
   // Atlantic-only fish (med:null)
+  {id:'baudroie',fam:'fam-fond',name:'Baudroie',latin:'Lophius piscatorius',e:'🐟',
+   m:'30 cm',pm:null,s:"Toute l'année",i:'LC',
+   n:'Chair excellente · Pêche en profondeur · Tête non comptée dans la mesure',
+   med:null},
   {id:'turbot',fam:'fam-fond',name:'Turbot',latin:'Scophthalmus maximus',e:'🐠',
    m:'30 cm',pm:null,s:"Toute l'année",i:'NT',
    n:'Espèce noble · Quotas stricts',med:null},
@@ -1162,6 +1185,19 @@ function delCustom(id){
   render();upStats();
 }
 
+// ══ LIGHTBOX ══
+function openLightbox(url,name){
+  document.getElementById('lb-img').src=url;
+  document.getElementById('lb-name').textContent=name;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
 // ══ WIKIPEDIA IMAGE LOADER ══
 const WIKI_CACHE = {};
 async function wikiImg(latin){
@@ -1209,7 +1245,7 @@ function rc(id){
   const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}${delBtn}</div>`:''}`;
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${f.name.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}${delBtn}</div>`:''}`;
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
