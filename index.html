@@ -7,6 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B2540'/%3E%3Cpath d='M16,50C20,38 40,30 58,29C70,28 78,31 83,36L91,23L97,14L90,30L88,50L90,70L97,86L91,77L83,64C78,69 70,72 58,71C40,70 20,62 16,50Z' fill='%231AAFA0'/%3E%3Cpath d='M52,29L62,15L72,29' fill='%231AAFA0'/%3E%3Ccircle cx='22' cy='49' r='3.5' fill='%230B2540'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -405,6 +406,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .recipe-empty{font-size:11px;color:var(--txt3);font-style:italic;padding:8px 0}
 /* ══ MAP BUTTON IN HERO ══ */
 .hero-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+/* ══ INFO MINI-MAP ══ */
+#info-mini-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px}
+/* ══ STORY BUTTON ══ */
+.story-btn{width:100%;padding:11px;border-radius:50px;border:1.5px solid rgba(26,175,160,.4);background:rgba(26,175,160,.08);color:var(--acc);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;transition:all .15s}
+.story-btn:hover{background:rgba(26,175,160,.18);border-color:var(--acc)}
 </style>
 </head>
 <body>
@@ -467,16 +473,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
       </div>
       <!-- STATS -->
       <div class="hero-stats">
-        <div class="stat-chip"><div><div class="stat-v" id="sc">0</div><div class="stat-l">Espèces pêchées</div></div></div>
-        <div class="stat-chip"><div><div class="stat-v" id="st-total">0</div><div class="stat-l">Au total</div></div></div>
-        <div class="stat-chip"><div><div class="stat-v" id="sp">0%</div><div class="stat-l">Progression</div></div></div>
+        <div class="stat-chip"><div><div class="stat-v" id="sc">0</div><div class="stat-l" id="sl-caught">Espèces pêchées</div></div></div>
+        <div class="stat-chip"><div><div class="stat-v" id="st-total">0</div><div class="stat-l" id="sl-total">Au total</div></div></div>
+        <div class="stat-chip"><div><div class="stat-v" id="sp">0%</div><div class="stat-l" id="sl-prog">Progression</div></div></div>
       </div>
       <div>
-        <div class="prog-hdr"><span>Tableau de chasse</span><strong id="pl">0 / 0</strong></div>
+        <div class="prog-hdr"><span id="tableau-lbl">Tableau de chasse</span><strong id="pl">0 / 0</strong></div>
         <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
       </div>
       <div class="hero-btns">
-        <button class="pdf-export-btn" onclick="exportPDF()">📄 Exporter PDF</button>
         <button class="pdf-export-btn" onclick="openMap()">🗺 Carte de pêche</button>
         <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
       </div>
@@ -564,6 +569,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <div id="info-recipe-content"></div>
       </div>
       <div class="info-pane" id="ipane-carte">
+        <div id="info-mini-map"></div>
         <button class="info-map-btn" onclick="closeInfo();openMap()">
           <span class="info-map-btn-icon">🗺</span>
           <div class="info-map-btn-text" id="info-map-btn-text">Voir sur la carte de pêche</div>
@@ -1258,6 +1264,103 @@ const DESC = {
   mulette_epaisse:"Moule d'eau douce en danger critique, liée à certains poissons hôtes pour son cycle de vie.",
 };
 
+// ══ DESCRIPTIONS EN ANGLAIS ══
+const DESC_EN = {
+  thon:"Atlantic Bluefin Tuna, the largest tuna species, can exceed 300 kg and 3 m. Highly migratory, it crosses the Atlantic between feeding grounds and Mediterranean spawning areas. Strictly regulated by ICCAT annual quotas.",
+  espadon:"The Swordfish, a large apex predator recognizable by its flattened bill. Found worldwide in tropical and temperate waters, it dives deep during the day and rises to the surface at night to feed on squid and fish.",
+  seriole:"The Greater Amberjack, a powerful pelagic predator found in warm Mediterranean and Atlantic waters. Often encountered around rocky reefs and offshore structures between 20–80 m. Highly prized sport fish.",
+  liche:"The Leerfish, a fast pelagic predator recognizable by its deeply forked tail and silvery body. Common in the Mediterranean near rocky coastlines. Reaches up to 2 m and 25 kg.",
+  coryphene:"The Dorado (Mahi-mahi), one of the most vividly colored fish in the ocean. Highly migratory, it follows floating debris. Prized for both sport fishing and its excellent flesh.",
+  barracuda:"The Mediterranean Barracuda, a formidable predator with a prominent lower jaw and rows of sharp teeth. Often found near rocky reefs and the open surface. Can reach 1.7 m.",
+  bonite:"The Atlantic Bonito, a fast-swimming fish closely related to tuna. Common in the Mediterranean from spring to autumn, often caught by trolling. Travels in large schools.",
+  maquereau:"The Atlantic Mackerel, a fast-schooling pelagic fish with iridescent blue-green stripes. Excellent table fish and very important in the ecosystem as prey for larger predators.",
+  chinchard:"The Atlantic Horse Mackerel, a schooling pelagic fish common throughout the Mediterranean and Atlantic. Important prey species for larger predators.",
+  doraderoyale:"The Gilt-head Seabream, one of the most prized Mediterranean fish. Recognizable by its golden spot between the eyes. Feeds on shellfish; found on sandy and Posidonia bottoms.",
+  doradegrise:"The Black Seabream, with dusky sides and faint golden markings. Found on rocky and Posidonia bottoms. Protandrous hermaphrodite — males can change to female.",
+  doraderose:"The Common Pandora, a pink-red seabream found on sandy and rocky bottoms from 10 to 200 m. Common throughout the Mediterranean and Atlantic.",
+  pagre:"The Red Porgy, a large deep-dwelling seabream recognized by its rosy-silver color and steep forehead. Found on rocky bottoms from 30 to 200 m.",
+  denti:"The Dentex, a powerful seabream and apex predator on rocky Mediterranean reefs. Recognized by its prominent canine teeth and blue-gray coloring. Can reach 1 m and 15 kg.",
+  sar:"The White Seabream, common on rocky Mediterranean coasts and Posidonia meadows from the surface to 50 m. Often found in mixed schools with other seabream species.",
+  sarmarbre:"The Striped Seabream, similar to the White Seabream but with dark vertical stripes on its flanks. Common on rocky bottoms throughout the Mediterranean.",
+  sartambour:"The Annular Seabream, with a distinctive black ring at the base of the tail. Common around rocky reefs in the western Mediterranean.",
+  beco:"The Sharpsnout Seabream, recognizable by its pointed snout and yellow markings on the flanks. Found on rocky and sandy bottoms from 10 to 50 m.",
+  marbre:"The Marbré, with a striking dark marbled pattern on a whitish body. Common in rocky shallow waters; often caught near the shore.",
+  pageot:"The Common Pandora (Pageot), a pink seabream found on sandy and rocky mixed bottoms from 20 to 200 m. Protandrous hermaphrodite.",
+  bar:"The European Sea Bass, one of the most sought-after sport fish. Found on rocky coasts, estuaries and open water. An aggressive predator feeding on small fish and crustaceans.",
+  mulet:"The Thick-lipped Grey Mullet, a coastal fish found in estuaries, harbors and rocky shores. Feeds on detritus and micro-algae. Tolerates low salinity.",
+  muletdore:"The Golden Grey Mullet, with characteristic golden spots on its cheeks. Found in coastal and estuarine habitats throughout the Mediterranean.",
+  rouget:"The Striped Red Mullet, the emblematic fish of Provençal cuisine. Recognized by its bright red coloring and two chin barbels used to probe the seabed for invertebrates.",
+  sole:"The Common Sole, a flatfish of sandy and muddy bottoms. Highly camouflaged, it buries itself in sediment during the day and hunts worms and small crustaceans at night.",
+  vive:"The Greater Weever, a venomous fish that buries itself in sand with only its head exposed. Its first dorsal fin and gill cover spines contain a painful venom.",
+  rascasse:"The Scorpionfish, a master of camouflage on rocky and Posidonia bottoms. Covered in venomous spines. The essential ingredient of authentic bouillabaisse.",
+  chapon:"The Large-scaled Scorpionfish, larger and more colorful than the common scorpionfish. Found in rocky crevices and caves, often at greater depths.",
+  sebaste:"The Rose Fish, a deep-water scorpionfish found mainly in Atlantic waters below 100 m. Viviparous and very slow-growing; can live over 60 years.",
+  labre:"The Rainbow Wrasse and related wrasse species. Colorful reef fish found on rocky and Posidonia bottoms. Protogynous hermaphrodites — females can change to males.",
+  serran:"The Comber, a small grouper-like fish found on rocky Mediterranean reefs. Simultaneous hermaphrodite. Common between 10 and 500 m.",
+  merou:"The Dusky Grouper, a large territorial reef fish. Can reach 1.5 m and 60 kg; changes sex from female to male with age. Protected in France since 1993.",
+  corb:"The Brown Meagre, recognizable by the deep drumming sound it produces using its swim bladder. Found on rocky and sandy bottoms in the western Mediterranean.",
+  poulpe:"The Common Octopus, a highly intelligent cephalopod found on rocky and sandy bottoms. Masters camouflage and can change color and texture in milliseconds.",
+  seche:"The Common Cuttlefish, with a distinctive oval body and internal cuttlebone. Uses chromatophores for stunning camouflage. Found on sandy and rocky bottoms.",
+  congre:"The European Conger Eel, a large powerful eel found in rocky crevices and wrecks. Can reach 3 m and 110 kg. Nocturnal ambush predator.",
+  murene:"The Mediterranean Moray Eel, a snake-like fish inhabiting rocky crevices from 1 to 50 m. Despite its fierce appearance, it only bites in self-defense.",
+  merlu:"The European Hake, a predatory fish of deep sandy and muddy bottoms. One of the most commercially important species in France and Spain.",
+  baudroie:"The Monkfish (Anglerfish), an ambush predator with a huge upward-facing mouth. Lies motionless on soft bottoms and attracts prey with a bioluminescent lure.",
+  raie_bouclee:"The Thornback Ray, the most common ray in the Atlantic and Channel. Found on sandy and gravelly bottoms from 20 to 200 m. Feeds on crustaceans and small fish.",
+  raie_past:"The Common Stingray, found on sandy bottoms in the Mediterranean. Has a venomous tail spine; the rest of the fish is harmless.",
+  raie_etoilee:"The Starry Ray, found on sandy and gravelly Mediterranean bottoms. Distinguished by star-shaped tubercles and spots on its dorsal surface.",
+  turbot:"The Turbot, one of the most prized flatfish. Found on sandy and gravelly bottoms in the Atlantic and North Sea. Highly valued for its firm, delicate white flesh.",
+  barbue:"The Brill, similar to Turbot but more oval-shaped. Found on sandy bottoms in the Atlantic and North Sea. Very good table fish.",
+  cabillaud:"The Atlantic Cod, one of the most commercially important fish in history. Found in cold Atlantic waters. Heavily overfished in many areas; key conservation concern.",
+  lieujane:"The Pollack, a greenish-bronze predatory fish of the Atlantic. Common around wrecks and rocky reefs. Excellent light-tackle sport fish.",
+  saintpierre:"The John Dory, recognized by its large distinctive black 'thumb print' on each side and its highly extendable jaw. Found in both Atlantic and Mediterranean.",
+  palourde:"The Grooved Carpet Shell, one of the most commercially important European bivalves. Found on sandy-muddy bottoms in the intertidal zone. Highly sought in French markets.",
+  palourde_jp:"The Japanese Carpet Shell, introduced from Asia in the 20th century. Now dominant in Atlantic mudflats. Very similar to the native clam but more productive.",
+  coque:"The Common Cockle, a filter-feeding bivalve found on sandy beaches and mudflats. Easily collected by hand at low tide along the Atlantic coast.",
+  moule:"The Blue Mussel, Europe's most cultivated bivalve. Found attached to hard substrates from the intertidal zone to 20 m. Key product of French shellfish aquaculture.",
+  huitre_plate:"The European Flat Oyster, the native oyster of European coasts. Nearly disappeared due to overharvesting and disease; slowly recovering in protected areas.",
+  cstjacques:"The Great Scallop (Coquille Saint-Jacques), France's most emblematic shellfish. Lives on sandy bottoms from 5 to 400 m. Only the adductor muscle and coral are eaten in France.",
+  couteau:"The Razor Shell, a bivalve living buried vertically in sand. Can be attracted by pouring salt into the burrow. Harvested by hand during low spring tides.",
+  praire:"The Warty Venus, a round-ribbed bivalve with a distinctive rough texture. Found on gravelly bottoms in the Atlantic and Mediterranean. Often eaten raw.",
+  petoncle:"The Queen Scallop, smaller than the Great Scallop. It can swim by rapidly clapping its shells. Found on sandy and gravelly bottoms.",
+  bigorneau:"The Common Periwinkle, a small intertidal gastropod found on rocky shores. Collected by hand at low tide; traditionally served with a pin.",
+  bulot:"The Common Whelk, a large carnivorous gastropod of sandy and rocky Atlantic bottoms. Very popular in Normandy; served boiled with mayonnaise.",
+  patelle:"The Common Limpet, a conical gastropod firmly attached to rocks. Resists exposure to air and wave action. Found on Atlantic and Mediterranean rocky shores.",
+  ormeau:"The European Abalone, a large gastropod with an ear-shaped shell. Found on rocky bottoms from 5 to 30 m. Now very rare; strictly regulated due to overharvesting.",
+  oursin:"The Common Sea Urchin, the purple sea urchin harvested for its prized gonads. Found on rocky bottoms from 5 to 30 m in the Mediterranean.",
+  crabe_vert:"The Shore Crab (Crab verts), one of Europe's most abundant crabs. Highly tolerant of varying salinity; found in the intertidal zone on rocky and sandy shores.",
+  tourteau:"The Edible Crab, the largest European crab. Found on rocky and sandy bottoms from 0 to 100 m. Highly prized for its large claws and sweet white meat.",
+  homard:"The European Lobster, the most prized crustacean in Europe. Found in rocky crevices from 0 to 60 m. Distinguished from crawfish by its powerful claws.",
+  langouste:"The Spiny Lobster, unlike true lobsters it has no claws. Found in rocky crevices in the Mediterranean and Atlantic. Prized for its tail meat.",
+  cigale_mer:"The Slipper Lobster, a flat crustacean found on sandy-rocky bottoms in the Mediterranean. Increasingly rare; strictly regulated in France.",
+  crevette_bouquet:"The Common Prawn, a large prawn found on rocky and weedy Atlantic bottoms. Translucent with reddish spots; one of the finest Atlantic shellfish.",
+  crevette_grise:"The Brown Shrimp, very small but intensely flavorful. Harvested in shallow sandy Atlantic bays and estuaries; hand-sorted in Normandy.",
+  truite_fario:"The Brown Trout, the emblematic fish of French mountain streams. Requires cold, clear, oxygen-rich water; an excellent indicator of ecosystem health.",
+  truite_arenciel:"The Rainbow Trout, introduced from North America. Widely farmed and stocked; prefers clear, cool rivers and lakes. Forms the basis of French trout farming.",
+  ombre:"The Grayling, a salmonid with a distinctive large sail-like dorsal fin. Found in fast-flowing, cold clear rivers; an indicator of pristine water quality.",
+  omble:"The Arctic Charr, a salmonid found in cold deep Alpine lakes. Very sensitive to temperature and water quality; one of France's most beautiful freshwater fish.",
+  saumon:"The Atlantic Salmon, the legendary migratory fish that returns from the ocean to spawn in its birth river. Now rare in France; subject to major conservation programs.",
+  brochet:"The Northern Pike, the apex predator of French freshwater. Can exceed 1.2 m and 25 kg; ambushes prey from aquatic vegetation with explosive bursts of speed.",
+  sandre:"The Zander (Pike-perch), a large perch-like predator introduced to French rivers and lakes. Feeds on small fish in deeper, turbid water; prized table fish.",
+  perche:"The European Perch, a popular freshwater predator with distinctive dark vertical stripes and bright red ventral fins. Common in French lakes and slow rivers.",
+  blackbass:"The Largemouth Bass, introduced from North America. Now widespread in French warm-water lakes and slow rivers. Very popular sport fish.",
+  silure:"The Wels Catfish, Europe's largest freshwater fish. Can exceed 2.5 m and 100 kg; bottom-dweller in large rivers and lakes. Nocturnal predator.",
+  carpe:"The Common Carp, Europe's most popular sport fishing target. Originally from Asia, now widespread in French lakes and slow rivers. Can live over 50 years.",
+  barbeau:"The Barbel, a powerful river fish found in fast-flowing stretches with clean gravel beds. Recognized by four barbels on its upper jaw.",
+  chevesne:"The Chub, an opportunistic omnivore found in rivers throughout France. Bronze flanks with dark-edged scales; very wary and challenging to catch.",
+  gardon:"The Roach, the most abundant small fish in French freshwater. Often caught in large numbers by float fishing; an excellent fish for beginners.",
+  breme:"The Common Bream, a deep-bodied silvery fish of slow rivers and lakes. Often found in large shoals; popular with match anglers.",
+  tanche:"The Tench, a robust fish of muddy lakes and slow rivers. Tolerates low oxygen levels; distinctive olive-green coloring with tiny scales.",
+  rotengle:"The Rudd, similar to roach but with golden-red fins. Prefers still, weedy water rich in aquatic vegetation; found near the surface.",
+  anguille_edf:"The European Eel, one of the most remarkable migratory fish. Born in the Sargasso Sea, it migrates to European rivers for 10–20 years before returning to spawn. Critically endangered.",
+  perche_soleil:"The Pumpkinseed, a small colorful sunfish introduced from North America. Common in warm, weedy ponds; recognized by the blue streaks on its cheeks.",
+  ecrevisse_pp:"The White-clawed Crayfish, the only native French crayfish. Critically endangered due to invasive species and habitat loss; subject to national conservation programs.",
+  ecrevisse_pb:"The Stone Crayfish, a native species found in cold, clear mountain streams. Very sensitive to water quality and temperature changes.",
+  ecrevisse_signal:"The Signal Crayfish, introduced from North America. Highly invasive; carries a plague fungus lethal to native crayfish. Legal to fish in France.",
+  ecrevisse_louisiane:"The Red Swamp Crayfish, an invasive species from the southern USA. Very hardy and prolific; colonizes warm, turbid waters and agricultural canals.",
+  moule_perliere:"The Freshwater Pearl Mussel, one of Europe's most endangered molluscs. Can live over 100 years in clean, fast-flowing rivers. Strict protection across Europe.",
+  mulette_epaisse:"The Thick-shelled River Mussel, a large freshwater mussel of major French rivers. Long-lived but extremely vulnerable to water pollution and habitat degradation.",
+};
+
 // ══ NOMS EN ANGLAIS ══
 const NAME_EN = {
   thon:'Atlantic Bluefin Tuna',espadon:'Swordfish',seriole:'Greater Amberjack',liche:'Leerfish',coryphene:'Mahi-Mahi',
@@ -1378,7 +1481,7 @@ const RECIPES = {
 };
 
 // ══ LANGUAGE ══
-let LANG='fr';
+let LANG=(()=>{const s=localStorage.getItem('pesc-lang');if(s)return s;const nl=(navigator.language||navigator.userLanguage||'fr').toLowerCase();return nl.startsWith('en')?'en':'fr';})();
 const I18N={
   fr:{langBtn:'EN',zone_edf:'🏞 Eau douce',zone_med:'🌊 Méditerranée',zone_atl:'🌊 Atlantique',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Espagne',stat_caught:'Espèces pêchées',
@@ -1394,7 +1497,17 @@ const I18N={
       size_lbl:'Taille',weight_short:'Poids',clbl_one:'espèce',clbl_many:'espèces',
       flt_riviere:'🏞 Rivière',flt_lac:'💧 Lac',flt_coup:'🎣 Coup',
       flt_main:'🖐 À main',flt_nasse:'🪤 Nasse',flt_balance:'⚖ Balance',
-      flt_bateau:'⚓ Bateau',flt_bord:'🌊 Bord',flt_chasse:'🤿 Chasse S-M',flt_mes_ajouts:'✚ Mes ajouts'},
+      flt_bateau:'⚓ Bateau',flt_bord:'🌊 Bord',flt_chasse:'🤿 Chasse S-M',flt_mes_ajouts:'✚ Mes ajouts',
+      ps_sub:'Qui pêche aujourd\'hui ?',tableau:'Tableau de chasse',
+      fmf_add_photo:'Ajouter une photo',fmf_add_sub:'Galerie · Caméra · Fichier PNG/JPG',
+      fmf_identify:'🔍 Identifier l\'espèce',fmf_change:'↩ Changer',fmf_new_photo:'📸 Nouvelle photo',
+      fmf_confidence:'Confiance',fmf_alts:'Autres possibilités',fmf_retry:'↩ Recommencer',
+      fmf_retry_photo:'↩ Réessayer avec une autre photo',fmf_not_fish:'Je ne suis pas sûr que cette espèce soit présente dans l\'eau.',
+      fmf_loading_inat:'iNaturalist identifie l\'espèce',fmf_loading_claude:'Claude AI identifie l\'espèce',
+      modal_add_title:'+ Ajouter une espèce',modal_add_sub:'Ajoute une espèce personnalisée à ton carnet',
+      modal_tab_sp:'🐟 Espèce',modal_tab_fam:'📁 Famille',
+      btn_cancel:'Annuler',btn_add:'✓ Ajouter',btn_close:'Fermer',btn_create:'✓ Créer la famille',
+      story_btn:'📸 Créer une Story Instagram'},
   en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
       stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
@@ -1409,29 +1522,50 @@ const I18N={
       size_lbl:'Size',weight_short:'Weight',clbl_one:'species',clbl_many:'species',
       flt_riviere:'🏞 River',flt_lac:'💧 Lake',flt_coup:'🎣 Float fishing',
       flt_main:'🖐 By hand',flt_nasse:'🪤 Trap',flt_balance:'⚖ Balance net',
-      flt_bateau:'⚓ Boat',flt_bord:'🌊 Shore',flt_chasse:'🤿 Spearfishing',flt_mes_ajouts:'✚ My additions'},
+      flt_bateau:'⚓ Boat',flt_bord:'🌊 Shore',flt_chasse:'🤿 Spearfishing',flt_mes_ajouts:'✚ My additions',
+      ps_sub:'Who\'s fishing today?',tableau:'Fishing record',
+      fmf_add_photo:'Add a photo',fmf_add_sub:'Gallery · Camera · PNG/JPG file',
+      fmf_identify:'🔍 Identify species',fmf_change:'↩ Change',fmf_new_photo:'📸 New photo',
+      fmf_confidence:'Confidence',fmf_alts:'Other possibilities',fmf_retry:'↩ Retry',
+      fmf_retry_photo:'↩ Try with another photo',fmf_not_fish:'I\'m not sure this species is found in water.',
+      fmf_loading_inat:'iNaturalist is identifying the species',fmf_loading_claude:'Claude AI is identifying the species',
+      modal_add_title:'+ Add a species',modal_add_sub:'Add a custom species to your logbook',
+      modal_tab_sp:'🐟 Species',modal_tab_fam:'📁 Family',
+      btn_cancel:'Cancel',btn_add:'✓ Add',btn_close:'Close',btn_create:'✓ Create family',
+      story_btn:'📸 Create Instagram Story'},
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
-function toggleLang(){
-  LANG=LANG==='fr'?'en':'fr';
+function applyLang(){
   document.getElementById('lang-btn').textContent=T('langBtn');
   document.getElementById('zone-edf').textContent=T('zone_edf');
   document.getElementById('zone-med').textContent=T('zone_med');
   document.getElementById('zone-atl').textContent=T('zone_atl');
   document.getElementById('country-fr').textContent=T('country_fr');
   document.getElementById('country-es').textContent=T('country_es');
-  document.querySelector('.stat-l:nth-child(1)')?.closest('.stat-chip')?.querySelector('.stat-l');
-  document.querySelectorAll('.stat-l').forEach((el,i)=>{el.textContent=[T('stat_caught'),T('stat_total'),T('stat_progress')][i]||el.textContent;});
-  document.querySelector('.chint').textContent=T('hint');
+  const sl=document.getElementById('sl-caught');if(sl)sl.textContent=T('stat_caught');
+  const slt=document.getElementById('sl-total');if(slt)slt.textContent=T('stat_total');
+  const slp=document.getElementById('sl-prog');if(slp)slp.textContent=T('stat_progress');
+  const tbl=document.getElementById('tableau-lbl');if(tbl)tbl.textContent=T('tableau');
+  const pssub=document.getElementById('ps-sub');if(pssub)pssub.textContent=T('ps_sub');
+  const ch=document.querySelector('.chint');if(ch)ch.textContent=T('hint');
   const fs=document.getElementById('fsearch');if(fs)fs.placeholder=T('search');
-  document.getElementById('mode-lbl-l').textContent=T('mode_pesc');
-  document.getElementById('mode-lbl-r').textContent=T('mode_coq');
-  document.getElementById('info-map-btn-text').textContent=T('map_link');
-  document.getElementById('map-title').textContent=T('map_title');
-  document.querySelector('#itab-desc').textContent=T('desc_tab');
-  document.querySelector('#itab-recette').textContent=T('recipe_tab');
-  document.querySelector('#itab-carte').textContent=T('map_tab');
+  const ml=document.getElementById('mode-lbl-l');if(ml)ml.textContent=T('mode_pesc');
+  const mr=document.getElementById('mode-lbl-r');if(mr)mr.textContent=T('mode_coq');
+  const imb=document.getElementById('info-map-btn-text');if(imb)imb.textContent=T('map_link');
+  const mt=document.getElementById('map-title');if(mt)mt.textContent=T('map_title');
+  const itd=document.getElementById('itab-desc');if(itd)itd.textContent=T('desc_tab');
+  const itr=document.getElementById('itab-recette');if(itr)itr.textContent=T('recipe_tab');
+  const itc=document.getElementById('itab-carte');if(itc)itc.textContent=T('map_tab');
+  const mtl=document.getElementById('modal-title');if(mtl)mtl.textContent=T('modal_add_title');
+  const mts=document.getElementById('modal-sub');if(mts)mts.textContent=T('modal_add_sub');
+  const tsp=document.getElementById('tab-sp');if(tsp)tsp.textContent=T('modal_tab_sp');
+  const tfm=document.getElementById('tab-fam');if(tfm)tfm.textContent=T('modal_tab_fam');
   updateBrandSub();
+}
+function toggleLang(){
+  LANG=LANG==='fr'?'en':'fr';
+  localStorage.setItem('pesc-lang',LANG);
+  applyLang();
   renderFilters();render();
 }
 
@@ -1543,8 +1677,8 @@ function showProfileScreen(){
 function renderProfileScreen(){
   const sub=document.getElementById('ps-sub');
   const inner=document.getElementById('ps-inner');
-  if(!PROFILES.length){sub.textContent='Bienvenue ! Crée ton premier profil 🎣';renderCreateForm(inner,false);return;}
-  sub.textContent='Qui pêche aujourd\'hui ?';
+  if(!PROFILES.length){sub.textContent=LANG==='en'?'Welcome! Create your first profile 🎣':'Bienvenue ! Crée ton premier profil 🎣';renderCreateForm(inner,false);return;}
+  sub.textContent=T('ps_sub');
   let h='<div class="ps-cards">';
   PROFILES.forEach(p=>{const av=p.photo?`<img src="${p.photo}">`:`<span>${p.name[0]?.toUpperCase()||'🎣'}</span>`;h+=`<div class="pc" onclick="selectProfile('${p.id}')"><div class="pc-av">${av}</div><div class="pc-name">${p.name}</div></div>`;});
   h+=`<div class="pc pc-add" onclick="showCreateForm()"><div class="pc-av">+</div><div class="pc-name">Ajouter</div></div></div>`;
@@ -1616,6 +1750,7 @@ function launchWithLoading(pid){
     document.getElementById('add-fab').classList.remove('hidden');
     document.getElementById('fmf-fab').classList.remove('hidden');
     applyMode();applyZone();applyCountry();updateProfileChip();
+    applyLang();
     renderFilters();render();upStats();
   },1600);
 }
@@ -1979,11 +2114,11 @@ function _fmfRenderUpload(){
   document.getElementById('fmf-body').innerHTML=`
     <div class="fmf-upload-zone" onclick="document.getElementById('_fmf-inp').click()">
       <div class="fmf-upload-icon">📸</div>
-      <div class="fmf-upload-text">Ajouter une photo</div>
-      <div class="fmf-upload-sub">Galerie · Caméra · Fichier PNG/JPG</div>
+      <div class="fmf-upload-text">${T('fmf_add_photo')}</div>
+      <div class="fmf-upload-sub">${T('fmf_add_sub')}</div>
     </div>
     <input type="file" id="_fmf-inp" accept="image/*" style="display:none" onchange="_fmfCapture(this)">
-    <button class="fmf-analyze-btn" disabled>🔍 Identifier l'espèce</button>`;
+    <button class="fmf-analyze-btn" disabled>${T('fmf_identify')}</button>`;
 }
 
 function _fmfCapture(inp){
@@ -1995,10 +2130,10 @@ function _fmfCapture(inp){
       document.getElementById('fmf-body').innerHTML=`
         <div class="fmf-preview-wrap">
           <img src="data:${mediaType};base64,${base64}" alt="Aperçu">
-          <button class="fmf-change-btn" onclick="_fmfRenderUpload()">↩ Changer</button>
+          <button class="fmf-change-btn" onclick="_fmfRenderUpload()">${T('fmf_change')}</button>
         </div>
         <input type="file" id="_fmf-inp" accept="image/*" style="display:none" onchange="_fmfCapture(this)">
-        <button class="fmf-analyze-btn" onclick="_fmfAnalyze()">🔍 Identifier l'espèce</button>`;
+        <button class="fmf-analyze-btn" onclick="_fmfAnalyze()">${T('fmf_identify')}</button>`;
     });
   };
   r.readAsDataURL(f);
@@ -2038,7 +2173,7 @@ async function _fmfAnalyzeClaude(){
   document.getElementById('fmf-body').innerHTML=`
     <div class="fmf-loading">
       <div class="fmf-fish-spin">🐟</div>
-      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">Claude AI identifie l'espèce</span></p>
+      <p>${T('fmf_loading_claude')}<br><span style="color:var(--txt3);font-size:12px">Claude AI</span></p>
     </div>`;
 
   try{
@@ -2096,7 +2231,7 @@ async function _fmfAnalyzeINat(){
   document.getElementById('fmf-body').innerHTML=`
     <div class="fmf-loading">
       <div class="fmf-fish-spin">🐟</div>
-      <p>Analyse en cours…<br><span style="color:var(--txt3);font-size:12px">iNaturalist identifie l'espèce</span></p>
+      <p>${T('fmf_loading_inat')}<br><span style="color:var(--txt3);font-size:12px">iNaturalist</span></p>
     </div>`;
 
   try{
@@ -2132,8 +2267,8 @@ async function _fmfAnalyzeINat(){
 function _fmfShowINatResult(results){
   if(!results.length){
     document.getElementById('fmf-body').innerHTML=`
-      <div class="fmf-not-found">🤔 Je ne suis pas sûr que cette espèce soit présente dans l'eau.</div>
-      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
+      <div class="fmf-not-found">🤔 ${T('fmf_not_fish')}</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_retry_photo')}</button>`;
     return;
   }
   const top=results[0];
@@ -2152,18 +2287,18 @@ function _fmfShowINatResult(results){
       <div class="fmf-result-latin">${latin}</div>
       <div class="fmf-result-tags">
         ${family?`<span class="tag t-dd">📂 ${family}</span>`:''}
-        <span class="tag t-lc" style="font-size:10px">Confiance : ${confMap[conf]} (${score}%)</span>
+        <span class="tag t-lc" style="font-size:10px">${T('fmf_confidence')} : ${confMap[conf]} (${score}%)</span>
       </div>
-      ${alts?`<div class="fmf-result-desc" style="font-size:12px;color:var(--txt3)">Autres possibilités : ${alts}</div>`:''}
+      ${alts?`<div class="fmf-result-desc" style="font-size:12px;color:var(--txt3)">${T('fmf_alts')} : ${alts}</div>`:''}
     </div>
-    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">📸 Nouvelle photo</button>`;
+    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
 }
 
 function _fmfShowResult(r){
   if(!r||!r.found){
     document.getElementById('fmf-body').innerHTML=`
-      <div class="fmf-not-found">🤔 Je ne suis pas sûr que cette espèce soit présente dans l'eau.</div>
-      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
+      <div class="fmf-not-found">🤔 ${T('fmf_not_fish')}</div>
+      <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_retry_photo')}</button>`;
     return;
   }
   const zoneMap={med:'🌊 Méditerranée',atl:'🌊 Atlantique',edf:'🏞 Eau douce',all:'🌍 Toutes zones'};
@@ -2178,11 +2313,11 @@ function _fmfShowResult(r){
         ${zl?`<span class="tag tm">${zl}</span>`:''}
         ${r.size_range?`<span class="tag ts">📏 ${r.size_range}</span>`:''}
         ${r.family?`<span class="tag t-dd">📂 ${r.family}</span>`:''}
-        ${cl?`<span class="tag t-lc" style="font-size:10px">Confiance : ${cl}</span>`:''}
+        ${cl?`<span class="tag t-lc" style="font-size:10px">${T('fmf_confidence')} : ${cl}</span>`:''}
       </div>
       ${r.description?`<div class="fmf-result-desc">${r.description}</div>`:''}
     </div>
-    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">📸 Nouvelle photo</button>`;
+    <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
 }
 
 // ══ SPECIES INFO MODAL ══
@@ -2213,7 +2348,8 @@ function openInfo(id){
   if(cachedUrl){tryPhoto(cachedUrl,true);}
   else{wikiImg(f.latin).then(wurl=>{if(wurl&&_infoId===id)tryPhoto(wurl,false);});}
   // Description
-  document.getElementById('info-desc-text').textContent=DESC[id]||'Aucune description disponible.';
+  const descText=(LANG==='en'&&DESC_EN[id])||DESC[id]||'Aucune description disponible.';
+  document.getElementById('info-desc-text').textContent=descText;
   // Recipe
   const recipeEl=document.getElementById('info-recipe-content');
   if(RECIPES[id]){recipeEl.innerHTML='<div class="info-recipe-content">'+RECIPES[id]+'</div>';}
@@ -2226,13 +2362,34 @@ function openInfo(id){
 function closeInfo(){
   document.getElementById('info-overlay').classList.remove('open');
   document.body.style.overflow='';
+  if(_infoMiniMap){_infoMiniMap.remove();_infoMiniMap=null;}
 }
 function closeInfoOut(e){if(e.target===document.getElementById('info-overlay'))closeInfo();}
+let _infoMiniMap=null;
 function setInfoTab(tab){
   ['desc','recette','carte'].forEach(t=>{
     document.getElementById('itab-'+t).classList.toggle('active',t===tab);
     document.getElementById('ipane-'+t).classList.toggle('active',t===tab);
   });
+  if(tab==='carte'&&_infoId)initInfoMiniMap(_infoId);
+}
+function initInfoMiniMap(id){
+  if(!window.L)return;
+  const mapEl=document.getElementById('info-mini-map');if(!mapEl)return;
+  if(_infoMiniMap){_infoMiniMap.remove();_infoMiniMap=null;}
+  const coords=MAP_COORDS[id];
+  const center=coords||[43,5];const zoom=coords?9:5;
+  _infoMiniMap=L.map('info-mini-map',{zoomControl:true,scrollWheelZoom:true,attributionControl:false}).setView(center,zoom);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(_infoMiniMap);
+  L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{maxZoom:18,opacity:0.75}).addTo(_infoMiniMap);
+  if(coords){
+    const allData=[...BASE_DATA,...COQUIDEX_DATA,...FRESHWATER_DATA,...CQ_FRESHWATER_DATA,...(CUSTOM||[])];
+    const sp=allData.find(x=>x.id===id);
+    const depthObj=LANG==='en'?DEPTH_EN:DEPTH;
+    const depthStr=depthObj[id]?`<br><span style="font-size:11px;color:#1565C0">⚓ ${depthObj[id]}</span>`:'';
+    const m=L.circleMarker(coords,{radius:10,fillColor:'#1AAFA0',color:'#fff',weight:2.5,fillOpacity:0.9}).addTo(_infoMiniMap);
+    if(sp)m.bindPopup(`<b>${(LANG==='en'&&NAME_EN[id])||sp.name}</b>${depthStr}`).openPopup();
+  }
 }
 
 // ══ MAP (Leaflet) ══
@@ -2285,6 +2442,92 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+// ══ INSTAGRAM STORY GENERATOR ══
+function _rrect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();ctx.fill();
+}
+async function exportStory(id){
+  const f=getData().find(x=>x.id===id);if(!f)return;
+  const s=getActiveST()[stKey(id)]||{};if(!s.caught)return;
+  const W=1080,H=1920;
+  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  // Background
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#030d1a');grad.addColorStop(0.55,'#0B2540');grad.addColorStop(1,'#0a3356');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+  // Dot pattern
+  ctx.fillStyle='rgba(26,175,160,0.06)';
+  for(let i=0;i<22;i++)for(let j=0;j<44;j++){ctx.beginPath();ctx.arc(i*50+25,j*45+22,3.5,0,Math.PI*2);ctx.fill();}
+  // Top bar
+  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,0,W,130);
+  ctx.font='bold 58px system-ui,sans-serif';ctx.fillStyle='rgba(255,255,255,0.85)';ctx.textAlign='left';
+  ctx.fillText('🎣 Pesciudex',55,90);
+  ctx.font='32px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.8)';
+  ctx.fillText('pesciudex · imchoubi.github.io',55,128);
+  // Glow behind emoji
+  const glowGrad=ctx.createRadialGradient(W/2,470,0,W/2,470,260);
+  glowGrad.addColorStop(0,'rgba(26,175,160,0.22)');glowGrad.addColorStop(1,'rgba(26,175,160,0)');
+  ctx.fillStyle=glowGrad;ctx.beginPath();ctx.arc(W/2,470,260,0,Math.PI*2);ctx.fill();
+  // Emoji
+  ctx.font='240px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText(f.e||'🐟',W/2,610);
+  // Species name
+  const cname=(LANG==='en'&&NAME_EN[id])||f.name;
+  ctx.font='bold 88px system-ui,sans-serif';ctx.fillStyle='#ffffff';ctx.textAlign='center';
+  ctx.fillText(cname.length>18?cname.substring(0,16)+'…':cname,W/2,780);
+  // Latin name
+  ctx.font='italic 46px system-ui,sans-serif';ctx.fillStyle='rgba(26,175,160,0.85)';
+  ctx.fillText(f.latin||'',W/2,848);
+  // Divider
+  ctx.strokeStyle='rgba(26,175,160,0.4)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(140,900);ctx.lineTo(W-140,900);ctx.stroke();
+  // Catch info boxes
+  const details=[];
+  if(s.date)details.push({icon:'📅',lbl:'Date',val:s.date});
+  if(s.size)details.push({icon:'📏',lbl:LANG==='en'?'Size':'Taille',val:s.size});
+  if(s.weight)details.push({icon:'⚖️',lbl:LANG==='en'?'Weight':'Poids',val:s.weight+' kg'});
+  if(details.length){
+    const bw=details.length===1?460:details.length===2?460:310;
+    const bg=details.length===1?320:details.length===2?40:22;
+    let bx=details.length===1?W/2-bw/2:(W-(details.length*bw+(details.length-1)*bg))/2;
+    details.forEach(d=>{
+      ctx.fillStyle='rgba(255,255,255,0.07)';_rrect(ctx,bx,940,bw,150,24);
+      ctx.font='50px system-ui';ctx.fillStyle='white';ctx.textAlign='center';ctx.fillText(d.icon,bx+bw/2,998);
+      ctx.font='28px system-ui';ctx.fillStyle='rgba(255,255,255,0.55)';ctx.fillText(d.lbl,bx+bw/2,1033);
+      ctx.font='bold 40px system-ui';ctx.fillStyle='white';ctx.fillText(d.val.length>14?d.val.substring(0,13)+'…':d.val,bx+bw/2,1078);
+      bx+=bw+bg;
+    });
+  }
+  // IUCN status
+  const ic=IC[f.i]||IC.DD;
+  ctx.font='34px system-ui';ctx.fillStyle='rgba(255,255,255,0.45)';ctx.textAlign='center';
+  ctx.fillText(ic.dot+' '+(LANG==='en'?(ic.label_en||ic.label):ic.label),W/2,1165);
+  // Zone badge
+  const zoneTxt=ZONE==='edf'?T('zone_edf'):ZONE==='med'?T('zone_med'):T('zone_atl');
+  ctx.fillStyle='rgba(26,175,160,0.15)';_rrect(ctx,W/2-200,1195,400,60,30);
+  ctx.font='bold 32px system-ui';ctx.fillStyle='rgba(26,175,160,0.9)';ctx.fillText(zoneTxt,W/2,1235);
+  // Bottom bar
+  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,H-380,W,380);
+  ctx.font='bold 42px system-ui';ctx.fillStyle='rgba(255,255,255,0.65)';ctx.textAlign='center';
+  ctx.fillText(LANG==='en'?'Caught with Pesciudex 🎣':'Pêché avec Pesciudex 🎣',W/2,H-298);
+  // QR Code
+  try{
+    if(typeof QRCode!=='undefined'){
+      const qrc=document.createElement('canvas');
+      await QRCode.toCanvas(qrc,'https://imchoubi.github.io/Pesciudex',{width:210,margin:1,color:{dark:'#ffffff',light:'#00000000'}});
+      ctx.drawImage(qrc,W/2-105,H-268,210,210);
+    }
+  }catch(e){}
+  ctx.font='26px system-ui';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='center';
+  ctx.fillText('imchoubi.github.io/Pesciudex',W/2,H-28);
+  // Download
+  const link=document.createElement('a');
+  link.download=`pesciudex-${id}.png`;link.href=canvas.toDataURL('image/png');link.click();
+}
 function tSeason(s){
   if(!s||LANG==='fr')return s;
   return s
@@ -2310,7 +2553,7 @@ function rc(id){
   const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div>${delBtn}</div>`:''}`;
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${delBtn}</div>`:''}`;
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
