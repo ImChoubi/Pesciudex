@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Pesciudex & Coquidex</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B2540'/%3E%3Cpath d='M16,50C20,38 40,30 58,29C70,28 78,31 83,36L91,23L97,14L90,30L88,50L90,70L97,86L91,77L83,64C78,69 70,72 58,71C40,70 20,62 16,50Z' fill='%231AAFA0'/%3E%3Cpath d='M52,29L62,15L72,29' fill='%231AAFA0'/%3E%3Ccircle cx='22' cy='49' r='3.5' fill='%230B2540'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -353,6 +356,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .lb-close:hover{background:rgba(255,255,255,.35)}
 .lb-name{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.55);padding:6px 18px;border-radius:50px;backdrop-filter:blur(8px);white-space:nowrap;max-width:85vw;overflow:hidden;text-overflow:ellipsis}
 .fthumb{cursor:zoom-in}
+/* ══ LANG TOGGLE ══ */
+.lang-toggle{font-size:11px;font-weight:700;padding:4px 12px;border-radius:50px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.lang-toggle:hover{background:rgba(255,255,255,.22);color:#fff;border-color:rgba(255,255,255,.5)}
+/* ══ MAP OVERLAY ══ */
+#map-overlay{position:fixed;inset:0;z-index:400;background:#e8f4f8;display:none;flex-direction:column}
+#map-overlay.open{display:flex}
+.map-topbar{background:var(--sea);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.map-topbar-title{font-size:15px;font-weight:700;flex:1}
+.map-close-btn{padding:6px 14px;border-radius:50px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.map-legend-bar{background:#fff;padding:8px 14px;display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0;border-top:1px solid #e0e0e0;font-size:11px}
+.map-leg-item{display:flex;align-items:center;gap:5px;color:var(--txt2)}
+.map-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+#leaflet-map{flex:1;min-height:0}
+/* ══ SPECIES INFO MODAL ══ */
+#info-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:450;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#info-overlay.open{display:flex}
+.info-modal{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
+.info-photo-wrap{width:100%;height:200px;background:var(--sea);border-radius:22px 22px 0 0;overflow:hidden;position:relative;flex-shrink:0}
+.info-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.info-photo-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:56px}
+.info-body{padding:18px 18px 40px}
+.info-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.info-header-text{flex:1;min-width:0}
+.info-name{font-size:20px;font-weight:800;color:var(--sea);line-height:1.1;margin-bottom:2px}
+.info-name-en{font-size:12px;color:var(--txt3);font-style:italic}
+.info-close-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(11,37,64,.15);background:#fff;cursor:pointer;font-size:17px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--txt2)}
+.info-close-btn:hover{background:rgba(11,37,64,.07)}
+.info-tabs{display:flex;gap:6px;margin-bottom:14px}
+.info-tab{font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;border:1.5px solid rgba(11,37,64,.12);background:#fff;color:var(--txt2);cursor:pointer;transition:all .15s}
+.info-tab.active{background:var(--sea);color:#fff;border-color:var(--sea)}
+.info-pane{display:none}
+.info-pane.active{display:block}
+.info-desc-text{font-size:13px;color:var(--txt);line-height:1.75;padding:4px 0}
+.info-recipe-empty{font-size:12px;color:var(--txt3);font-style:italic;padding:12px 0;text-align:center}
+.info-recipe-content{font-size:13px;color:var(--txt);line-height:1.7}
+.info-map-btn{display:flex;align-items:center;gap:10px;background:rgba(26,175,160,.08);border:1px solid rgba(26,175,160,.25);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;width:100%;text-align:left;margin-top:4px}
+.info-map-btn:hover{background:rgba(26,175,160,.16)}
+.info-map-btn-icon{font-size:22px}
+.info-map-btn-text{font-size:12px;color:var(--sea);font-weight:600}
+/* ══ INFO BUTTON ON CARDS ══ */
+.info-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(11,37,64,.13);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:13px;color:var(--txt3);transition:all .18s;margin-left:3px;padding:0;line-height:1}
+.info-btn:hover{border-color:var(--acc);color:var(--acc)}
+/* ══ DESC BOX IN CARD ══ */
+.desc-box{font-size:11.5px;color:var(--txt2);background:rgba(26,175,160,.05);border-left:3px solid rgba(26,175,160,.3);border-radius:0 6px 6px 0;padding:7px 10px;margin-top:8px;margin-bottom:2px;line-height:1.6}
+/* ══ RECIPE SECTION ══ */
+.recipe-box{font-size:12.5px;color:var(--txt);line-height:1.7;padding:4px 0 2px}
+.recipe-empty{font-size:11px;color:var(--txt3);font-style:italic;padding:8px 0}
+/* ══ MAP BUTTON IN HERO ══ */
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
 </style>
 </head>
 <body>
@@ -384,7 +436,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <div class="hero-pattern" id="hero-pattern"></div>
     <div class="hero-inner">
       <div class="brand">
-        <div class="brand-logo" id="brand-logo"></div>
+        <div class="brand-logo" id="brand-logo"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="18" fill="#0B2540"/><path d="M16,50 C20,38 40,30 58,29 C70,28 78,31 83,36 L91,23 L97,14 L90,30 L88,50 L90,70 L97,86 L91,77 L83,64 C78,69 70,72 58,71 C40,70 20,62 16,50 Z" fill="#1AAFA0"/><path d="M52,29 L62,15 L72,29" fill="#1AAFA0" stroke="#0B2540" stroke-width="1" stroke-linejoin="round"/><path d="M40,52 L24,67 L42,60 Z" fill="#0E7A70"/><path d="M40,49 C41,43 45,38 51,37 L56,36 L62,38 L65,44 L64,52 L60,58 L54,60 L48,58 L43,53 Z" fill="rgba(11,37,64,0.22)"/><path d="M28,37 C30,44 30,56 28,63" fill="none" stroke="#0B2540" stroke-width="1.3" stroke-linecap="round"/><circle cx="22" cy="49" r="3.5" fill="#0B2540"/><circle cx="21" cy="48" r="1.2" fill="rgba(255,255,255,0.5)"/></svg></div>
         <div class="brand-text">
           <div class="brand-name" id="brand-name">Pesciudex</div>
           <div class="brand-sub" id="brand-sub">Carnet de pêche · Méditerranée · France</div>
@@ -423,8 +475,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <div class="prog-hdr"><span>Tableau de chasse</span><strong id="pl">0 / 0</strong></div>
         <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
       </div>
-      <div style="text-align:right">
+      <div class="hero-btns">
         <button class="pdf-export-btn" onclick="exportPDF()">📄 Exporter PDF</button>
+        <button class="pdf-export-btn" onclick="openMap()">🗺 Carte de pêche</button>
+        <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
       </div>
     </div>
     <svg class="wave" viewBox="0 0 1440 36" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -468,6 +522,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
   </svg>
 </button>
 <button class="add-fab hidden" id="add-fab" onclick="openModal()">+</button>
+
+<!-- MAP MODAL -->
+<div id="map-overlay">
+  <div class="map-topbar">
+    <span class="map-topbar-title" id="map-title">🗺 Carte de pêche — Méditerranée & Atlantique</span>
+    <button class="map-close-btn" onclick="closeMap()">✕ Fermer</button>
+  </div>
+  <div id="leaflet-map"></div>
+  <div class="map-legend-bar">
+    <span class="map-leg-item"><span class="map-leg-dot" style="background:#1AAFA0"></span>Méditerranée</span>
+    <span class="map-leg-item"><span class="map-leg-dot" style="background:#1565C0"></span>Atlantique</span>
+    <span class="map-leg-item"><span class="map-leg-dot" style="background:#2E7D32"></span>Eau douce</span>
+    <span class="map-leg-item"><span class="map-leg-dot" style="background:#795548"></span>Coquidex</span>
+  </div>
+</div>
+
+<!-- SPECIES INFO MODAL -->
+<div id="info-overlay" onclick="closeInfoOut(event)">
+  <div class="info-modal">
+    <div class="info-photo-wrap" id="info-photo-wrap">
+      <div class="info-photo-emoji" id="info-photo-emoji">🐟</div>
+    </div>
+    <div class="info-body">
+      <div class="info-header">
+        <div class="info-header-text">
+          <div class="info-name" id="info-name">—</div>
+          <div class="info-name-en" id="info-name-en">—</div>
+        </div>
+        <button class="info-close-btn" onclick="closeInfo()">✕</button>
+      </div>
+      <div class="info-tabs">
+        <button class="info-tab active" onclick="setInfoTab('desc')" id="itab-desc" data-tab="desc">Description</button>
+        <button class="info-tab" onclick="setInfoTab('recette')" id="itab-recette" data-tab="recette">🍳 Recette</button>
+        <button class="info-tab" onclick="setInfoTab('carte')" id="itab-carte" data-tab="carte">🗺 Carte</button>
+      </div>
+      <div class="info-pane active" id="ipane-desc">
+        <div class="info-desc-text" id="info-desc-text">—</div>
+      </div>
+      <div class="info-pane" id="ipane-recette">
+        <div id="info-recipe-content"></div>
+      </div>
+      <div class="info-pane" id="ipane-carte">
+        <button class="info-map-btn" onclick="closeInfo();openMap()">
+          <span class="info-map-btn-icon">🗺</span>
+          <div class="info-map-btn-text" id="info-map-btn-text">Voir sur la carte de pêche</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- FIND MY FISH MODAL -->
 <div id="fmf-overlay" onclick="fmfCloseOut(event)">
@@ -1003,7 +1107,7 @@ const IMGS={
   saintpierre:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Zeus_faber_museum.jpg/300px-Zeus_faber_museum.jpg',
   raie_bouclee:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Raja_clavata.jpg/300px-Raja_clavata.jpg',
   raie_past:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Dasyatis_pastinaca.jpg/300px-Dasyatis_pastinaca.jpg',
-  raie_etoilee:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Raja_asterias.jpg/300px-Raja_asterias.jpg',
+  raie_etoilee:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Raja_asterias.jpg/330px-Raja_asterias.jpg',
   // Eau douce
   truite_fario:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Salmo_trutta_Boulenger_1895.jpg/300px-Salmo_trutta_Boulenger_1895.jpg',
   truite_arenciel:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Rainbow_trout.jpg/300px-Rainbow_trout.jpg',
@@ -1056,6 +1160,208 @@ const CQIMGS={
   moule_perliere:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Margaritifera_margaritifera.jpg/300px-Margaritifera_margaritifera.jpg',
   mulette_epaisse:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Unio_crassus.jpg/300px-Unio_crassus.jpg',
 };
+
+// ══ DESCRIPTIONS (FR) ══
+const DESC = {
+  thon:"Prédateur emblématique, le thon rouge migre entre l'Atlantique et la Méditerranée. Peut dépasser 300 kg — pêche à la traîne ou au vif.",
+  espadon:"Le plus grand poisson à épée, atteignant 4 m et 400 kg. Pêche nocturne en surface ou en profondeur à la palangre.",
+  seriole:"Puissant prédateur pélagique des eaux chaudes, excellent combattant. Pêche à la traîne ou au vif sur les tombants.",
+  liche:"Espèce pélagique des côtes rocheuses méditerranéennes. Pêche à la traîne ou au leurre coulant.",
+  coryphene:"Poisson multicolore des eaux chaudes qui suit les objets flottants. Chair exquise — pêche à la traîne ou au leurre.",
+  barracuda:"Prédateur fusiforme des eaux chaudes, chasse en bancs. Pêche au leurre vif ou à la traîne depuis le bord.",
+  bonite:"Proche du thon, très sportif en surface. Excellent en pêche côtière à la traîne ou aux leurres de surface.",
+  maquereau:"Pélagique grégaire présent en bancs denses en été. Chair riche en Ω3 — pêche à la plume ou au surfcasting.",
+  chinchard:"Petit pélagique abondant et délicieux mariné. Pêche à la plume ou au filet en eau côtière.",
+  doraderoyale:"La reine des sparidés méditerranéens, vivant sur les herbiers de posidonie. Méfiante et combative — pêche au fond avec crevette ou ver.",
+  doradegrise:"Sparidé des eaux fraîches et rochers herbeux. Pêche au fond avec moule ou ver.",
+  doraderose:"Vit en profondeur (200-600 m), chair très délicate. Pêche à la paternoster en grande profondeur.",
+  pagre:"Sparidé robuste des fonds rocheux de Méditerranée et d'Atlantique. Pêche au fond avec crabe ou ver.",
+  denti:"Le roi des sparidés méditerranéens, présent sur les tombants profonds. Chair exceptionnelle — technique spécialisée.",
+  sar:"Incontournable des côtes rocheuses peu profondes. Méfiant — pêche à l'écrevisse, moule ou ver de vase.",
+  sarmarbre:"Plus rare que le sar commun, reconnaissable à ses bandes verticales. Fonds rocheux de 5 à 50 m.",
+  sartambour:"Sparidé au profil pointu des fonds mixtes. Pêche au fond avec crustacé ou ver de vase.",
+  beco:"Commun sur les côtes rocheuses méditerranéennes. Pêche au coup ou au fond avec ver ou oursin.",
+  marbre:"Sparidé élancé des fonds sableux, reconnaissable à ses bandes argentées. Pêche avec ver de vase.",
+  pageot:"Fonds sableux et rocheux de 10 à 200 m. Pêche à la paternoster ou au toc avec ver.",
+  bar:"Le roi sportif de nos côtes, excellent en surfcasting, au leurre ou à la traîne. Chair très fine.",
+  mulet:"Poisson côtier des ports et estuaires. Pêche technique au pain, farine ou flocon — discrétion obligatoire.",
+  muletdore:"Préfère les eaux chaudes et fonds sableux. Pêche au fond avec appât végétal ou invertébré.",
+  rouget:"Emblème de la cuisine méditerranéenne, il fouille les fonds sableux avec ses barbillons. Pêche au fond sur sable.",
+  sole:"Poisson plat nocturne des fonds sableux. Chair gastronomique — pêche à la traîne lente ou au surfcasting.",
+  vive:"Redoutée des baigneurs pour ses épines venimeuses. Chair délicieuse qui vaut le risque !",
+  rascasse:"Espèce clé de la bouillabaisse provençale, vit dans les rochers et herbiers. Pêche au toc ou à la traîne de fond.",
+  chapon:"La grande rascasse rouge, très prisée en soupe. Failles rocheuses profondes — pêche au fond avec vif ou leurre.",
+  sebaste:"Poisson des grandes profondeurs (200-600 m), reconnaissable à sa couleur orange vif. Pêche à la paternoster.",
+  labre:"Gardien des herbiers de posidonie, vit sur les fonds rocheux. Pêche au fond avec oursin ou crustacé.",
+  serran:"Hermaphrodite et curieux, toujours présent sur les fonds rocheux peu profonds. Facile à pêcher — bon à table.",
+  merou:"Espèce emblématique et protégée, peut vivre 50 ans. Combattant redoutable sur les tombants rocheux.",
+  corb:"Poisson mystérieux des grottes et éboulis, actif la nuit. Son chant est audible hors de l'eau !",
+  poulpe:"Chasseur intelligent des fonds rocheux. Pêche à la turlutte, au casseron ou à la palangre.",
+  seche:"Vit sur les fonds côtiers, pond sur les herbiers au printemps. Pêche à la turlutte ou à la palangre.",
+  congre:"Serpent de mer des failles rocheuses, peut dépasser 2 m. Pêche de nuit avec poisson ou calmar.",
+  murene:"Fascinante mais à manier avec précaution — morsure douloureuse. Pêche au fond dans les anfractuosités.",
+  merlu:"L'un des plus pêchés en France, de 30 à 600 m. Pêche à la paternoster ou à la traîne de fond.",
+  baudroie:"Prédateur des fonds meubles qui chasse à l'affût avec son illicium. Chair excellente — la lotte de mer.",
+  turbot:"Roi des poissons plats, fonds sableux de l'Atlantique. Chair parmi les plus gastronomiques.",
+  barbue:"Parent du turbot, préfère les fonds moins profonds. Chair fine et délicate.",
+  cabillaud:"La morue fraîche, pilier de la pêche atlantique. Fonds sableux de 10 à 600 m.",
+  lieujane:"Sportif des côtes rocheuses atlantiques. Pêche à la traîne, au leurre ou à la paternoster.",
+  saintpierre:"Poisson mythique reconnaissable à sa tache noire — la marque du pouce de Saint Pierre. Chair délicate.",
+  raie_bouclee:"La plus commune des raies côtières, fonds sableux et graveleux. Pêche au fond avec ver ou calmar.",
+  raie_past:"Possède un dard venimeux sur sa queue — ne jamais saisir. Pêche au fond avec ver ou crustacé.",
+  raie_etoilee:"Espèce endémique méditerranéenne, reconnaissable à ses taches étoilées. Fonds sableux et détritiques de 0 à 80 m.",
+  palourde:"Mollusque bivalve des fonds sableux littoraux. Pêche à pied à marée basse dans les sables vaseux.",
+  palourde_jp:"Espèce introduite très productive, largement cultivée. Plus commune que la palourde native.",
+  coque:"Abondante sur les estrans sableux, se pêche à pied à la griffe. Délicieuse marinière.",
+  moule:"Mollusque des rochers et structures immergées. Collecte à la main sur les rochers découverts.",
+  huitre_plate:"Espèce native en déclin, chair iodée exceptionnelle. Régions conchylicoles de l'Atlantique.",
+  cstjacques:"Bivalve noble des fonds sablo-vaseux de l'Atlantique. Pêche à la drague — quotas stricts.",
+  couteau:"Mollusque des sables profonds, sort la nuit. Pêche au sel sur les sables découverts à marée basse.",
+  praire:"Bivalve des fonds meubles côtiers, chair ferme et goûteuse. Pêche à pied ou en plongée.",
+  petoncle:"Petit pétoncle des roches et algues. Collecte à pied ou en plongée selon les zones.",
+  bigorneau:"Gastéropode des rochers intertidaux. Collecte à pied à marée basse — délicieux à l'aiguille !",
+  bulot:"Grand gastéropode des fonds sablo-vaseux. Pêche au casier ou au filet — cuit et servi avec mayonnaise.",
+  patelle:"Accrochée aux rochers battus par les vagues. Collecte à pied — à manger frais.",
+  ormeau:"Chair très appréciée — pêche strictement réglementée dans de nombreuses zones.",
+  oursin:"L'or de la Méditerranée, sa corail est une délicatesse. Collecte en plongée ou à pied sur les rochers.",
+  crabe_vert:"Crabe commun des zones intertidales. Collecte à pied ou au filet — souvent utilisé comme vif.",
+  tourteau:"Le roi des crabes, pinces puissantes. Pêche au casier en eau profonde — chair succulente.",
+  homard:"Le crustacé le plus précieux de nos eaux. Pêche au casier — quotas et tailles minimum stricts.",
+  langouste:"Crustacé emblématique de la Méditerranée. Pêche au casier sur les fonds rocheux profonds.",
+  cigale_mer:"La langouste plate, typiquement méditerranéenne. Pêche de nuit en plongée ou au casier.",
+  crevette_bouquet:"Crevette des eaux estuariennes, très savoureuse cuite à l'eau. Pêche au filet ou au carrelet.",
+  crevette_grise:"Petite crevette des fonds sableux, très abondante en Atlantique. Pêche au filet ou au haveneau.",
+  truite_fario:"La truite sauvage des torrents et rivières froides, symbole de la pêche sportive. Pêche à la mouche ou aux leurres.",
+  truite_arenciel:"Introduite d'Amérique du Nord, très présente dans les rivières françaises. Combattante appréciée.",
+  ombre:"Salmonidé des eaux fraîches et vives, pêche délicate à la mouche. Espèce indicatrice de qualité d'eau.",
+  omble:"Salmonidé des lacs alpins aux eaux froides et oxygénées. Pêche à la traîne ou à la cuillère.",
+  saumon:"Le roi des rivières, remonte pour frayer à plusieurs centaines de km de la mer. Pêche très réglementée.",
+  brochet:"Prédateur en embuscade dans les herbiers aquatiques. Pêche aux leurres ou au vif.",
+  sandre:"Prédateur nocturne des grands fleuves et lacs, très sportif. Pêche au leurre souple ou à la paternoster.",
+  perche:"Prédateur commun des eaux douces, rayures caractéristiques. Pêche aux vers ou aux petits leurres.",
+  blackbass:"Introduit d'Amérique du Nord, très sportif. Pêche aux leurres de surface et subsurface.",
+  silure:"Le plus grand poisson d'eau douce d'Europe, peut dépasser 2 m. Pêche au vif ou aux leurres imposants.",
+  carpe:"Cyprinidé commun de grande taille dans les lacs et rivières. Pêche à la bouillette ou aux appâts naturels.",
+  barbeau:"Cyprinidé des rivières à courant, fond pierreux. Pêche au fond avec ver ou teignes.",
+  chevesne:"Cyprinidé opportuniste des rivières de plaine et montagne. Pêche à la mouche ou aux petits leurres.",
+  gardon:"Très commun, idéal pour débuter. Pêche au coup avec asticot ou pain.",
+  breme:"Cyprinidé des eaux calmes et profondes. Pêche au feeder ou au coup en grande profondeur.",
+  tanche:"Cyprinidé des eaux calmes végétalisées. Pêche au fond avec ver dans les herbiers.",
+  rotengle:"Cyprinidé des eaux chaudes végétalisées. Pêche de surface aux insectes ou au coup.",
+  anguille_edf:"Espèce en danger critique qui migre jusqu'en mer des Sargasses pour frayer. Pêche réglementée.",
+  perche_soleil:"Espèce invasive d'Amérique du Nord, très colorée. Se pêche facilement aux petits leurres.",
+  ecrevisse_pp:"Espèce native protégée. Pêche fortement réglementée — espèce indicatrice de qualité d'eau.",
+  ecrevisse_pb:"Écrevisse native des sources et ruisseaux clairs, espèce protégée. En forte régression.",
+  ecrevisse_signal:"Espèce invasive américaine dominant les eaux françaises. Pêche libre selon arrêté préfectoral.",
+  ecrevisse_louisiane:"Espèce invasive très prolifique. Pêche autorisée voire encouragée pour la réguler.",
+  moule_perliere:"Mollusque endémique protégé des ruisseaux froids. Parmi les animaux les plus longévifs d'Europe (100+ ans).",
+  mulette_epaisse:"Moule d'eau douce en danger critique, liée à certains poissons hôtes pour son cycle de vie.",
+};
+
+// ══ NOMS EN ANGLAIS ══
+const NAME_EN = {
+  thon:'Atlantic Bluefin Tuna',espadon:'Swordfish',seriole:'Greater Amberjack',liche:'Leerfish',coryphene:'Mahi-Mahi',
+  barracuda:'European Barracuda',bonite:'Atlantic Bonito',maquereau:'Atlantic Mackerel',chinchard:'Atlantic Horse Mackerel',
+  doraderoyale:'Gilthead Sea Bream',doradegrise:'Black Sea Bream',doraderose:'Blackspot Sea Bream',pagre:'Common Sea Bream',
+  denti:'Common Dentex',sar:'White Sea Bream',sarmarbre:'Zebra Sea Bream',sartambour:'Sharpsnout Sea Bream',
+  beco:'Two-banded Sea Bream',marbre:'Sand Steenbras',pageot:'Common Pandora',bar:'European Sea Bass',
+  mulet:'Thicklip Grey Mullet',muletdore:'Golden Grey Mullet',rouget:'Striped Red Mullet',sole:'Common Sole',
+  vive:'Greater Weever',rascasse:'Black Scorpionfish',chapon:'Largescaled Scorpionfish',sebaste:'Blackbelly Rosefish',
+  labre:'Brown Wrasse',serran:'Painted Comber',merou:'Dusky Grouper',corb:'Brown Meagre',
+  poulpe:'Common Octopus',seche:'Common Cuttlefish',congre:'European Conger',murene:'Mediterranean Moray',
+  merlu:'European Hake',baudroie:'Monkfish',turbot:'Turbot',barbue:'Brill',cabillaud:'Atlantic Cod',
+  lieujane:'Pollock',saintpierre:'John Dory',raie_bouclee:'Thornback Ray',raie_past:'Common Stingray',
+  raie_etoilee:'Starry Ray',palourde:'Grooved Carpet Shell',palourde_jp:'Manila Clam',coque:'Common Cockle',
+  moule:'Mediterranean Mussel',huitre_plate:'European Flat Oyster',cstjacques:'Great Scallop',couteau:'Pod Razor Shell',
+  praire:'Warty Venus',petoncle:'Variegated Scallop',bigorneau:'Common Periwinkle',bulot:'Common Whelk',
+  patelle:'Common Limpet',ormeau:'European Abalone',oursin:'Purple Sea Urchin',crabe_vert:'European Green Crab',
+  tourteau:'Edible Crab',homard:'European Lobster',langouste:'Common Spiny Lobster',cigale_mer:'Sculptured Slipper Lobster',
+  crevette_bouquet:'Common Prawn',crevette_grise:'Common Shrimp',truite_fario:'Brown Trout',
+  truite_arenciel:'Rainbow Trout',ombre:'European Grayling',omble:'Arctic Char',saumon:'Atlantic Salmon',
+  brochet:'Northern Pike',sandre:'Zander',perche:'European Perch',blackbass:'Largemouth Bass',
+  silure:'Wels Catfish',carpe:'Common Carp',barbeau:'Barbel',chevesne:'Chub',gardon:'Common Roach',
+  breme:'Common Bream',tanche:'Tench',rotengle:'Rudd',anguille_edf:'European Eel',perche_soleil:'Pumpkinseed',
+  ecrevisse_pp:'Noble Crayfish',ecrevisse_pb:'White-clawed Crayfish',ecrevisse_signal:'Signal Crayfish',
+  ecrevisse_louisiane:'Red Swamp Crayfish',moule_perliere:'Freshwater Pearl Mussel',mulette_epaisse:'Thick-shelled River Mussel',
+};
+
+// ══ COORDONNÉES CARTE ══
+const MAP_COORDS = {
+  thon:[38.5,7.0],espadon:[37.0,12.0],seriole:[41.5,8.5],liche:[43.3,6.5],coryphene:[36.5,13.0],
+  barracuda:[43.0,6.5],bonite:[43.2,6.0],maquereau:[43.5,5.5],chinchard:[43.3,5.0],
+  doraderoyale:[43.0,5.8],doradegrise:[43.5,5.2],doraderose:[37.5,9.0],pagre:[42.8,7.0],
+  denti:[42.0,9.2],sar:[43.1,6.3],sarmarbre:[42.5,8.9],sartambour:[43.0,6.8],
+  beco:[43.2,7.0],marbre:[43.3,4.8],pageot:[43.1,5.6],bar:[43.3,5.5],
+  mulet:[43.5,5.0],muletdore:[43.4,5.1],rouget:[43.2,5.8],sole:[43.4,4.6],
+  vive:[43.3,4.5],rascasse:[43.1,5.9],chapon:[43.0,6.0],sebaste:[40.0,8.0],
+  labre:[43.0,5.8],serran:[43.2,6.2],merou:[41.5,8.7],corb:[42.8,6.5],
+  poulpe:[43.1,5.7],seche:[43.4,4.8],congre:[43.0,5.5],murene:[41.8,8.9],
+  merlu:[43.0,5.0],baudroie:[43.2,4.7],raie_bouclee:[50.0,0.0],raie_past:[43.4,4.4],
+  raie_etoilee:[42.5,9.0],turbot:[47.5,-3.5],barbue:[47.0,-3.0],cabillaud:[47.5,-5.0],
+  lieujane:[48.0,-4.5],saintpierre:[46.5,-2.0],
+  palourde:[47.3,-2.2],palourde_jp:[47.0,-2.0],coque:[48.0,-2.0],moule:[47.5,-3.0],
+  huitre_plate:[47.5,-3.5],cstjacques:[48.5,-2.5],couteau:[48.0,-2.0],praire:[47.0,-2.5],
+  petoncle:[48.5,-3.0],bigorneau:[48.0,-3.0],bulot:[49.0,-1.5],patelle:[43.5,6.0],
+  ormeau:[48.0,-4.0],oursin:[43.0,6.0],crabe_vert:[48.0,-2.0],tourteau:[48.0,-3.5],
+  homard:[48.5,-4.0],langouste:[42.0,9.0],cigale_mer:[41.5,8.8],crevette_bouquet:[47.0,-2.0],
+  crevette_grise:[50.5,1.5],truite_fario:[44.5,6.0],truite_arenciel:[45.0,4.0],
+  ombre:[44.8,6.5],omble:[45.5,6.5],saumon:[46.0,-1.2],brochet:[47.5,2.0],
+  sandre:[46.5,4.0],perche:[47.0,2.5],blackbass:[44.0,2.0],silure:[44.5,0.5],
+  carpe:[46.5,2.0],barbeau:[45.0,3.0],chevesne:[46.0,3.5],gardon:[47.0,3.0],
+  breme:[47.0,2.0],tanche:[46.0,2.0],rotengle:[46.5,2.5],anguille_edf:[47.0,1.0],
+  perche_soleil:[45.5,1.5],ecrevisse_pp:[45.0,4.0],ecrevisse_pb:[44.5,5.0],
+  ecrevisse_signal:[46.0,3.0],ecrevisse_louisiane:[43.5,3.0],moule_perliere:[45.0,3.5],mulette_epaisse:[46.5,5.0],
+};
+
+// ══ RECETTES ══ (à compléter par l'auteur — HTML libre)
+const RECIPES = {
+  // Exemple : poulpe:'<h4>Poulpe à la mode de Cargèse</h4><p>Battez le poulpe, faites-le mariner 12h à l\'huile d\'olive, ail et romarin...</p>'
+};
+
+// ══ LANGUAGE ══
+let LANG='fr';
+const I18N={
+  fr:{langBtn:'EN',zone_edf:'🏞 Eau douce',zone_med:'🌊 Méditerranée',zone_atl:'🌊 Atlantique',
+      country_fr:'🇫🇷 France',country_es:'🇪🇸 Espagne',stat_caught:'Espèces pêchées',
+      stat_total:'Au total',stat_progress:'Progression',hint:'Cliquer pour cocher ✓',
+      search:'Rechercher une espèce…',filter_all:'🎯 Toutes',filter_caught:'✅ Pêchées',
+      filter_todo:'⏳ Restantes',mode_pesc:'🐟 Pesciudex',mode_coq:'Coquidex 🐚',
+      map_title:'🗺 Carte de pêche — Méditerranée & Atlantique',
+      desc_tab:'Description',recipe_tab:'🍳 Recette',map_tab:'🗺 Carte',
+      recipe_soon:'Recette originale à venir — retrouvez bientôt les créations exclusives de Pesciudex 🍽',
+      map_link:'Voir sur la carte de pêche'},
+  en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
+      country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
+      stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
+      search:'Search for a species…',filter_all:'🎯 All',filter_caught:'✅ Caught',
+      filter_todo:'⏳ Remaining',mode_pesc:'🐟 Pesciudex',mode_coq:'Shelldex 🐚',
+      map_title:'🗺 Fishing Map — Mediterranean & Atlantic',
+      desc_tab:'Description',recipe_tab:'🍳 Recipe',map_tab:'🗺 Map',
+      recipe_soon:'Original recipe coming soon — exclusive Pesciudex creations 🍽',
+      map_link:'View on fishing map'},
+};
+function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
+function toggleLang(){
+  LANG=LANG==='fr'?'en':'fr';
+  document.getElementById('lang-btn').textContent=T('langBtn');
+  document.getElementById('zone-edf').textContent=T('zone_edf');
+  document.getElementById('zone-med').textContent=T('zone_med');
+  document.getElementById('zone-atl').textContent=T('zone_atl');
+  document.getElementById('country-fr').textContent=T('country_fr');
+  document.getElementById('country-es').textContent=T('country_es');
+  document.querySelector('.stat-l:nth-child(1)')?.closest('.stat-chip')?.querySelector('.stat-l');
+  document.querySelectorAll('.stat-l').forEach((el,i)=>{el.textContent=[T('stat_caught'),T('stat_total'),T('stat_progress')][i]||el.textContent;});
+  document.querySelector('.chint').textContent=T('hint');
+  const fs=document.getElementById('fsearch');if(fs)fs.placeholder=T('search');
+  document.getElementById('mode-lbl-l').textContent=T('mode_pesc');
+  document.getElementById('mode-lbl-r').textContent=T('mode_coq');
+  document.getElementById('info-map-btn-text').textContent=T('map_link');
+  document.getElementById('map-title').textContent=T('map_title');
+  document.querySelector('#itab-desc').textContent=T('desc_tab');
+  document.querySelector('#itab-recette').textContent=T('recipe_tab');
+  document.querySelector('#itab-carte').textContent=T('map_tab');
+  renderFilters();render();
+}
 
 // ══ STATE ══
 let PROFILES=[], ACTIVE_PID=null;
@@ -1804,7 +2110,92 @@ function _fmfShowResult(r){
     <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">📸 Nouvelle photo</button>`;
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('fmf-overlay').classList.contains('open'))closeFMF();});
+// ══ SPECIES INFO MODAL ══
+let _infoId=null;
+function openInfo(id){
+  const f=getData().find(x=>x.id===id);if(!f)return;
+  _infoId=id;
+  document.getElementById('info-name').textContent=f.name;
+  document.getElementById('info-name-en').textContent=NAME_EN[id]||f.latin||'';
+  // Photo
+  const wrap=document.getElementById('info-photo-wrap');
+  const existing=wrap.querySelector('img');if(existing)existing.remove();
+  const emojiEl=document.getElementById('info-photo-emoji');
+  emojiEl.textContent=f.e||'🐟';
+  emojiEl.style.display='flex';
+  const imgSrc=(getActiveST()[stKey(id)]||{}).photo||(MODE==='coq'?CQIMGS[id]:IMGS[id])||WIKI_CACHE[(f.latin||'').trim().split(/\s+/).slice(0,2).join('_')]||localStorage.getItem('wimg:'+(f.latin||'').trim().split(/\s+/).slice(0,2).join('_'))||'';
+  if(imgSrc){
+    const img=document.createElement('img');img.src=imgSrc;img.referrerPolicy='no-referrer';
+    img.onerror=()=>{img.remove();emojiEl.style.display='flex';};
+    img.onload=()=>{emojiEl.style.display='none';};
+    wrap.insertBefore(img,emojiEl);
+  }
+  // Description
+  const descLang=LANG==='en'&&DESC[id]?DESC[id]:DESC[id]||'';
+  document.getElementById('info-desc-text').textContent=descLang||'Aucune description disponible.';
+  // Recipe
+  const recipeEl=document.getElementById('info-recipe-content');
+  if(RECIPES[id]){recipeEl.innerHTML='<div class="info-recipe-content">'+RECIPES[id]+'</div>';}
+  else{recipeEl.innerHTML='<div class="info-recipe-empty">'+T('recipe_soon')+'</div>';}
+  // Tabs
+  setInfoTab('desc');
+  document.getElementById('info-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeInfo(){
+  document.getElementById('info-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeInfoOut(e){if(e.target===document.getElementById('info-overlay'))closeInfo();}
+function setInfoTab(tab){
+  ['desc','recette','carte'].forEach(t=>{
+    document.getElementById('itab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('ipane-'+t).classList.toggle('active',t===tab);
+  });
+}
+
+// ══ MAP (Leaflet) ══
+let _leafletMap=null;
+function openMap(){
+  document.getElementById('map-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>{
+    if(!window.L){document.getElementById('map-title').textContent='🗺 Leaflet non chargé — connexion requise';return;}
+    if(!_leafletMap){
+      _leafletMap=L.map('leaflet-map',{zoomControl:true}).setView([44.5,4],5);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:13,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'}).addTo(_leafletMap);
+      const zoneColor={med:'#1AAFA0',atl:'#1565C0',edf:'#2E7D32',cq:'#795548'};
+      const getZoneOf=id=>{
+        const edf=['truite_fario','truite_arenciel','ombre','omble','saumon','brochet','sandre','perche','blackbass','silure','carpe','barbeau','chevesne','gardon','breme','tanche','rotengle','anguille_edf','perche_soleil','ecrevisse_pp','ecrevisse_pb','ecrevisse_signal','ecrevisse_louisiane','moule_perliere','mulette_epaisse'];
+        const cq=['palourde','palourde_jp','coque','moule','huitre_plate','cstjacques','couteau','praire','petoncle','bigorneau','bulot','patelle','ormeau','oursin','crabe_vert','tourteau','homard','langouste','cigale_mer','crevette_bouquet','crevette_grise'];
+        const atl=['turbot','barbue','cabillaud','lieujane','saintpierre','raie_bouclee'];
+        if(edf.includes(id))return 'edf';if(cq.includes(id))return 'cq';if(atl.includes(id))return 'atl';return 'med';
+      };
+      Object.entries(MAP_COORDS).forEach(([id,coords])=>{
+        const allData=[...BASE_DATA,...COQUIDEX_DATA,...FRESHWATER_DATA,...CQ_FRESHWATER_DATA,...(CUSTOM||[])];
+        const sp=allData.find(x=>x.id===id);if(!sp)return;
+        const z=getZoneOf(id);
+        const circle=L.circleMarker(coords,{radius:7,fillColor:zoneColor[z]||'#1AAFA0',color:'#fff',weight:1.5,opacity:1,fillOpacity:0.85}).addTo(_leafletMap);
+        const enName=NAME_EN[id]?` <em style="color:#888;font-size:11px">${NAME_EN[id]}</em>`:'';
+        circle.bindPopup(`<b>${sp.name}</b>${enName}<br><span style="font-size:11px;color:#666;font-style:italic">${sp.latin||''}</span>`);
+      });
+    } else {
+      _leafletMap.invalidateSize();
+    }
+  },120);
+}
+function closeMap(){
+  document.getElementById('map-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('fmf-overlay').classList.contains('open'))closeFMF();
+    else if(document.getElementById('info-overlay').classList.contains('open'))closeInfo();
+    else if(document.getElementById('map-overlay').classList.contains('open'))closeMap();
+  }
+});
 
 // ══ CARD RENDER ══
 function rc(id){
@@ -1820,7 +2211,7 @@ function rc(id){
   const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${f.name.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}${delBtn}</div>`:''}`;
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${f.name.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${f.name}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${f.s}</span><span class="tag ${ic.cls}">${ic.dot} ${ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">Mode</div><div class="mgrid">${mb}</div><div class="slbl">Ma prise</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>Taille / Qté</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>Poids (kg)</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">Taille</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">Poids</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">Mode</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>Notes</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="Lieu, profondeur, technique…">${s.note||''}</textarea></div><div class="slbl">Ma photo</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div>${delBtn}</div>`:''}`;
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
