@@ -1563,7 +1563,7 @@ async function _fmfAnalyzeINat(){
 function _fmfShowINatResult(results){
   if(!results.length){
     document.getElementById('fmf-body').innerHTML=`
-      <div class="fmf-not-found">🤔 Aucune espèce reconnue dans cette image.</div>
+      <div class="fmf-not-found">🤔 Je ne suis pas sûr que cette espèce soit présente dans l'eau.</div>
       <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
     return;
   }
@@ -1593,7 +1593,7 @@ function _fmfShowINatResult(results){
 function _fmfShowResult(r){
   if(!r||!r.found){
     document.getElementById('fmf-body').innerHTML=`
-      <div class="fmf-not-found">🤔 ${r?.message||'Aucun animal aquatique reconnu dans cette image.'}</div>
+      <div class="fmf-not-found">🤔 Je ne suis pas sûr que cette espèce soit présente dans l'eau.</div>
       <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">↩ Réessayer avec une autre photo</button>`;
     return;
   }
