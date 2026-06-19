@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -467,6 +470,59 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 /* ══ TUNA DECLARATION MODAL ══ */
 #tuna-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 #tuna-overlay.open{display:flex}
+/* ══ LEADERBOARD ══ */
+#lb-overlay{position:fixed;inset:0;z-index:460;background:#e8f4f8;display:none;flex-direction:column}
+#lb-overlay.open{display:flex}
+.lb-topbar{background:linear-gradient(135deg,#0B2540 0%,#1A6FA0 100%);padding:14px 16px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lb-topbar-title{flex:1;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.4px}
+.lb-close{background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;font-size:18px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-tabs{display:flex;gap:6px;padding:12px 14px 0;flex-shrink:0}
+.lb-tab{flex:1;font-size:12px;font-weight:600;padding:7px 4px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);cursor:pointer;transition:all .15s;text-align:center}
+.lb-tab.sel{background:var(--sea);color:#fff;border-color:var(--sea)}
+.lb-month-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;flex-shrink:0}
+.lb-month-lbl{font-size:14px;font-weight:700;color:var(--sea)}
+.lb-nav-btn{background:rgba(11,37,64,.08);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;color:var(--sea);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-nav-btn:hover{background:rgba(11,37,64,.18)}
+.lb-sponsor{margin:0 14px 10px;background:linear-gradient(135deg,#FFF8E1,#FFF3CD);border:1.5px solid rgba(230,180,0,.35);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lb-sponsor-logo{font-size:28px;line-height:1}
+.lb-sponsor-info{flex:1}
+.lb-sponsor-name{font-size:13px;font-weight:800;color:#7A5800}
+.lb-sponsor-prize{font-size:11px;color:#9A7000;margin-top:2px}
+.lb-sponsor-link{font-size:11px;font-weight:600;color:#B88000;text-decoration:none;background:rgba(230,180,0,.2);padding:4px 10px;border-radius:50px;border:1px solid rgba(230,180,0,.35)}
+.lb-body{flex:1;overflow-y:auto;padding:0 14px 90px}
+.lb-fam-section{margin-bottom:18px}
+.lb-fam-hdr{font-size:13px;font-weight:700;color:var(--sea);margin-bottom:8px;display:flex;align-items:center;gap:6px;padding:6px 0 4px;border-bottom:1.5px solid rgba(11,37,64,.1)}
+.lb-entry{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-radius:10px;margin-bottom:6px;box-shadow:0 1px 4px rgba(11,37,64,.07)}
+.lb-rank{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.lb-rank-num{font-size:13px;font-weight:800;color:var(--txt3);width:28px;text-align:center;flex-shrink:0}
+.lb-entry-info{flex:1;min-width:0}
+.lb-entry-user{font-size:13px;font-weight:700;color:var(--sea);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-entry-sp{font-size:11px;color:var(--txt2);margin-top:1px}
+.lb-entry-stats{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.lb-stat-pill{font-size:11px;font-weight:600;background:rgba(26,175,160,.12);color:var(--teal3);padding:3px 8px;border-radius:50px}
+.lb-empty{text-align:center;padding:40px 20px;color:var(--txt3);font-size:13px}
+.lb-loading{text-align:center;padding:40px 20px;color:var(--txt3);font-size:13px}
+.lb-me{background:rgba(26,175,160,.07);border:1.5px solid rgba(26,175,160,.3)}
+/* Submit overlay */
+#lb-submit-overlay{position:fixed;inset:0;background:rgba(11,37,64,.6);z-index:470;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#lb-submit-overlay.open{display:flex}
+.lb-submit-sheet{background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px}
+.lb-submit-title{font-size:17px;font-weight:800;color:var(--sea);margin-bottom:4px}
+.lb-submit-sub{font-size:13px;color:var(--txt2);margin-bottom:18px}
+.lb-submit-sp{display:flex;align-items:center;gap:10px;background:var(--bg-page);border-radius:10px;padding:10px 12px;margin-bottom:18px}
+.lb-submit-sp-emoji{font-size:28px}
+.lb-submit-sp-name{font-size:14px;font-weight:700;color:var(--sea)}
+.lb-submit-sp-stats{font-size:12px;color:var(--txt2);margin-top:2px}
+.lb-inp{width:100%;font-size:15px;padding:11px 16px;border:1.5px solid rgba(11,37,64,.15);border-radius:50px;background:var(--bg-page);color:var(--sea);font-family:inherit;outline:none;margin-bottom:14px}
+.lb-inp:focus{border-color:var(--acc)}
+.lb-submit-btn{width:100%;padding:14px;font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--sea),var(--sea3));color:#fff;border:none;border-radius:50px;cursor:pointer;transition:opacity .15s}
+.lb-submit-btn:hover{opacity:.9}
+.lb-submit-btn:disabled{opacity:.5;cursor:default}
+.lb-cancel-btn{width:100%;padding:10px;font-size:14px;color:var(--txt2);background:none;border:none;cursor:pointer;margin-top:8px}
+/* Submit badge on card */
+.lb-card-btn{width:100%;margin-top:10px;padding:11px;font-size:13px;font-weight:700;background:linear-gradient(135deg,#0B2540,#1A6FA0);color:#fff;border:none;border-radius:50px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.lb-card-btn:hover{opacity:.9}
+.lb-submitted-badge{width:100%;margin-top:10px;padding:10px;font-size:13px;font-weight:600;background:rgba(26,175,160,.1);color:var(--teal3);border:1.5px solid rgba(26,175,160,.3);border-radius:50px;text-align:center}
 .tuna-modal{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;padding:22px 18px 40px;animation:slideUp .3s cubic-bezier(.4,0,.2,1)}
 .tuna-step{display:flex;gap:12px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(11,37,64,.07)}
 .tuna-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
@@ -547,6 +603,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <button class="pdf-export-btn" onclick="openMap()">🗺 Carte de pêche</button>
         <button class="pdf-export-btn" id="weather-btn" onclick="openWeather()">🌊 Météo</button>
         <button class="pdf-export-btn" id="stats-btn" onclick="openStats()">📊 Stats</button>
+        <button class="pdf-export-btn" id="lb-btn" onclick="openLeaderboard()">🏆 Classement</button>
         <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
       </div>
     </div>
@@ -789,6 +846,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 </div>
 
 <!-- LIGHTBOX -->
+<!-- LEADERBOARD OVERLAY -->
+<div id="lb-overlay">
+  <div class="lb-topbar">
+    <span style="font-size:22px">🏆</span>
+    <div class="lb-topbar-title" id="lb-title">Classement mensuel</div>
+    <button class="lb-close" onclick="closeLeaderboard()">✕</button>
+  </div>
+  <div class="lb-tabs" id="lb-tabs"></div>
+  <div class="lb-month-nav">
+    <button class="lb-nav-btn" onclick="_lbPrevMonth()">‹</button>
+    <div class="lb-month-lbl" id="lb-month-lbl"></div>
+    <button class="lb-nav-btn" onclick="_lbNextMonth()">›</button>
+  </div>
+  <div id="lb-sponsor" class="lb-sponsor" style="display:none"></div>
+  <div class="lb-body" id="lb-body"><div class="lb-loading">Chargement…</div></div>
+</div>
+<!-- LEADERBOARD SUBMIT -->
+<div id="lb-submit-overlay" onclick="closeLbSubmitOut(event)">
+  <div class="lb-submit-sheet">
+    <div class="lb-submit-title" id="lb-submit-title">Soumettre au classement</div>
+    <div class="lb-submit-sub" id="lb-submit-sub">Ton pseudo sera visible publiquement</div>
+    <div class="lb-submit-sp" id="lb-submit-sp"></div>
+    <input class="lb-inp" id="lb-pseudo-inp" type="text" maxlength="20" placeholder="Ton pseudo (ex: PêcheurCorse)">
+    <button class="lb-submit-btn" id="lb-submit-confirm" onclick="confirmLbSubmit()">🏆 Soumettre</button>
+    <button class="lb-cancel-btn" onclick="closeLbSubmit()">Annuler</button>
+  </div>
+</div>
 <div id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="event.stopPropagation();closeLightbox()">✕</button>
   <img class="lb-img" id="lb-img" src="" alt="" onclick="event.stopPropagation()">
@@ -1632,7 +1716,15 @@ const I18N={
       btn_cancel:'Annuler',btn_add:'✓ Ajouter',btn_close:'Fermer',btn_create:'✓ Créer la famille',
       story_btn:'📸 Créer une Story Instagram',
       weather_btn:'🌊 Météo',stats_btn:'📊 Stats',
-      stats_title:'📊 Mes statistiques',weather_title:'🌊 Météo marine — 7 jours'},
+      stats_title:'📊 Mes statistiques',weather_title:'🌊 Météo marine — 7 jours',
+      lb_btn:'🏆 Classement',lb_title:'Classement mensuel',
+      lb_submit_btn:'🏆 Soumettre au classement',lb_submitted:'✅ Soumis au classement',
+      lb_submit_title:'Soumettre au classement',lb_submit_sub:'Ton pseudo sera visible publiquement',
+      lb_pseudo_ph:'Ton pseudo (ex: PêcheurCorse)',lb_confirm:'🏆 Soumettre',lb_cancel:'Annuler',
+      lb_empty:'Aucune capture soumise ce mois-ci.\nSois le premier !',lb_loading:'Chargement…',
+      lb_med:'🌊 Méditerranée',lb_atl:'🌊 Atlantique',lb_edf:'🏞 Eau douce',
+      lb_sponsor_none:'Partenaire à venir',lb_prize:'Lot du mois',
+      lb_region_med:'Méditerranée',lb_region_atl:'Atlantique',lb_region_edf:'Eau douce'},
   en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
       stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
@@ -1659,7 +1751,15 @@ const I18N={
       btn_cancel:'Cancel',btn_add:'✓ Add',btn_close:'Close',btn_create:'✓ Create family',
       story_btn:'📸 Create Instagram Story',
       weather_btn:'🌊 Weather',stats_btn:'📊 Stats',
-      stats_title:'📊 My statistics',weather_title:'🌊 Marine weather — 7 days'},
+      stats_title:'📊 My statistics',weather_title:'🌊 Marine weather — 7 days',
+      lb_btn:'🏆 Ranking',lb_title:'Monthly ranking',
+      lb_submit_btn:'🏆 Submit to ranking',lb_submitted:'✅ Submitted to ranking',
+      lb_submit_title:'Submit to ranking',lb_submit_sub:'Your username will be publicly visible',
+      lb_pseudo_ph:'Your username (e.g. FishermanCorse)',lb_confirm:'🏆 Submit',lb_cancel:'Cancel',
+      lb_empty:'No catch submitted this month.\nBe the first!',lb_loading:'Loading…',
+      lb_med:'🌊 Mediterranean',lb_atl:'🌊 Atlantic',lb_edf:'🏞 Fresh water',
+      lb_sponsor_none:'Partner coming soon',lb_prize:'Prize of the month',
+      lb_region_med:'Mediterranean',lb_region_atl:'Atlantic',lb_region_edf:'Fresh water'},
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
 function applyLang(){
@@ -1689,8 +1789,10 @@ function applyLang(){
   const tfm=document.getElementById('tab-fam');if(tfm)tfm.textContent=T('modal_tab_fam');
   const wb=document.getElementById('weather-btn');if(wb)wb.textContent=T('weather_btn');
   const sb=document.getElementById('stats-btn');if(sb)sb.textContent=T('stats_btn');
+  const lbb=document.getElementById('lb-btn');if(lbb)lbb.textContent=T('lb_btn');
   const wt=document.getElementById('weather-title');if(wt)wt.textContent=T('weather_title');
   const st2=document.getElementById('stats-title');if(st2)st2.textContent=T('stats_title');
+  const lbt=document.getElementById('lb-title');if(lbt)lbt.textContent=T('lb_title');
   updateBrandSub();
 }
 function toggleLang(){
@@ -2950,7 +3052,8 @@ function rc(id){
   const modes=ZONE==='edf'?(MODE==='pesc'?MODES_EDF:MODES_CQEDF):(MODE==='pesc'?MODES_PESC:MODES_COQ);
   const mb=modes.map(m=>`<button class="mbtn${s.mode===m.key?' sel':''}" onclick="event.stopPropagation();sm('${id}','${m.key}')"><span class="mi">${m.icon}</span><span>${m.label}</span></button>`).join('');
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${delBtn}</div>`:''}`;
+  const lbBtn=caught?(_isSubmitted(id)?`<div class="lb-submitted-badge">${T('lb_submitted')}</div>`:`<button class="lb-card-btn" onclick="event.stopPropagation();openLbSubmit('${id}')">${T('lb_submit_btn')}</button>`):'';
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
@@ -3051,8 +3154,244 @@ function delFamily(id){
   renderCustomFamList();buildFamSelect();renderFilters();
 }
 
+// ══ FIREBASE LEADERBOARD ══
+const _FB_CONFIG={
+  apiKey:"AIzaSyDGvPaSk73fQrx4NsmJqKNr1RH4ExfywDI",
+  authDomain:"pesciudex.firebaseapp.com",
+  projectId:"pesciudex",
+  storageBucket:"pesciudex.firebasestorage.app",
+  messagingSenderId:"429108777336",
+  appId:"1:429108777336:web:8a701a17d716990111388d"
+};
+let _fbDb=null,_fbUser=null,_fbReady=false;
+let _lbRegion='med',_lbMonthOffset=0;
+let _pendingSubmitId=null;
+
+// Sponsor configuration — à mettre à jour avec le vrai partenaire
+const SPONSOR_CONFIG={
+  active:false,
+  name:'Partenaire à venir',
+  emoji:'🎣',
+  product:'Lot du mois à découvrir',
+  link:null
+};
+
+function _initFirebase(){
+  if(typeof firebase==='undefined')return;
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(_FB_CONFIG);
+    _fbDb=firebase.firestore();
+    firebase.auth().signInAnonymously().then(r=>{
+      _fbUser=r.user;_fbReady=true;
+    }).catch(()=>{_fbReady=true;});
+  }catch(e){_fbReady=true;}
+}
+
+function _lbMonth(offset){
+  const d=new Date();
+  d.setDate(1);d.setMonth(d.getMonth()+offset);
+  return d.toISOString().slice(0,7); // 'YYYY-MM'
+}
+function _lbMonthLabel(offset){
+  const d=new Date();
+  d.setDate(1);d.setMonth(d.getMonth()+offset);
+  const fr=LANG==='fr';
+  const months=fr?['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']:
+    ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return months[d.getMonth()]+' '+d.getFullYear();
+}
+
+function openLeaderboard(){
+  _lbRegion=ZONE==='atl'?'atl':ZONE==='edf'?'edf':'med';
+  _lbMonthOffset=0;
+  document.getElementById('lb-overlay').classList.add('open');
+  _renderLbUI();
+}
+function closeLeaderboard(){document.getElementById('lb-overlay').classList.remove('open');}
+function _lbPrevMonth(){_lbMonthOffset--;_renderLbUI();}
+function _lbNextMonth(){if(_lbMonthOffset<0){_lbMonthOffset++;_renderLbUI();}}
+
+function _renderLbUI(){
+  // Tabs
+  const tabs=document.getElementById('lb-tabs');
+  const regions=[{k:'med',label:T('lb_med')},{k:'atl',label:T('lb_atl')},{k:'edf',label:T('lb_edf')}];
+  tabs.innerHTML=regions.map(r=>`<button class="lb-tab${_lbRegion===r.k?' sel':''}" onclick="_lbSetRegion('${r.k}')">${r.label}</button>`).join('');
+  // Month nav
+  document.getElementById('lb-month-lbl').textContent=_lbMonthLabel(_lbMonthOffset);
+  // Disable next if current month
+  document.querySelector('.lb-nav-btn:last-child').disabled=_lbMonthOffset>=0;
+  // Sponsor
+  _renderLbSponsor();
+  // Entries
+  _fetchLbEntries();
+}
+
+function _lbSetRegion(r){_lbRegion=r;_renderLbUI();}
+
+function _renderLbSponsor(){
+  const el=document.getElementById('lb-sponsor');
+  if(!SPONSOR_CONFIG.active){el.style.display='none';return;}
+  el.style.display='flex';
+  const link=SPONSOR_CONFIG.link?`<a href="${SPONSOR_CONFIG.link}" target="_blank" class="lb-sponsor-link">Voir →</a>`:'';
+  el.innerHTML=`<div class="lb-sponsor-logo">${SPONSOR_CONFIG.emoji}</div>
+<div class="lb-sponsor-info">
+  <div class="lb-sponsor-name">${SPONSOR_CONFIG.name}</div>
+  <div class="lb-sponsor-prize">🎁 ${T('lb_prize')} : ${SPONSOR_CONFIG.product}</div>
+</div>${link}`;
+}
+
+async function _fetchLbEntries(){
+  const body=document.getElementById('lb-body');
+  body.innerHTML=`<div class="lb-loading">${T('lb_loading')}</div>`;
+  if(!_fbDb){
+    body.innerHTML=`<div class="lb-empty">Connexion indisponible.<br>Vérifie ta connexion internet.</div>`;
+    return;
+  }
+  try{
+    const month=_lbMonth(_lbMonthOffset);
+    const snap=await _fbDb.collection('leaderboard')
+      .where('region','==',_lbRegion)
+      .where('month','==',month)
+      .orderBy('timestamp','desc')
+      .limit(200)
+      .get();
+    const entries=[];
+    snap.forEach(doc=>entries.push({id:doc.id,...doc.data()}));
+    _renderLbEntries(entries);
+  }catch(e){
+    body.innerHTML=`<div class="lb-empty">Erreur de chargement.<br><small>${e.message}</small></div>`;
+  }
+}
+
+function _renderLbEntries(entries){
+  const body=document.getElementById('lb-body');
+  if(!entries.length){
+    body.innerHTML=`<div class="lb-empty">${T('lb_empty').replace('\n','<br>')}</div>`;
+    return;
+  }
+  // Group by family
+  const byFam={};
+  entries.forEach(e=>{
+    const fk=e.family||'autre';
+    if(!byFam[fk])byFam[fk]=[];
+    byFam[fk].push(e);
+  });
+  // Sort within each family by weight desc, then size desc
+  Object.values(byFam).forEach(arr=>arr.sort((a,b)=>{
+    const wa=parseFloat(a.weight)||0,wb=parseFloat(b.weight)||0;
+    if(wa!==wb)return wb-wa;
+    const sa=parseFloat(a.size)||0,sb=parseFloat(b.size)||0;
+    return sb-sa;
+  }));
+  const fams=ZONE==='edf'?(MODE==='pesc'?FAMS_EDF:CQFAMS_EDF):(MODE==='pesc'?FAMS_BASE:CQFAMS_BASE);
+  const podium=['🥇','🥈','🥉'];
+  let html='';
+  Object.entries(byFam).forEach(([fk,arr])=>{
+    const fc=fams[fk]||{label:fk,icon:'🎯'};
+    const famLabel=LANG==='en'?(fc.label_en||fc.label):fc.label;
+    html+=`<div class="lb-fam-section"><div class="lb-fam-hdr">${fc.icon} ${famLabel}</div>`;
+    arr.slice(0,10).forEach((e,i)=>{
+      const isMe=_fbUser&&e.userId===_fbUser.uid;
+      const rank=i<3?`<span class="lb-rank">${podium[i]}</span>`:`<span class="lb-rank-num">${i+1}</span>`;
+      const stats=[];
+      if(e.weight)stats.push(`⚖ ${e.weight} kg`);
+      if(e.size)stats.push(`📏 ${e.size}`);
+      html+=`<div class="lb-entry${isMe?' lb-me':''}">
+        ${rank}
+        <div class="lb-entry-info">
+          <div class="lb-entry-user">${e.username||'Anonyme'}${isMe?' <span style="font-size:10px;color:var(--teal3)">· toi</span>':''}</div>
+          <div class="lb-entry-sp">${e.speciesEmoji||'🐟'} ${e.speciesName||''}</div>
+        </div>
+        <div class="lb-entry-stats">${stats.map(s=>`<div class="lb-stat-pill">${s}</div>`).join('')}</div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  body.innerHTML=html;
+}
+
+// Submit flow
+function openLbSubmit(id){
+  const f=getData().find(x=>x.id===id);if(!f)return;
+  const s=(getActiveST()[stKey(id)])||{};
+  if(!s.caught)return;
+  _pendingSubmitId=id;
+  // Pre-fill pseudo from localStorage
+  const saved=localStorage.getItem('pesc-pseudo')||'';
+  document.getElementById('lb-pseudo-inp').value=saved;
+  // Species preview
+  const spDiv=document.getElementById('lb-submit-sp');
+  const stats=[];
+  if(s.weight)stats.push(`⚖ ${s.weight} kg`);
+  if(s.size)stats.push(`📏 ${s.size}`);
+  if(s.date)stats.push(`📅 ${s.date}`);
+  spDiv.innerHTML=`<div class="lb-submit-sp-emoji">${f.e}</div>
+<div><div class="lb-submit-sp-name">${f.name}</div><div class="lb-submit-sp-stats">${stats.join(' · ')}</div></div>`;
+  document.getElementById('lb-submit-title').textContent=T('lb_submit_title');
+  document.getElementById('lb-submit-sub').textContent=T('lb_submit_sub');
+  document.getElementById('lb-pseudo-inp').placeholder=T('lb_pseudo_ph');
+  document.getElementById('lb-submit-confirm').textContent=T('lb_confirm');
+  document.getElementById('lb-cancel-btn')||0;
+  document.getElementById('lb-submit-overlay').classList.add('open');
+}
+function closeLbSubmit(){document.getElementById('lb-submit-overlay').classList.remove('open');_pendingSubmitId=null;}
+function closeLbSubmitOut(e){if(e.target===document.getElementById('lb-submit-overlay'))closeLbSubmit();}
+
+async function confirmLbSubmit(){
+  if(!_pendingSubmitId||!_fbDb||!_fbUser)return;
+  const pseudo=document.getElementById('lb-pseudo-inp').value.trim();
+  if(!pseudo){document.getElementById('lb-pseudo-inp').focus();return;}
+  localStorage.setItem('pesc-pseudo',pseudo);
+  const btn=document.getElementById('lb-submit-confirm');
+  btn.disabled=true;btn.textContent='Envoi…';
+  const id=_pendingSubmitId;
+  const f=getData().find(x=>x.id===id);
+  const s=(getActiveST()[stKey(id)])||{};
+  const month=_lbMonth(0);
+  const docId=`${_fbUser.uid}_${id}_${month}`;
+  // region = ZONE
+  const region=ZONE;
+  try{
+    await _fbDb.collection('leaderboard').doc(docId).set({
+      userId:_fbUser.uid,
+      username:pseudo,
+      region,
+      family:f.fam||'',
+      speciesId:id,
+      speciesName:f.name,
+      speciesEmoji:f.e||'🐟',
+      latinName:f.latin||'',
+      iucn:f.i||'DD',
+      size:s.size||'',
+      weight:s.weight?parseFloat(s.weight):null,
+      date:s.date||'',
+      month,
+      timestamp:firebase.firestore.FieldValue.serverTimestamp()
+    });
+    // Mark as submitted
+    const submitted=JSON.parse(localStorage.getItem('pesc-submitted')||'{}');
+    submitted[`${id}_${month}`]=true;
+    localStorage.setItem('pesc-submitted',JSON.stringify(submitted));
+    closeLbSubmit();
+    // Refresh card
+    rc(id);
+    // Feedback
+    btn.disabled=false;btn.textContent=T('lb_confirm');
+  }catch(e){
+    btn.disabled=false;btn.textContent=T('lb_confirm');
+    alert('Erreur : '+e.message);
+  }
+}
+
+function _isSubmitted(id){
+  const month=_lbMonth(0);
+  const submitted=JSON.parse(localStorage.getItem('pesc-submitted')||'{}');
+  return !!submitted[`${id}_${month}`];
+}
+
 // ══ INIT ══
 loadProfiles();migrateOld();
+_initFirebase();
 const doStart=pid=>{
   ACTIVE_PID=pid;loadProfileState();
   document.getElementById('loading').classList.add('hidden');
