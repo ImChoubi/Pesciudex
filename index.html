@@ -549,31 +549,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .iucn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:3px;flex-shrink:0}
 /* ══ DARK MODE ══ */
 @media(prefers-color-scheme:dark){
-  :root{--bg-page:#0F1923;--txt:#DDE8F4;--txt2:#7A9AB8;--txt3:#3D5870;--wave-fill:#0F1923;--sh1:0 1px 4px rgba(0,0,0,.25);--sh2:0 4px 16px rgba(0,0,0,.35)}
-  body{background:#0F1923}
-  .card,.legend{background:#172535;border-color:rgba(255,255,255,.06)}
+  :root{--bg-page:#1E2D3F;--txt:#D8E8F4;--txt2:#7A9AB8;--txt3:#4A6A88;--wave-fill:#1E2D3F;--sh1:0 1px 4px rgba(0,0,0,.2);--sh2:0 4px 16px rgba(0,0,0,.28)}
+  body{background:#1E2D3F}
+  .card,.legend{background:#253545;border-color:rgba(255,255,255,.07)}
   .card.caught{border-color:rgba(26,175,160,.4);border-left-color:var(--acc)}
-  .fbar{background:#0F1923;border-bottom-color:rgba(255,255,255,.06)}
-  .fsearch{background-color:#172535;border-color:rgba(255,255,255,.1);color:var(--txt)}
-  .fbtn{background:#172535;border-color:rgba(255,255,255,.09);color:var(--txt2)}
+  .fbar{background:#1E2D3F;border-bottom-color:rgba(255,255,255,.07)}
+  .fsearch{background-color:#253545;border-color:rgba(255,255,255,.1);color:var(--txt)}
+  .fbtn{background:#253545;border-color:rgba(255,255,255,.09);color:var(--txt2)}
   .fbtn.on{background:var(--sea);color:#fff}
-  .bnav{background:#172535;border-top-color:rgba(255,255,255,.06)}
-  .bnav-btn{color:#3D5870}
+  .bnav{background:#253545;border-top-color:rgba(255,255,255,.07)}
+  .bnav-btn{color:#4A6A88}
   .bnav-btn.active{color:var(--acc)}
-  .field input,.ffield input,.ffield textarea,.mfield input,.mfield select,.mfield textarea{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt)}
-  .rbox,.wstat{background:#0F1923}
-  .mbtn{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt2)}
+  .field input,.ffield input,.ffield textarea,.mfield input,.mfield select,.mfield textarea{background:#1A2838;border-color:rgba(255,255,255,.1);color:var(--txt)}
+  .rbox,.wstat{background:#1A2838}
+  .mbtn{background:#1A2838;border-color:rgba(255,255,255,.1);color:var(--txt2)}
   .mbtn.sel{background:var(--sea);color:#fff}
-  .nbox{background:rgba(26,175,160,.07)}
-  .modal,.fmf-modal,.lb-submit-sheet{background:#172535}
-  .info-modal{background:#172535}
-  .wcard,.lb-entry,.scard,.catch-tl-item{background:#172535}
-  .lb-body{background:#0F1923}
+  .nbox{background:rgba(26,175,160,.08)}
+  .modal,.fmf-modal,.lb-submit-sheet{background:#253545}
+  .info-modal{background:#253545}
+  .wcard,.lb-entry,.scard,.catch-tl-item{background:#253545}
+  .lb-body{background:#1E2D3F}
   .modal-handle{background:rgba(255,255,255,.12)}
-  .btn-cancel{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt2)}
+  .btn-cancel{background:#1A2838;border-color:rgba(255,255,255,.1);color:var(--txt2)}
   .desc-box{background:rgba(26,175,160,.07);border-left-color:rgba(26,175,160,.4)}
   .cbar .clbl{color:var(--txt2)}
-  .fam-line{background:rgba(255,255,255,.07)}
+  .fam-line{background:rgba(255,255,255,.08)}
 }
 </style>
 </head>
@@ -581,45 +581,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 
 <!-- LOADING SCREEN -->
 <div id="loading">
-  <div class="ld-logo-wrap">
-    <svg width="70" height="90" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
-      <path d="M60,8 C57,10 53,13 50,17 C46,22 43,26 41,31 C38,37 36,42 34,48 C32,54 31,60 31,66 C31,72 32,78 34,84 C36,90 39,95 42,100 C45,105 48,109 51,113 C54,117 57,121 59,125 C61,121 64,117 67,113 C70,109 73,105 76,100 C79,95 82,90 84,84 C86,78 87,72 87,66 C87,60 86,54 84,48 C82,42 80,37 77,31 C75,26 72,22 68,17 C65,13 63,10 60,8Z" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.5" stroke-linejoin="round"/>
-      <path d="M36,58 L84,58 L84,76 Q84,82 78,82 L42,82 Q36,82 36,76 Z" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
-      <line x1="58" y1="58" x2="58" y2="82" stroke="white" stroke-width="2.5"/>
-      <line x1="62" y1="58" x2="62" y2="82" stroke="white" stroke-width="2.5"/>
-      <rect x="36" y="60" width="20" height="18" rx="0" fill="rgba(255,255,255,.12)" stroke="none"/>
-      <rect x="64" y="60" width="18" height="18" rx="0" fill="rgba(255,255,255,.12)" stroke="none"/>
-      <line x1="40" y1="63" x2="47" y2="63" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
-      <line x1="68" y1="63" x2="75" y2="63" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M36,68 L26,68" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M84,68 L94,68" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M94,68 L100,68 L100,30 L96,24" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <rect x="93" y="17" width="10" height="8" rx="2" fill="white"/>
-    </svg>
+  <div class="ld-scene">
+    <div class="ld-sea"></div>
+    <div class="ld-wave"></div>
+    <div class="ld-fish">🐟</div>
+    <div class="ld-splash-l">💦</div>
+    <div class="ld-splash-r">💦</div>
   </div>
   <div class="ld-title" id="ld-title">Pesciudex</div>
-  <div class="ld-boat-wrap">
-    <svg class="ld-boat-svg" width="200" height="110" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
-      <line x1="130" y1="45" x2="158" y2="20" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/>
-      <line x1="158" y1="20" x2="165" y2="70" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
-      <g style="animation:ldFishBob 2s ease-in-out infinite">
-        <ellipse cx="165" cy="72" rx="8" ry="5" fill="#1AAFA0"/>
-        <path d="M173,72 L180,67 L180,77Z" fill="#1AAFA0"/>
-        <circle cx="162" cy="70" r="2" fill="#0B2540"/>
-      </g>
-      <circle cx="118" cy="42" r="8" fill="rgba(255,255,255,.9)"/>
-      <rect x="91" y="38" width="8" height="4" rx="1.5" fill="#1A6FA0"/>
-      <rect x="86" y="36" width="18" height="3" rx="1.5" fill="#1A6FA0"/>
-      <line x1="118" y1="50" x2="118" y2="68" stroke="rgba(255,255,255,.9)" stroke-width="3" stroke-linecap="round"/>
-      <line x1="118" y1="54" x2="130" y2="47" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="118" y1="54" x2="108" y2="62" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="118" y1="68" x2="110" y2="80" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="118" y1="68" x2="126" y2="80" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M55,80 Q100,94 165,80 L160,92 Q100,108 60,92Z" fill="#1A3A5E"/>
-      <path d="M58,80 Q100,90 162,80" fill="none" stroke="#2A5A8E" stroke-width="2"/>
-    </svg>
-    <div class="ld-water"></div>
-  </div>
   <div class="ld-tagline" id="ld-tagline"></div>
   <div class="ld-dots"><span></span><span></span><span></span></div>
 </div>
@@ -637,7 +606,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <div class="hero-pattern" id="hero-pattern"></div>
     <div class="hero-inner">
       <div class="brand">
-        <div class="brand-logo" id="brand-logo"><svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:4px"><path d="M60,8 C57,10 53,13 50,17 C46,22 43,26 41,31 C38,37 36,42 34,48 C32,54 31,60 31,66 C31,72 32,78 34,84 C36,90 39,95 42,100 C45,105 48,109 51,113 C54,117 57,121 59,125 C61,121 64,117 67,113 C70,109 73,105 76,100 C79,95 82,90 84,84 C86,78 87,72 87,66 C87,60 86,54 84,48 C82,42 80,37 77,31 C75,26 72,22 68,17 C65,13 63,10 60,8Z" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.5" stroke-linejoin="round"/><path d="M36,58 L84,58 L84,76 Q84,82 78,82 L42,82 Q36,82 36,76 Z" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/><line x1="58" y1="58" x2="58" y2="82" stroke="white" stroke-width="2.5"/><line x1="62" y1="58" x2="62" y2="82" stroke="white" stroke-width="2.5"/><rect x="36" y="60" width="20" height="18" fill="rgba(255,255,255,.12)"/><rect x="64" y="60" width="18" height="18" fill="rgba(255,255,255,.12)"/><path d="M84,68 L92,68 L92,32 L88,26" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="85" y="19" width="9" height="8" rx="2" fill="white"/></svg></div>
+        <div class="brand-logo" id="brand-logo"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="18" fill="#0B2540"/><path d="M16,50C20,38 40,30 58,29C70,28 78,31 83,36L91,23L97,14L90,30L88,50L90,70L97,86L91,77L83,64C78,69 70,72 58,71C40,70 20,62 16,50Z" fill="#1AAFA0"/><path d="M52,29L62,15L72,29" fill="#1AAFA0"/><circle cx="22" cy="49" r="3.5" fill="#0B2540"/></svg></div>
         <div class="brand-text">
           <div class="brand-name" id="brand-name">Pesciudex</div>
           <div class="brand-sub" id="brand-sub">Carnet de pêche · Méditerranée · France</div>
@@ -1862,7 +1831,8 @@ const I18N={
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
 function applyLang(){
-  document.getElementById('lang-btn').textContent=T('langBtn');
+  const lb=document.getElementById('lang-btn');if(lb)lb.textContent=T('langBtn');
+  const bll=document.getElementById('bnav-lang-lbl');if(bll)bll.textContent=T('langBtn');
   document.getElementById('zone-edf').textContent=T('zone_edf');
   document.getElementById('zone-med').textContent=T('zone_med');
   document.getElementById('zone-atl').textContent=T('zone_atl');
