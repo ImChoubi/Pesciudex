@@ -253,7 +253,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .foot span{color:var(--acc)}
 
 /* ══ FAB + MODAL ══ */
-.add-fab{position:fixed;bottom:74px;right:76px;z-index:100;width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(82,183,136,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.add-fab{position:fixed;bottom:74px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(82,183,136,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .add-fab:hover{transform:scale(1.08)}
 .modal-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
@@ -288,7 +288,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .custom-fam-chip{display:flex;align-items:center;gap:5px;background:rgba(26,175,160,.08);border:1px solid rgba(26,175,160,.2);border-radius:50px;padding:4px 10px;font-size:12px}
 .custom-fam-chip button{border:none;background:none;cursor:pointer;color:#B71C1C;font-size:13px;line-height:1;padding:0 2px}
 /* ══ FIND MY FISH ══ */
-.fmf-fab{position:fixed;bottom:74px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;transition:transform .15s;padding:0}
+.fmf-fab{position:fixed;bottom:136px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;transition:transform .15s;padding:0}
 .fmf-fab:hover{transform:scale(1.08) rotate(-8deg)}
 .fmf-fab svg{width:40px;height:40px}
 #fmf-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
@@ -317,6 +317,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .fmf-result-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .fmf-result-desc{font-size:13px;color:var(--txt2);line-height:1.65}
 .fmf-retry-btn{width:100%;padding:12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+.dark .fmf-retry-btn{background:#243040;border-color:rgba(255,255,255,.12);color:var(--txt2)}
+.fmf-save-btn{width:100%;padding:13px;border-radius:50px;border:none;background:var(--acc);color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px;transition:opacity .15s}
+.fmf-save-btn:hover{opacity:.9}
 .fmf-error-box{background:#FFF3E0;color:#BF360C;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
 .fmf-not-found{background:#FFFDE7;color:#E65100;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:8px;line-height:1.55}
 .fmf-prov-row{margin-top:16px;padding-top:14px;border-top:1px solid rgba(11,37,64,.07)}
@@ -554,7 +557,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .iucn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:3px;flex-shrink:0}
 /* ══ DARK MODE ══ */
 /* ══ DARK MODE — déclenché par la classe .dark sur <html> ══ */
-.dark{--bg-page:#2C3A4A;--txt:#E4EDF5;--txt2:#90AABF;--txt3:#607080;--wave-fill:#2C3A4A;--sh1:0 1px 4px rgba(0,0,0,.18);--sh2:0 4px 16px rgba(0,0,0,.25)}
+.dark{--bg-page:#2C3A4A;--txt:#E4EDF5;--txt2:#90AABF;--txt3:#7A96B0;--wave-fill:#2C3A4A;--sh1:0 1px 4px rgba(0,0,0,.18);--sh2:0 4px 16px rgba(0,0,0,.25);--sea:#B8D8EE;--acc:#6BC99A;--teal3:#5CD3CB}
 .dark body{background:#2C3A4A}
 .dark .card,.dark .legend{background:#364C60;border-color:rgba(255,255,255,.08)}
 .dark .card.caught{border-color:rgba(26,175,160,.4);border-left-color:var(--acc)}
@@ -565,6 +568,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .dark .bnav{background:#364C60;border-top-color:rgba(255,255,255,.08)}
 .dark .bnav-btn{color:#607080}
 .dark .bnav-btn.active{color:var(--acc)}
+.dark .bnav-btn:hover{background:rgba(255,255,255,.08);color:#E4EDF5;border-radius:12px}
 .dark .field input,.dark .ffield input,.dark .ffield textarea,.dark .mfield input,.dark .mfield select,.dark .mfield textarea{background:#243040;border-color:rgba(255,255,255,.12);color:var(--txt)}
 .dark .rbox,.dark .wstat{background:#243040}
 .dark .mbtn{background:#243040;border-color:rgba(255,255,255,.12);color:var(--txt2)}
@@ -1805,7 +1809,7 @@ const I18N={
       flt_bateau:'⚓ Bateau',flt_bord:'🌊 Bord',flt_chasse:'🤿 Chasse S-M',flt_mes_ajouts:'✚ Mes ajouts',
       ps_sub:'Qui pêche aujourd\'hui ?',tableau:'Tableau de chasse',
       fmf_add_photo:'Ajouter une photo',fmf_add_sub:'Galerie · Caméra · Fichier PNG/JPG',
-      fmf_identify:'🔍 Identifier l\'espèce',fmf_change:'↩ Changer',fmf_new_photo:'📸 Nouvelle photo',
+      fmf_identify:'🔍 Identifier l\'espèce',fmf_change:'↩ Changer',fmf_new_photo:'📸 Nouvelle photo',fmf_save_btn:'✓ Enregistrer la capture',
       fmf_confidence:'Confiance',fmf_alts:'Autres possibilités',fmf_retry:'↩ Recommencer',
       fmf_retry_photo:'↩ Réessayer avec une autre photo',fmf_not_fish:'Je ne suis pas sûr que cette espèce soit présente dans l\'eau.',
       fmf_loading_inat:'iNaturalist identifie l\'espèce',fmf_loading_claude:'Claude AI identifie l\'espèce',
@@ -1841,7 +1845,7 @@ const I18N={
       flt_bateau:'⚓ Boat',flt_bord:'🌊 Shore',flt_chasse:'🤿 Spearfishing',flt_mes_ajouts:'✚ My additions',
       ps_sub:'Who\'s fishing today?',tableau:'Fishing record',
       fmf_add_photo:'Add a photo',fmf_add_sub:'Gallery · Camera · PNG/JPG file',
-      fmf_identify:'🔍 Identify species',fmf_change:'↩ Change',fmf_new_photo:'📸 New photo',
+      fmf_identify:'🔍 Identify species',fmf_change:'↩ Change',fmf_new_photo:'📸 New photo',fmf_save_btn:'✓ Save catch',
       fmf_confidence:'Confidence',fmf_alts:'Other possibilities',fmf_retry:'↩ Retry',
       fmf_retry_photo:'↩ Try with another photo',fmf_not_fish:'I\'m not sure this species is found in water.',
       fmf_loading_inat:'iNaturalist is identifying the species',fmf_loading_claude:'Claude AI is identifying the species',
@@ -2645,6 +2649,7 @@ function _fmfShowINatResult(results){
       ${alts?`<div class="fmf-result-desc" style="font-size:12px;color:var(--txt3)">${T('fmf_alts')} : ${alts}</div>`:''}
     </div>
     ${_fmfProtectionHTML(latin)}
+    <button class="fmf-save-btn" onclick="_fmfSaveCatch(${JSON.stringify(name)},${JSON.stringify(latin)})">${T('fmf_save_btn')}</button>
     <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
 }
 
@@ -2672,7 +2677,28 @@ function _fmfShowResult(r){
       ${r.description?`<div class="fmf-result-desc">${r.description}</div>`:''}
     </div>
     ${_fmfProtectionHTML(r.latin||'')}
+    ${r.found?`<button class="fmf-save-btn" onclick="_fmfSaveCatch(${JSON.stringify(r.name||'')},${JSON.stringify(r.latin||'')})">${T('fmf_save_btn')}</button>`:''}
     <button class="fmf-retry-btn" onclick="_fmfRenderUpload()">${T('fmf_new_photo')}</button>`;
+}
+
+function _fmfSaveCatch(name,latin){
+  const data=getData();
+  const nl=name.toLowerCase(),ll=latin.toLowerCase();
+  const match=data.find(f=>
+    (f.latin&&f.latin.toLowerCase()===ll)||
+    f.name.toLowerCase()===nl||
+    (NAME_EN[f.id]&&NAME_EN[f.id].toLowerCase()===nl)
+  );
+  if(!match){
+    alert(LANG==='en'?'Species not found in your logbook — try adding it manually.':'Espèce non trouvée dans le carnet — tu peux l\'ajouter manuellement.');
+    return;
+  }
+  const k=stKey(match.id);
+  const ast=getActiveST();
+  if(!ast[k])ast[k]={};
+  if(!ast[k].caught){ast[k].caught=true;saveActiveST();render();upStats();}
+  closeFMF();
+  setTimeout(()=>{const el=document.getElementById('c-'+match.id);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},300);
 }
 
 // ══ SPECIES INFO MODAL ══
@@ -3214,6 +3240,15 @@ function setModalTab(t){
   sp.style.background=t==='sp'?'var(--acc)':'#fff';sp.style.color=t==='sp'?'#fff':'var(--txt2)';sp.style.borderColor=t==='sp'?'var(--acc)':'rgba(11,37,64,.15)';
   fa.style.background=t==='fam'?'var(--acc)':'#fff';fa.style.color=t==='fam'?'#fff':'var(--txt2)';fa.style.borderColor=t==='fam'?'var(--acc)':'rgba(11,37,64,.15)';
   if(t==='fam')renderCustomFamList();
+  const mtl=document.getElementById('modal-title');
+  const mts=document.getElementById('modal-sub');
+  if(t==='fam'){
+    if(mtl)mtl.textContent=LANG==='en'?'+ Add a family':'+ Ajouter une famille';
+    if(mts)mts.textContent=LANG==='en'?'Add a custom family to your logbook':'Ajoute une famille personnalisée à ton carnet';
+  }else{
+    if(mtl)mtl.textContent=T('modal_add_title');
+    if(mts)mts.textContent=T('modal_add_sub');
+  }
 }
 function buildFamSelect(){
   const sel=document.getElementById('m-fam');const fams=getFAMS();
@@ -3535,11 +3570,12 @@ async function unsub(id){
   const submitted=JSON.parse(localStorage.getItem('pesc-submitted')||'{}');
   delete submitted[`${id}_${month}`];
   localStorage.setItem('pesc-submitted',JSON.stringify(submitted));
+  rc(id);
   if(_fbDb&&_fbUser){
     const docId=`${_fbUser.uid}_${id}_${month}`;
-    try{await _fbDb.collection('leaderboard').doc(docId).delete();}catch(e){}
+    try{await _fbDb.collection('leaderboard').doc(docId).delete();}
+    catch(e){console.error('Firestore delete:',e);}
   }
-  rc(id);
 }
 
 function resetCatch(id){
