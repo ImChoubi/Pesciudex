@@ -11,6 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -61,6 +62,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .ld-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.25);animation:ldDot 1.3s ease-in-out infinite}
 .ld-dots span:nth-child(2){animation-delay:.18s}.ld-dots span:nth-child(3){animation-delay:.36s}
 @keyframes ldDot{0%,100%{background:rgba(255,255,255,.2);transform:scale(1)}50%{background:rgba(26,175,160,.85);transform:scale(1.4)}}
+/* ══ LOADING SCREEN REDESIGN ══ */
+.ld-boat-wrap{position:relative;width:220px;height:130px;margin-bottom:6px}
+.ld-water{position:absolute;bottom:0;left:0;right:0;height:28px;background:linear-gradient(180deg,rgba(26,175,160,.25) 0%,rgba(11,37,64,.5) 100%);border-radius:50% 50% 0 0 / 30% 30% 0 0;animation:ldWater 3s ease-in-out infinite}
+@keyframes ldWater{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1.04) translateY(-2px)}}
+.ld-boat-svg{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);animation:ldRock 4s ease-in-out infinite;transform-origin:center bottom}
+@keyframes ldRock{0%,100%{transform:translateX(-50%) rotate(-1.5deg)}50%{transform:translateX(-50%) rotate(1.5deg)}}
+.ld-tagline{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.02em;min-height:20px;text-align:center}
+.ld-logo-wrap{margin-bottom:10px}
+@keyframes ldFishBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
 /* ══ HERO BACKGROUND PATTERNS ══ */
 .hero{background:linear-gradient(155deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 100%);padding:20px 20px 0;position:relative;overflow:hidden;transition:background .5s}
@@ -159,20 +169,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .fbtn.fam.on{background:var(--acc2);border-color:var(--acc2)}
 
 /* ══ MAIN ══ */
-.main{max-width:900px;margin:0 auto;padding:12px 16px 100px}
+.main{max-width:900px;margin:0 auto;padding:12px 16px 80px}
 .cbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .clbl{font-size:13px;font-weight:600;color:var(--txt2)}
 .chint{font-size:11px;color:var(--txt3)}
-.fam-hdr{display:flex;align-items:center;gap:8px;padding:11px 0 5px;margin-top:4px}
-.fam-title{font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.fam-hdr{display:flex;align-items:center;gap:8px;padding:14px 0 6px;margin-top:4px}
+.fam-title{font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
 .fam-line{flex:1;height:1px;background:rgba(11,37,64,.1)}
 .fam-cnt{font-size:11px;color:var(--txt3);white-space:nowrap}
 .grid{display:flex;flex-direction:column;gap:6px}
 
 /* ══ CARDS ══ */
-.card{background:#fff;border:1.5px solid rgba(11,37,64,.08);border-radius:14px;overflow:hidden;box-shadow:var(--sh1);transition:box-shadow .2s,border-color .2s}
-.card:hover{box-shadow:var(--sh2)}
-.card.caught{border-color:var(--acc)}
+.card{background:#fff;border:1.5px solid rgba(11,37,64,.07);border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(11,37,64,.06);transition:box-shadow .2s,border-color .2s,transform .15s}
+.card:hover{box-shadow:0 4px 14px rgba(11,37,64,.1);transform:translateY(-1px)}
+.card.caught{border-left:3px solid var(--acc);border-color:rgba(26,175,160,.35)}
 .card.custom{border-style:dashed;border-color:rgba(26,175,160,.4)}
 .card.custom.caught{border-style:solid;border-color:var(--acc)}
 .card.banned{opacity:.55;pointer-events:none}
@@ -186,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .card.caught .ctick{display:flex}
 .ban-badge{display:inline-block;background:#FFEBEE;color:#B71C1C;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;border:1px solid rgba(183,28,28,.25)}
 .cinfo{flex:1;min-width:0}
-.cname{font-size:13px;font-weight:700;color:var(--txt)}
+.cname{font-size:14px;font-weight:700;color:var(--txt)}
 .clatin{font-size:10px;color:var(--txt3);font-style:italic;margin-top:1px}
 .tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
 .tag{font-size:10px;padding:2px 7px;border-radius:20px;white-space:nowrap;line-height:1.5;font-weight:500}
@@ -238,7 +248,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .foot span{color:var(--acc)}
 
 /* ══ FAB + MODAL ══ */
-.add-fab{position:fixed;bottom:24px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(82,183,136,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.add-fab{position:fixed;bottom:74px;right:76px;z-index:100;width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(82,183,136,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .add-fab:hover{transform:scale(1.08)}
 .modal-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
@@ -273,7 +283,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .custom-fam-chip{display:flex;align-items:center;gap:5px;background:rgba(26,175,160,.08);border:1px solid rgba(26,175,160,.2);border-radius:50px;padding:4px 10px;font-size:12px}
 .custom-fam-chip button{border:none;background:none;cursor:pointer;color:#B71C1C;font-size:13px;line-height:1;padding:0 2px}
 /* ══ FIND MY FISH ══ */
-.fmf-fab{position:fixed;bottom:86px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;transition:transform .15s;padding:0}
+.fmf-fab{position:fixed;bottom:74px;right:20px;z-index:100;width:52px;height:52px;border-radius:50%;background:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;transition:transform .15s;padding:0}
 .fmf-fab:hover{transform:scale(1.08) rotate(-8deg)}
 .fmf-fab svg{width:40px;height:40px}
 #fmf-overlay{position:fixed;inset:0;background:rgba(11,37,64,.55);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
@@ -409,6 +419,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .recipe-empty{font-size:11px;color:var(--txt3);font-style:italic;padding:8px 0}
 /* ══ MAP BUTTON IN HERO ══ */
 .hero-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+/* ══ BOTTOM NAV ══ */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:90;background:#fff;border-top:1px solid rgba(11,37,64,.08);display:flex;align-items:stretch;height:62px;box-shadow:0 -4px 20px rgba(11,37,64,.07);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;color:var(--txt3);cursor:pointer;font-size:9.5px;font-weight:600;transition:color .15s;padding:6px 2px;letter-spacing:.02em;text-transform:uppercase}
+.bnav-btn.active{color:var(--acc)}
+.bnav-btn svg{width:20px;height:20px;stroke-width:2;transition:transform .15s}
+.bnav-btn.active svg{transform:scale(1.1)}
+.bnav-btn:hover{color:var(--sea)}
 /* ══ INFO MINI-MAP ══ */
 #info-mini-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px}
 /* ══ STORY BUTTON ══ */
@@ -529,21 +546,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .tuna-step-num{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#B71C1C,#E53935);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
 .tuna-step-title{font-size:13px;font-weight:700;color:var(--sea);margin-bottom:4px}
 .tuna-step-text{font-size:12px;color:var(--txt2);line-height:1.65}
+.iucn-dot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin-right:3px;flex-shrink:0}
+/* ══ DARK MODE ══ */
+@media(prefers-color-scheme:dark){
+  :root{--bg-page:#0F1923;--txt:#DDE8F4;--txt2:#7A9AB8;--txt3:#3D5870;--wave-fill:#0F1923;--sh1:0 1px 4px rgba(0,0,0,.25);--sh2:0 4px 16px rgba(0,0,0,.35)}
+  body{background:#0F1923}
+  .card,.legend{background:#172535;border-color:rgba(255,255,255,.06)}
+  .card.caught{border-color:rgba(26,175,160,.4);border-left-color:var(--acc)}
+  .fbar{background:#0F1923;border-bottom-color:rgba(255,255,255,.06)}
+  .fsearch{background-color:#172535;border-color:rgba(255,255,255,.1);color:var(--txt)}
+  .fbtn{background:#172535;border-color:rgba(255,255,255,.09);color:var(--txt2)}
+  .fbtn.on{background:var(--sea);color:#fff}
+  .bnav{background:#172535;border-top-color:rgba(255,255,255,.06)}
+  .bnav-btn{color:#3D5870}
+  .bnav-btn.active{color:var(--acc)}
+  .field input,.ffield input,.ffield textarea,.mfield input,.mfield select,.mfield textarea{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt)}
+  .rbox,.wstat{background:#0F1923}
+  .mbtn{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt2)}
+  .mbtn.sel{background:var(--sea);color:#fff}
+  .nbox{background:rgba(26,175,160,.07)}
+  .modal,.fmf-modal,.lb-submit-sheet{background:#172535}
+  .info-modal{background:#172535}
+  .wcard,.lb-entry,.scard,.catch-tl-item{background:#172535}
+  .lb-body{background:#0F1923}
+  .modal-handle{background:rgba(255,255,255,.12)}
+  .btn-cancel{background:#0F1923;border-color:rgba(255,255,255,.1);color:var(--txt2)}
+  .desc-box{background:rgba(26,175,160,.07);border-left-color:rgba(26,175,160,.4)}
+  .cbar .clbl{color:var(--txt2)}
+  .fam-line{background:rgba(255,255,255,.07)}
+}
 </style>
 </head>
 <body>
 
 <!-- LOADING SCREEN -->
 <div id="loading">
-  <div class="ld-scene">
-    <div class="ld-sea"></div>
-    <div class="ld-wave"></div>
-    <div class="ld-fish">🐟</div>
-    <div class="ld-splash-l">💦</div>
-    <div class="ld-splash-r">💦</div>
+  <div class="ld-logo-wrap">
+    <svg width="70" height="90" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60,8 C57,10 53,13 50,17 C46,22 43,26 41,31 C38,37 36,42 34,48 C32,54 31,60 31,66 C31,72 32,78 34,84 C36,90 39,95 42,100 C45,105 48,109 51,113 C54,117 57,121 59,125 C61,121 64,117 67,113 C70,109 73,105 76,100 C79,95 82,90 84,84 C86,78 87,72 87,66 C87,60 86,54 84,48 C82,42 80,37 77,31 C75,26 72,22 68,17 C65,13 63,10 60,8Z" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M36,58 L84,58 L84,76 Q84,82 78,82 L42,82 Q36,82 36,76 Z" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
+      <line x1="58" y1="58" x2="58" y2="82" stroke="white" stroke-width="2.5"/>
+      <line x1="62" y1="58" x2="62" y2="82" stroke="white" stroke-width="2.5"/>
+      <rect x="36" y="60" width="20" height="18" rx="0" fill="rgba(255,255,255,.12)" stroke="none"/>
+      <rect x="64" y="60" width="18" height="18" rx="0" fill="rgba(255,255,255,.12)" stroke="none"/>
+      <line x1="40" y1="63" x2="47" y2="63" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="68" y1="63" x2="75" y2="63" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M36,68 L26,68" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M84,68 L94,68" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M94,68 L100,68 L100,30 L96,24" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="93" y="17" width="10" height="8" rx="2" fill="white"/>
+    </svg>
   </div>
   <div class="ld-title" id="ld-title">Pesciudex</div>
-  <div class="ld-sub">Chargement de ton carnet…</div>
+  <div class="ld-boat-wrap">
+    <svg class="ld-boat-svg" width="200" height="110" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg">
+      <line x1="130" y1="45" x2="158" y2="20" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="158" y1="20" x2="165" y2="70" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>
+      <g style="animation:ldFishBob 2s ease-in-out infinite">
+        <ellipse cx="165" cy="72" rx="8" ry="5" fill="#1AAFA0"/>
+        <path d="M173,72 L180,67 L180,77Z" fill="#1AAFA0"/>
+        <circle cx="162" cy="70" r="2" fill="#0B2540"/>
+      </g>
+      <circle cx="118" cy="42" r="8" fill="rgba(255,255,255,.9)"/>
+      <rect x="91" y="38" width="8" height="4" rx="1.5" fill="#1A6FA0"/>
+      <rect x="86" y="36" width="18" height="3" rx="1.5" fill="#1A6FA0"/>
+      <line x1="118" y1="50" x2="118" y2="68" stroke="rgba(255,255,255,.9)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="118" y1="54" x2="130" y2="47" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="118" y1="54" x2="108" y2="62" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="118" y1="68" x2="110" y2="80" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="118" y1="68" x2="126" y2="80" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M55,80 Q100,94 165,80 L160,92 Q100,108 60,92Z" fill="#1A3A5E"/>
+      <path d="M58,80 Q100,90 162,80" fill="none" stroke="#2A5A8E" stroke-width="2"/>
+    </svg>
+    <div class="ld-water"></div>
+  </div>
+  <div class="ld-tagline" id="ld-tagline"></div>
   <div class="ld-dots"><span></span><span></span><span></span></div>
 </div>
 
@@ -560,7 +637,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <div class="hero-pattern" id="hero-pattern"></div>
     <div class="hero-inner">
       <div class="brand">
-        <div class="brand-logo" id="brand-logo"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="18" fill="#0B2540"/><path d="M16,50 C20,38 40,30 58,29 C70,28 78,31 83,36 L91,23 L97,14 L90,30 L88,50 L90,70 L97,86 L91,77 L83,64 C78,69 70,72 58,71 C40,70 20,62 16,50 Z" fill="#1AAFA0"/><path d="M52,29 L62,15 L72,29" fill="#1AAFA0" stroke="#0B2540" stroke-width="1" stroke-linejoin="round"/><path d="M40,52 L24,67 L42,60 Z" fill="#0E7A70"/><path d="M40,49 C41,43 45,38 51,37 L56,36 L62,38 L65,44 L64,52 L60,58 L54,60 L48,58 L43,53 Z" fill="rgba(11,37,64,0.22)"/><path d="M28,37 C30,44 30,56 28,63" fill="none" stroke="#0B2540" stroke-width="1.3" stroke-linecap="round"/><circle cx="22" cy="49" r="3.5" fill="#0B2540"/><circle cx="21" cy="48" r="1.2" fill="rgba(255,255,255,0.5)"/></svg></div>
+        <div class="brand-logo" id="brand-logo"><svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:4px"><path d="M60,8 C57,10 53,13 50,17 C46,22 43,26 41,31 C38,37 36,42 34,48 C32,54 31,60 31,66 C31,72 32,78 34,84 C36,90 39,95 42,100 C45,105 48,109 51,113 C54,117 57,121 59,125 C61,121 64,117 67,113 C70,109 73,105 76,100 C79,95 82,90 84,84 C86,78 87,72 87,66 C87,60 86,54 84,48 C82,42 80,37 77,31 C75,26 72,22 68,17 C65,13 63,10 60,8Z" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.5" stroke-linejoin="round"/><path d="M36,58 L84,58 L84,76 Q84,82 78,82 L42,82 Q36,82 36,76 Z" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/><line x1="58" y1="58" x2="58" y2="82" stroke="white" stroke-width="2.5"/><line x1="62" y1="58" x2="62" y2="82" stroke="white" stroke-width="2.5"/><rect x="36" y="60" width="20" height="18" fill="rgba(255,255,255,.12)"/><rect x="64" y="60" width="18" height="18" fill="rgba(255,255,255,.12)"/><path d="M84,68 L92,68 L92,32 L88,26" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="85" y="19" width="9" height="8" rx="2" fill="white"/></svg></div>
         <div class="brand-text">
           <div class="brand-name" id="brand-name">Pesciudex</div>
           <div class="brand-sub" id="brand-sub">Carnet de pêche · Méditerranée · France</div>
@@ -599,13 +676,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <div class="prog-hdr"><span id="tableau-lbl">Tableau de chasse</span><strong id="pl">0 / 0</strong></div>
         <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
       </div>
-      <div class="hero-btns">
-        <button class="pdf-export-btn" onclick="openMap()">🗺 Carte de pêche</button>
-        <button class="pdf-export-btn" id="weather-btn" onclick="openWeather()">🌊 Météo</button>
-        <button class="pdf-export-btn" id="stats-btn" onclick="openStats()">📊 Stats</button>
-        <button class="pdf-export-btn" id="lb-btn" onclick="openLeaderboard()">🏆 Classement</button>
-        <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
-      </div>
     </div>
     <svg class="wave" viewBox="0 0 1440 36" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <path id="wave-path" d="M0,18 C240,36 480,0 720,18 C960,36 1200,0 1440,18 L1440,36 L0,36 Z" fill="#F5F0E8"/>
@@ -624,19 +694,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <div class="cbar"><span class="clbl" id="clbl"></span><span class="chint">Cliquer pour cocher ✓</span></div>
     <div class="grid" id="grid"></div>
     <div class="legend">
-      <h3>🌿 Statuts IUCN</h3>
+      <h3 style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--teal)"></span> Statuts IUCN</h3>
       <div class="lgrid">
-        <div class="li"><span class="tag t-lc">🟢 LC</span> Préoccupation mineure</div>
-        <div class="li"><span class="tag t-nt">🟡 NT</span> Quasi menacé</div>
-        <div class="li"><span class="tag t-vu">🟠 VU</span> Vulnérable</div>
-        <div class="li"><span class="tag t-en">🔴 EN</span> En danger</div>
-        <div class="li"><span class="tag t-dd">⚪ DD</span> Données insuffisantes</div>
+        <div class="li"><span class="tag t-lc"><span class="iucn-dot" style="background:#2E7D32"></span> LC</span> Préoccupation mineure</div>
+        <div class="li"><span class="tag t-nt"><span class="iucn-dot" style="background:#E65100"></span> NT</span> Quasi menacé</div>
+        <div class="li"><span class="tag t-vu"><span class="iucn-dot" style="background:#BF360C"></span> VU</span> Vulnérable</div>
+        <div class="li"><span class="tag t-en"><span class="iucn-dot" style="background:#B71C1C"></span> EN</span> En danger</div>
+        <div class="li"><span class="tag t-dd"><span class="iucn-dot" style="background:#607D8B"></span> DD</span> Données insuffisantes</div>
       </div>
     </div>
     <div class="foot">Pesciudex & Coquidex · Mailles DIRM 2024 · Statuts IUCN · <span>Données locales</span></div>
   </main>
 </div>
 
+<!-- BOTTOM NAVIGATION -->
+<nav class="bnav" id="bnav">
+  <button class="bnav-btn active" data-tab="home" onclick="_bnav('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span id="bnav-home">Accueil</span>
+  </button>
+  <button class="bnav-btn" data-tab="weather" onclick="_bnav('weather')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/><path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/></svg>
+    <span id="bnav-weather">Météo</span>
+  </button>
+  <button class="bnav-btn bnav-map" data-tab="map" onclick="_bnav('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span id="bnav-map">Carte</span>
+  </button>
+  <button class="bnav-btn" data-tab="ranking" onclick="_bnav('ranking')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 22V18"/><path d="M14 22V18"/><path d="M6 4v8a6 6 0 0 0 12 0V4"/></svg>
+    <span id="bnav-ranking">Classement</span>
+  </button>
+  <button class="bnav-btn" data-tab="stats" onclick="_bnav('stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+    <span id="bnav-stats">Stats</span>
+  </button>
+  <button class="bnav-btn bnav-lang" data-tab="lang" onclick="toggleLang()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span id="bnav-lang-lbl">FR/EN</span>
+  </button>
+</nav>
 <button class="fmf-fab hidden" id="fmf-fab" onclick="openFMF()" title="Find My Fish">
   <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
     <circle cx="20" cy="20" r="18" fill="white" stroke="#1a1a2e" stroke-width="2.2"/>
@@ -1724,7 +1821,8 @@ const I18N={
       lb_empty:'Aucune capture soumise ce mois-ci.\nSois le premier !',lb_loading:'Chargement…',
       lb_med:'🌊 Méditerranée',lb_atl:'🌊 Atlantique',lb_edf:'🏞 Eau douce',
       lb_sponsor_none:'Partenaire à venir',lb_prize:'Lot du mois',
-      lb_region_med:'Méditerranée',lb_region_atl:'Atlantique',lb_region_edf:'Eau douce'},
+      lb_region_med:'Méditerranée',lb_region_atl:'Atlantique',lb_region_edf:'Eau douce',
+      bnav_home:'Accueil',bnav_weather:'Météo',bnav_map:'Carte',bnav_ranking:'Classement',bnav_stats:'Stats',bnav_lang:'FR/EN'},
   en:{langBtn:'FR',zone_edf:'🏞 Fresh Water',zone_med:'🌊 Mediterranean',zone_atl:'🌊 Atlantic',
       country_fr:'🇫🇷 France',country_es:'🇪🇸 Spain',stat_caught:'Species caught',
       stat_total:'Total',stat_progress:'Progress',hint:'Click to check ✓',
@@ -1759,7 +1857,8 @@ const I18N={
       lb_empty:'No catch submitted this month.\nBe the first!',lb_loading:'Loading…',
       lb_med:'🌊 Mediterranean',lb_atl:'🌊 Atlantic',lb_edf:'🏞 Fresh water',
       lb_sponsor_none:'Partner coming soon',lb_prize:'Prize of the month',
-      lb_region_med:'Mediterranean',lb_region_atl:'Atlantic',lb_region_edf:'Fresh water'},
+      lb_region_med:'Mediterranean',lb_region_atl:'Atlantic',lb_region_edf:'Fresh water',
+      bnav_home:'Home',bnav_weather:'Weather',bnav_map:'Map',bnav_ranking:'Ranking',bnav_stats:'Stats',bnav_lang:'FR/EN'},
 };
 function T(k){return I18N[LANG][k]||I18N.fr[k]||k;}
 function applyLang(){
@@ -1793,6 +1892,11 @@ function applyLang(){
   const wt=document.getElementById('weather-title');if(wt)wt.textContent=T('weather_title');
   const st2=document.getElementById('stats-title');if(st2)st2.textContent=T('stats_title');
   const lbt=document.getElementById('lb-title');if(lbt)lbt.textContent=T('lb_title');
+  const bnh=document.getElementById('bnav-home');if(bnh)bnh.textContent=T('bnav_home');
+  const bnw=document.getElementById('bnav-weather');if(bnw)bnw.textContent=T('bnav_weather');
+  const bnm=document.getElementById('bnav-map');if(bnm)bnm.textContent=T('bnav_map');
+  const bnr=document.getElementById('bnav-ranking');if(bnr)bnr.textContent=T('bnav_ranking');
+  const bns=document.getElementById('bnav-stats');if(bns)bns.textContent=T('bnav_stats');
   updateBrandSub();
 }
 function toggleLang(){
@@ -2681,6 +2785,7 @@ function openMap(){
 function closeMap(){
   document.getElementById('map-overlay').classList.remove('open');
   document.body.style.overflow='';
+  _bnavHome();
 }
 
 document.addEventListener('keydown',e=>{
@@ -2874,7 +2979,7 @@ function openWeather(){
   document.getElementById('weather-overlay').classList.add('open');
   _renderWeatherUI();
 }
-function closeWeather(){document.getElementById('weather-overlay').classList.remove('open');}
+function closeWeather(){document.getElementById('weather-overlay').classList.remove('open');_bnavHome();}
 function _renderWeatherUI(){
   const zl={med:LANG==='fr'?'🌊 Méditerranée':'🌊 Mediterranean',atl:'🌊 Atlantique',cor:LANG==='fr'?'🏝 Corse':'🏝 Corsica',edf:LANG==='fr'?'🏞 Eau douce':'🏞 Freshwater'};
   let ztabs='';
@@ -2971,7 +3076,7 @@ function openStats(){
   document.getElementById('stats-overlay').classList.add('open');
   renderStats();
 }
-function closeStats(){document.getElementById('stats-overlay').classList.remove('open');}
+function closeStats(){document.getElementById('stats-overlay').classList.remove('open');_bnavHome();}
 function closeStatsOut(e){if(e.target===document.getElementById('stats-overlay'))closeStats();}
 function renderStats(){
   if(!ACTIVE_PID){document.getElementById('stats-body').innerHTML='';return;}
@@ -3054,6 +3159,7 @@ function rc(id){
   const delBtn=f.custom?`<button class="del-card-btn" onclick="event.stopPropagation();if(confirm('Supprimer ${f.name} ?'))delCustom('${id}')">🗑 Supprimer</button>`:'';
   const lbBtn=caught?(_isSubmitted(id)?`<div class="lb-submitted-badge">${T('lb_submitted')}</div>`:`<button class="lb-card-btn" onclick="event.stopPropagation();openLbSubmit('${id}')">${T('lb_submit_btn')}</button>`):'';
   el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button><button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
+  _twParse(el);
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
 }
@@ -3176,6 +3282,10 @@ const SPONSOR_CONFIG={
   link:null
 };
 
+function _twParse(el){
+  if(typeof twemoji==='undefined')return;
+  twemoji.parse(el||document.body,{folder:'svg',ext:'.svg',base:'https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/'});
+}
 function _initFirebase(){
   if(typeof firebase==='undefined')return;
   try{
@@ -3207,7 +3317,17 @@ function openLeaderboard(){
   document.getElementById('lb-overlay').classList.add('open');
   _renderLbUI();
 }
-function closeLeaderboard(){document.getElementById('lb-overlay').classList.remove('open');}
+function closeLeaderboard(){document.getElementById('lb-overlay').classList.remove('open');_bnavHome();}
+function _bnav(tab){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  if(tab==='weather')openWeather();
+  else if(tab==='map')openMap();
+  else if(tab==='ranking')openLeaderboard();
+  else if(tab==='stats')openStats();
+}
+function _bnavHome(){
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab==='home'));
+}
 function _lbPrevMonth(){_lbMonthOffset--;_renderLbUI();}
 function _lbNextMonth(){if(_lbMonthOffset<0){_lbMonthOffset++;_renderLbUI();}}
 
@@ -3398,13 +3518,25 @@ const doStart=pid=>{
   document.getElementById('add-fab').classList.remove('hidden');
   applyMode();applyZone();applyCountry();updateProfileChip();
   renderFilters();render();upStats();
+  _twParse(document.body);
 };
 // Toujours afficher le choix du profil au lancement
-setTimeout(()=>{
-  document.getElementById('loading').classList.add('hidden');
-  document.getElementById('ps').classList.remove('hidden');
-  renderProfileScreen();
-},1800);
+(function(){
+  const phrases=LANG==='fr'?['Prêt à tous les collectionner…','Le carnet du pêcheur passionné','Méditerranée · Atlantique · Eau douce']:['Ready to catch them all…','The passionate angler\'s logbook','Mediterranean · Atlantic · Fresh water'];
+  let pi=0,ci=0;
+  const el=document.getElementById('ld-tagline');
+  function typeNext(){
+    if(!el)return;
+    if(ci<phrases[pi].length){el.textContent+=phrases[pi][ci++];setTimeout(typeNext,45);}
+    else{setTimeout(()=>{el.textContent='';pi=(pi+1)%phrases.length;ci=0;setTimeout(typeNext,200);},1800);}
+  }
+  typeNext();
+  setTimeout(()=>{
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('ps').classList.remove('hidden');
+    renderProfileScreen();
+  },1800);
+})();
 </script>
 </body>
 </html>
