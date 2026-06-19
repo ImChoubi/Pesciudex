@@ -3282,7 +3282,7 @@ function _renderLbEntries(entries){
     const sa=parseFloat(a.size)||0,sb=parseFloat(b.size)||0;
     return sb-sa;
   }));
-  const fams=ZONE==='edf'?(MODE==='pesc'?FAMS_EDF:CQFAMS_EDF):(MODE==='pesc'?FAMS_BASE:CQFAMS_BASE);
+  const fams=_lbRegion==='edf'?FAMS_EDF:FAMS_BASE;
   const podium=['🥇','🥈','🥉'];
   let html='';
   Object.entries(byFam).forEach(([fk,arr])=>{
@@ -3330,14 +3330,14 @@ function openLbSubmit(id){
   document.getElementById('lb-submit-sub').textContent=T('lb_submit_sub');
   document.getElementById('lb-pseudo-inp').placeholder=T('lb_pseudo_ph');
   document.getElementById('lb-submit-confirm').textContent=T('lb_confirm');
-  document.getElementById('lb-cancel-btn')||0;
   document.getElementById('lb-submit-overlay').classList.add('open');
 }
 function closeLbSubmit(){document.getElementById('lb-submit-overlay').classList.remove('open');_pendingSubmitId=null;}
 function closeLbSubmitOut(e){if(e.target===document.getElementById('lb-submit-overlay'))closeLbSubmit();}
 
 async function confirmLbSubmit(){
-  if(!_pendingSubmitId||!_fbDb||!_fbUser)return;
+  if(!_pendingSubmitId||!_fbDb){alert('Connexion Firebase indisponible.');return;}
+  if(!_fbUser){alert('Authentification en cours, réessaie dans quelques secondes.');return;}
   const pseudo=document.getElementById('lb-pseudo-inp').value.trim();
   if(!pseudo){document.getElementById('lb-pseudo-inp').focus();return;}
   localStorage.setItem('pesc-pseudo',pseudo);
