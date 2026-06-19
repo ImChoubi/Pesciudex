@@ -3252,7 +3252,6 @@ async function _fetchLbEntries(){
     const snap=await _fbDb.collection('leaderboard')
       .where('region','==',_lbRegion)
       .where('month','==',month)
-      .orderBy('timestamp','desc')
       .limit(200)
       .get();
     const entries=[];
