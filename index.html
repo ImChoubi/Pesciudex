@@ -143,6 +143,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .ctrl-btn{font-size:11.5px;font-weight:600;padding:5px 13px;border-radius:50px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;white-space:nowrap}
 .ctrl-btn.on{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.55);color:#fff}
 .ctrl-sep{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0;align-self:center}
+.selector-block{margin-bottom:8px;text-align:center}
+.selector-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:5px}
+.selector-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.sel-btn{font-size:11.5px;font-weight:600;padding:5px 14px;border-radius:50px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;white-space:nowrap}
+.sel-btn.on{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.6);color:#fff;box-shadow:0 1px 8px rgba(0,0,0,.15)}
+.sel-btn:hover:not(.on){background:rgba(255,255,255,.13);color:rgba(255,255,255,.85)}
 /* Stats */
 .hero-stats{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}
 .stat-chip{background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:50px;padding:6px 15px}
@@ -563,7 +569,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .dark .card.caught{border-color:rgba(26,175,160,.4);border-left-color:var(--acc)}
 .dark .fbar{background:#2C3A4A;border-bottom-color:rgba(255,255,255,.08)}
 .dark .fsearch{background-color:#364C60;border-color:rgba(255,255,255,.12);color:var(--txt)}
-.dark .fbtn{background:#364C60;border-color:rgba(255,255,255,.1);color:var(--txt2)}
+.dark .fbtn{background:#364C60;border-color:rgba(255,255,255,.15);color:#C5D8E8}
 .dark .fbtn.on{background:var(--sea);color:#fff}
 .dark .bnav{background:#364C60;border-top-color:rgba(255,255,255,.08)}
 .dark .bnav-btn{color:#607080}
@@ -684,14 +690,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
         <span class="mode-lbl" id="mode-lbl-r">Coquidex 🐚</span>
       </div>
       <!-- ZONE + COUNTRY -->
-      <div class="ctrl-row">
-        <button class="ctrl-btn" id="zone-edf" onclick="setZone('edf')">🏞 Eau douce</button>
-        <button class="ctrl-btn on" id="zone-med" onclick="setZone('med')">🌊 Méditerranée</button>
-        <button class="ctrl-btn" id="zone-atl" onclick="setZone('atl')">🌊 Atlantique</button>
-        <div class="ctrl-sep"></div>
-        <button class="ctrl-btn on" id="country-fr" onclick="setCountry('fr')">🇫🇷 France</button>
-        <button class="ctrl-btn" id="country-es" onclick="setCountry('es')">🇪🇸 Espagne</button>
-        <button class="ctrl-btn" id="country-it" onclick="setCountry('it')">🇮🇹 Italie</button>
+      <div class="selector-block">
+        <div class="selector-label">Zone</div>
+        <div class="selector-row">
+          <button class="sel-btn" id="zone-edf" onclick="setZone('edf')">🏞 Eau douce</button>
+          <button class="sel-btn on" id="zone-med" onclick="setZone('med')">🌊 Méditerranée</button>
+          <button class="sel-btn" id="zone-atl" onclick="setZone('atl')">🌊 Atlantique</button>
+        </div>
+      </div>
+      <div class="selector-block">
+        <div class="selector-label">Pays</div>
+        <div class="selector-row">
+          <button class="sel-btn on" id="country-fr" onclick="setCountry('fr')">🇫🇷 France</button>
+          <button class="sel-btn" id="country-es" onclick="setCountry('es')">🇪🇸 Espagne</button>
+          <button class="sel-btn" id="country-it" onclick="setCountry('it')">🇮🇹 Italie</button>
+        </div>
+        <div id="it-zone-note" style="display:none;font-size:10px;color:rgba(255,255,255,.65);margin-top:4px;text-align:center">🇮🇹 Italie — Méditerranée uniquement</div>
       </div>
       <!-- STATS -->
       <div class="hero-stats">
@@ -736,10 +750,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 
 <!-- BOTTOM NAVIGATION -->
 <nav class="bnav" id="bnav">
-  <button class="bnav-btn active" data-tab="home" onclick="_bnav('home')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span id="bnav-home">Accueil</span>
-  </button>
   <button class="bnav-btn" data-tab="weather" onclick="_bnav('weather')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/><path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2"/></svg>
     <span id="bnav-weather">Météo</span>
@@ -1102,6 +1112,13 @@ const BASE_DATA = [
   {id:'chinchard',fam:'fam-pelagiques',name:'Chinchard',latin:'Trachurus trachurus',e:'🐟',
    m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null,
    atl:{m:'15 cm'}},
+  {id:'anchois',fam:'fam-pelagiques',name:'Anchois',latin:'Engraulis encrasicolus',e:'🐟',
+   m:'9 cm',pm:null,s:'Printemps–Été',i:'LC',n:'Pêche au filet ou à la canne · Maille 9 cm (LT)'},
+  {id:'orphie',fam:'fam-pelagiques',name:'Orphie',latin:'Belone belone',e:'🐟',
+   m:'Pas de maille officielle (Med)',pm:null,s:'Printemps–Été',i:'LC',n:null,
+   atl:{m:'Pas de maille officielle'}},
+  {id:'liche-glauque',fam:'fam-pelagiques',name:'Liche glauque',latin:'Trachinotus ovatus',e:'🐟',
+   m:'Pas de maille en Méditerranée',pm:null,s:'Été',i:'LC',n:'Aussi appelée Palomine',atl:null},
   // ── Sparidés ──
   {id:'doraderoyale',fam:'fam-sparides',name:'Dorade royale',latin:'Sparus aurata',e:'🐡',
    m:'23 cm',pm:null,s:'Automne–Hiver',i:'LC',
@@ -1138,11 +1155,24 @@ const BASE_DATA = [
   {id:'pageot',fam:'fam-sparides',name:'Pageot commun',latin:'Pagellus erythrinus',e:'🐡',
    m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null,
    atl:{m:'17 cm'}},
+  {id:'pageot-acarne',fam:'fam-sparides',name:'Pageot acarné',latin:'Pagellus acarne',e:'🐡',
+   m:'17 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'bogue',fam:'fam-sparides',name:'Bogue',latin:'Boops boops',e:'🐠',
+   m:'Pas de maille officielle',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'oblade',fam:'fam-sparides',name:'Oblade',latin:'Oblada melanura',e:'🐠',
+   m:'Pas de maille en Méditerranée',pm:null,s:"Toute l'année",i:'LC',n:null,atl:null},
+  {id:'saupe',fam:'fam-sparides',name:'Saupe',latin:'Sarpa salpa',e:'🐠',
+   m:'Pas de maille en Méditerranée',pm:null,s:"Toute l'année",i:'LC',
+   n:'⚠ Chair parfois hallucinogène (prossion) — consommer avec précaution',atl:null},
+  {id:'picarel',fam:'fam-sparides',name:'Picarel',latin:'Spicara smaris',e:'🐠',
+   m:'Pas de maille officielle',pm:null,s:'Printemps–Été',i:'LC',n:null,atl:null},
+  {id:'sparaillon',fam:'fam-sparides',name:'Sparaillon',latin:'Diplodus annularis',e:'🐠',
+   m:'12 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
   // ── Bar, Mulets, Rougets ──
-  {id:'bar',fam:'fam-bar',name:'Bar commun',latin:'Dicentrarchus labrax',e:'🐟',
+  {id:'bar',fam:'fam-bar',name:'Loup',latin:'Dicentrarchus labrax',e:'🐟',
    m:'30 cm',pm:null,s:"Toute l'année",i:'LC',
    n:'Déclaration obligatoire dès 2026 · Marquage',
-   atl:{m:'42 cm',n:'Max 3/jour loisir · Marquage obligatoire'},
+   atl:{name:'Bar commun',m:'42 cm',n:'Max 3/jour loisir · Marquage obligatoire'},
    es:{m:'25 cm (Med Espagne)',n:'Maille Espagne : 25 cm'}},
   {id:'mulet',fam:'fam-bar',name:'Mulet à grosses lèvres',latin:'Chelon labrosus',e:'🐠',
    m:'Pas de maille (Med)',pm:null,s:"Toute l'année",i:'LC',n:null,
@@ -1152,6 +1182,15 @@ const BASE_DATA = [
    atl:{m:'30 cm'}},
   {id:'rouget',fam:'fam-bar',name:'Rouget barbet',latin:'Mullus surmuletus',e:'🐟',
    m:'15 cm',pm:null,s:'Été–Automne',i:'LC',n:null},
+  {id:'rouget-vase',fam:'fam-bar',name:'Rouget de vase',latin:'Mullus barbatus',e:'🐟',
+   m:'15 cm',pm:null,s:'Été–Automne',i:'LC',n:null,atl:null},
+  {id:'maigre',fam:'fam-bar',name:'Maigre',latin:'Argyrosomus regius',e:'🐟',
+   m:'45 cm',pm:null,s:'Printemps–Automne',i:'LC',n:'Marquage recommandé · Chair exceptionnelle',
+   atl:{m:'45 cm',n:'Max 3/jour · Marquage recommandé'}},
+  {id:'girelle',fam:'fam-labre',name:'Girelle',latin:'Coris julis',e:'🐠',
+   m:'Pas de maille officielle',pm:null,s:"Toute l'année",i:'LC',n:null,atl:null},
+  {id:'labre-ballan',fam:'fam-labre',name:'Labre ballan',latin:'Labrus bergylta',e:'🐠',
+   m:'Pas de maille officielle',pm:null,s:'Printemps–Été',i:'LC',n:null,med:null},
   {id:'sole',fam:'fam-bar',name:'Sole commune',latin:'Solea solea',e:'🐠',
    m:'24 cm',pm:null,s:'Printemps–Été',i:'LC',n:null,
    atl:{m:'24 cm'}},
@@ -1170,6 +1209,12 @@ const BASE_DATA = [
    m:'30 cm',pm:null,s:"Toute l'année",i:'LC',
    n:'Fonds > 50 m · Marquage obligatoire',
    atl:{m:'25 cm'}},
+  {id:'grondin-rouge',fam:'fam-scorpenides',name:'Grondin rouge',latin:'Chelidonichthys cuculus',e:'🦐',
+   m:'Pas de maille officielle',pm:null,s:"Toute l'année",i:'LC',
+   n:'Nage en marchant sur ses nageoires pectorales'},
+  {id:'grondin-perlon',fam:'fam-scorpenides',name:'Grondin perlon',latin:'Chelidonichthys lucerna',e:'🦐',
+   m:'Pas de maille officielle',pm:null,s:"Toute l'année",i:'LC',
+   n:'Plus grand des grondins · Pêche au fond'},
   // ── Labres & Serranidés ──
   {id:'labre',fam:'fam-labre',name:'Labre (merle)',latin:'Labrus merula',e:'🐠',
    m:'25 cm',pm:null,s:'Printemps–Été',i:'LC',n:null,
@@ -1207,6 +1252,15 @@ const BASE_DATA = [
   {id:'merlu',fam:'fam-fond',name:'Merlu commun',latin:'Merluccius merluccius',e:'🐟',
    m:'20 cm (Med)',pm:null,s:"Toute l'année",i:'LC',n:null,
    atl:{m:'27 cm'}},
+  {id:'mostelle',fam:'fam-fond',name:'Mostelle',latin:'Phycis blennoides',e:'🐟',
+   m:'30 cm',pm:null,s:"Toute l'année",i:'LC',n:'Fonds rocheux 50–400 m'},
+  {id:'merlan',fam:'fam-fond',name:'Merlan',latin:'Merlangius merlangus',e:'🐟',
+   m:'23 cm',pm:null,s:'Automne–Printemps',i:'LC',n:null,med:null},
+  {id:'lieu-noir',fam:'fam-fond',name:'Lieu noir',latin:'Pollachius virens',e:'🐟',
+   m:'30 cm',pm:null,s:"Toute l'année",i:'LC',n:null,med:null},
+  {id:'plie',fam:'fam-fond',name:'Plie / Carrelet',latin:'Pleuronectes platessa',e:'🐠',
+   m:'25 cm',pm:null,s:"Toute l'année",i:'LC',n:null,
+   atl:{m:'27 cm'}},
   // Atlantic-only fish (med:null)
   {id:'baudroie',fam:'fam-fond',name:'Baudroie',latin:'Lophius piscatorius',e:'🐟',
    m:'30 cm',pm:null,s:"Toute l'année",i:'LC',
@@ -1236,6 +1290,10 @@ const BASE_DATA = [
    m:'Pas de maille officielle',pm:null,s:"Toute l'année",i:'NT',
    n:'Endémique Méditerranée · Ailes comestibles',
    atl:null},
+  {id:'raie-brunette',fam:'fam-raies',name:'Raie brunette',latin:'Raja undulata',e:'🪃',
+   m:'— Espèce protégée',pm:null,s:'Variable',i:'EN',
+   n:'⛔ PRÉLÈVEMENT INTERDIT · Relâcher immédiatement · Déclaration recommandée',
+   banned_fr:true},
 ];
 
 // ══ COQUIDEX DATA ══
@@ -1354,6 +1412,25 @@ const FRESHWATER_DATA = [
    m:'20 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
   {id:'rotengle',fam:'fam-cyprinides',name:'Rotengle',latin:'Scardinius erythrophthalmus',e:'🐠',
    m:'15 cm',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'ablette',fam:'fam-cyprinides',name:'Ablette',latin:'Alburnus alburnus',e:'🐠',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:'Pêche au coup · Appât apprécié'},
+  {id:'goujon',fam:'fam-cyprinides',name:'Goujon',latin:'Gobio gobio',e:'🐠',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:'Cours d\'eau clairs à fond graveleux'},
+  {id:'vandoise',fam:'fam-cyprinides',name:'Vandoise',latin:'Leuciscus leuciscus',e:'🐠',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:'Rivières rapides oxygénées'},
+  {id:'aspe',fam:'fam-cyprinides',name:'Aspe',latin:'Aspius aspius',e:'🐠',
+   m:'40 cm',pm:null,s:"Toute l'année",i:'LC',
+   n:'Grand cyprinidé carnassier · Rare en France'},
+  {id:'ide',fam:'fam-cyprinides',name:'Ide mélanote',latin:'Leuciscus idus',e:'🐠',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:null},
+  {id:'carassin',fam:'fam-cyprinides',name:'Carassin commun',latin:'Carassius carassius',e:'🐠',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',n:'Ancêtre du poisson rouge'},
+  {id:'lavaret',fam:'fam-salmonides',name:'Lavaret',latin:'Coregonus lavaretus',e:'🐟',
+   m:'25 cm',pm:null,s:'Automne–Hiver',i:'NT',
+   n:'Lacs alpins (Bourget, Léman) · Filet ou toc de fond'},
+  {id:'truite-mer',fam:'fam-salmonides',name:'Truite de mer',latin:'Salmo trutta trutta',e:'🐟',
+   m:'40 cm',pm:null,s:'Variable – réglementation stricte',i:'LC',
+   n:'Forme migratricedu de la truite commune · Cours côtiers'},
   // ── Autres ──
   {id:'anguille_edf',fam:'fam-edf-autres',name:'Anguille européenne',latin:'Anguilla anguilla',e:'🐍',
    m:'60 cm',pm:null,s:'Variable – très réglementé',i:'EN',
@@ -1361,6 +1438,12 @@ const FRESHWATER_DATA = [
   {id:'perche_soleil',fam:'fam-edf-autres',name:'Perche-soleil',latin:'Lepomis gibbosus',e:'🐡',
    m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
    n:'Espèce envahissante introduite · ⚠ Remise à l\'eau interdite'},
+  {id:'poisson-chat',fam:'fam-edf-autres',name:'Poisson-chat',latin:'Ictalurus melas',e:'🐡',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
+   n:'Espèce introduite · ⚠ Remise à l\'eau interdite · Pêche toute l\'année sans restriction'},
+  {id:'gremille',fam:'fam-edf-autres',name:'Grémille',latin:'Gymnocephalus cernua',e:'🐡',
+   m:'Pas de maille',pm:null,s:"Toute l'année",i:'LC',
+   n:'Petite perche · Fond des lacs · ⚠ Espèce potentiellement envahissante dans certains bassins'},
 ];
 
 // ══ EAU DOUCE — COQUIDEX ══
@@ -1454,6 +1537,36 @@ const IMGS={
   rotengle:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Scardinius_erythrophthalmus.jpg/300px-Scardinius_erythrophthalmus.jpg',
   anguille_edf:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Anguilla_anguilla.jpg/300px-Anguilla_anguilla.jpg',
   perche_soleil:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Lepomis_gibbosus.jpg/300px-Lepomis_gibbosus.jpg',
+  ablette:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Alburnus_alburnus.jpg/300px-Alburnus_alburnus.jpg',
+  goujon:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Gobio_gobio.jpg/300px-Gobio_gobio.jpg',
+  vandoise:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Leuciscus_leuciscus.jpg/300px-Leuciscus_leuciscus.jpg',
+  aspe:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Aspius_aspius.jpg/300px-Aspius_aspius.jpg',
+  ide:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Leuciscus_idus.jpg/300px-Leuciscus_idus.jpg',
+  carassin:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Carassius_carassius.jpg/300px-Carassius_carassius.jpg',
+  lavaret:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Coregonus_lavaretus.jpg/300px-Coregonus_lavaretus.jpg',
+  'truite-mer':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Salmo_trutta.jpg/300px-Salmo_trutta.jpg',
+  'poisson-chat':'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Ictalurus_melas_-_Ambleve.jpg/300px-Ictalurus_melas_-_Ambleve.jpg',
+  gremille:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Gymnocephalus_cernua.jpg/300px-Gymnocephalus_cernua.jpg',
+  anchois:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Engraulis_encrasicolus.jpg/300px-Engraulis_encrasicolus.jpg',
+  orphie:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Belone_belone.jpg/300px-Belone_belone.jpg',
+  'liche-glauque':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Trachinotus_ovatus.jpg/300px-Trachinotus_ovatus.jpg',
+  bogue:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Boops_boops.jpg/300px-Boops_boops.jpg',
+  oblade:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Oblada_melanura.jpg/300px-Oblada_melanura.jpg',
+  saupe:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Sarpa_salpa.jpg/300px-Sarpa_salpa.jpg',
+  picarel:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Spicara_smaris.jpg/300px-Spicara_smaris.jpg',
+  sparaillon:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Diplodus_annularis_1.jpg/300px-Diplodus_annularis_1.jpg',
+  'pageot-acarne':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Pagellus_acarne.jpg/300px-Pagellus_acarne.jpg',
+  maigre:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Argyrosomus_regius.jpg/300px-Argyrosomus_regius.jpg',
+  girelle:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Coris_julis_Prague_2011_1.jpg/300px-Coris_julis_Prague_2011_1.jpg',
+  'labre-ballan':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Labrus_bergylta.jpg/300px-Labrus_bergylta.jpg',
+  'rouget-vase':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Mullus_barbatus.jpg/300px-Mullus_barbatus.jpg',
+  mostelle:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Phycis_blennoides.jpg/300px-Phycis_blennoides.jpg',
+  merlan:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Merlangius_merlangus.jpg/300px-Merlangius_merlangus.jpg',
+  'lieu-noir':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Pollachius_virens.jpg/300px-Pollachius_virens.jpg',
+  plie:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Pleuronectes_platessa.jpg/300px-Pleuronectes_platessa.jpg',
+  'raie-brunette':'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Raja_undulata.jpg/300px-Raja_undulata.jpg',
+  'grondin-rouge':'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Chelidonichthys_cuculus.jpg/300px-Chelidonichthys_cuculus.jpg',
+  'grondin-perlon':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Chelidonichthys_lucerna.jpg/300px-Chelidonichthys_lucerna.jpg',
 };
 // Wikimedia images — Coquidex
 const CQIMGS={
@@ -1583,6 +1696,36 @@ const DESC = {
   ecrevisse_louisiane:"Espèce invasive très prolifique. Pêche autorisée voire encouragée pour la réguler.",
   moule_perliere:"Mollusque endémique protégé des ruisseaux froids. Parmi les animaux les plus longévifs d'Europe (100+ ans).",
   mulette_epaisse:"Moule d'eau douce en danger critique, liée à certains poissons hôtes pour son cycle de vie.",
+  anchois:"Petit pélagique emblématique de la Méditerranée. En bancs denses proches de la surface, il se pêche au filet ou à la canne. Chair savoureuse utilisée en cuisine méditerranéenne.",
+  orphie:"Reconnaissable à son bec fin vert émeraude, l'orphie chasse en surface les petits poissons. Présente tout le long des côtes med et atl — pêche à la traîne légère.",
+  'liche-glauque':"Aussi appelée Palomine, ce carangidé vif fréquente les eaux côtières méditerranéennes. Nage rapide, lutte sportive — pêche à la traîne ou au leurre.",
+  bogue:"Poisson grégaire omniprésent en Méditerranée. Forme d'immenses bancs dans les herbiers et sur les fonds rocheux. Excellente pêche d'initiation.",
+  oblade:"Sparidé méditerranéen reconnaissable à sa tache noire caudale. Vit en groupes sur les fonds rocheux et les herbiers — curieux, facile à approcher.",
+  saupe:"Sparidé herbivore à bandes dorées et odeur caractéristique. Fréquente les herbiers de posidonie. Chair parfois hallucinogène (ichtyoalleinotoxisme) — consommer avec prudence.",
+  picarel:"Abondant en Méditerranée, vit en bancs sur les fonds sableux ou détritiques. Pêche au coup ou à la traîne légère — chair délicate.",
+  sparaillon:"Diplodus le plus petit, reconnaissable à l'anneau noir sur la queue. Vit sur les fonds rocheux peu profonds.",
+  'pageot-acarne':"Pageot caractérisé par une tache noire à la base de la pectorale. Fonds sableux 20–500 m — pêche au fond.",
+  maigre:"Le plus grand sparidé européen — peut dépasser 2 m et 100 kg. Chair exceptionnelle, l'une des meilleures de Méditerranée. Pêche au vif ou aux leurres dans les estuaires.",
+  girelle:"Petit labre très coloré, dimorphisme sexuel marqué (la femelle est brune). Vit dans les herbiers de posidonie et les rochers peu profonds — espèce hermaphrodite protogyne.",
+  'labre-ballan':"Le plus grand des labres européens, pouvant atteindre 60 cm. Vit dans les kelps et les rochers — principalement Atlantique et Manche. Hermaphrodite protogyne.",
+  'rouget-vase':"Frère du rouget barbet, il fréquente les fonds vaseux plus profonds. Chair identique, très estimée en cuisine — emblème de la pêche méditerranéenne.",
+  mostelle:"Gadidé des grands fonds (50–1000 m) au corps effilé. Pêche profonde au fond. Chair blanche et fine.",
+  merlan:"Gadidé côtier de l'Atlantique, très abondant. Pêche au fond ou au coup — chair délicate à consommer rapidement.",
+  'lieu-noir':"Aussi appelé coalfish, ce gadidé vit en pleine eau dans l'Atlantique Nord. Prédateur actif, sportif à la traîne.",
+  plie:"Poisson plat aux taches orangées caractéristiques. Fonds sableux côtiers — pêche au surfcasting ou à la traîne de fond.",
+  'raie-brunette':"Espèce protégée des côtes atlantiques. Reconnaissable à ses ondulations caractéristiques — relâcher immédiatement avec précaution.",
+  'grondin-rouge':"Scorpéniforme au corps trapu rouge orangé. Marche sur ses nageoires pectorales modifiées. Chair blanche savoureuse.",
+  'grondin-perlon':"Le plus grand grondin (jusqu'à 75 cm). Pectoral bleu vif caractéristique. Pêche au fond — excellent en soupe.",
+  ablette:"Petit cyprinidé argenté des eaux calmes. Très abondant, idéal pour la pêche au coup d'initiation.",
+  goujon:"Cyprinidé de fond des rivières à courant. Appât naturel et prise agréable au coup.",
+  vandoise:"Cyprinidé élancé des eaux vives oxygénées. Pêche à la mouche ou au toc.",
+  aspe:"Grand cyprinidé carnassier rare en France. Chasse en surface comme un carnassier — pêche aux leurres de surface.",
+  ide:"Cyprinidé coloré (rouge et doré avec l'âge). Rivières lentes et plans d'eau — pêche au coup ou aux leurres.",
+  carassin:"Ancêtre du poisson rouge, il résiste à l'hypoxie. Vit dans les étangs vaseux et les mares.",
+  lavaret:"Corégone des grands lacs alpins (Léman, Bourget, Annecy). Chair délicate très appréciée — pêche au filet ou toc de fond.",
+  'truite-mer':"Forme marine de la truite commune, elle migre vers la mer puis revient en rivière. Très sportive — pêche à la mouche ou aux leurres dans les cours côtiers.",
+  'poisson-chat':"Espèce introduite d'Amérique du Nord, prolifique dans les eaux chaudes. ⚠ Remise à l'eau interdite.",
+  gremille:"Petite perche à nageoire dorsale épineuse. Vit au fond des lacs et rivières lentes — pêche au fond.",
 };
 
 // ══ DESCRIPTIONS EN ANGLAIS ══
@@ -1681,6 +1824,36 @@ const DESC_EN = {
   ecrevisse_louisiane:"The Red Swamp Crayfish, an invasive species from the southern USA. Very hardy and prolific; colonizes warm, turbid waters and agricultural canals.",
   moule_perliere:"The Freshwater Pearl Mussel, one of Europe's most endangered molluscs. Can live over 100 years in clean, fast-flowing rivers. Strict protection across Europe.",
   mulette_epaisse:"The Thick-shelled River Mussel, a large freshwater mussel of major French rivers. Long-lived but extremely vulnerable to water pollution and habitat degradation.",
+  anchois:"The European Anchovy, a small schooling pelagic fish abundant in the Mediterranean and Atlantic. Caught by net or rod, it's one of the most used fish in Mediterranean cuisine.",
+  orphie:"The Garfish, instantly recognizable by its needle-like beak with vivid green bones. Hunts small fish at the surface — light trolling along Med and Atlantic coasts.",
+  'liche-glauque':"Also called Pompano, this Carangidae inhabits Mediterranean coastal waters. Fast and sporty — trolling or lure fishing.",
+  bogue:"A ubiquitous Mediterranean schooling fish found in Posidonia meadows and rocky reefs. Great species for beginner anglers.",
+  oblade:"A Mediterranean sparid recognizable by its black caudal spot. Lives in groups on rocky beds and seagrass — inquisitive and approachable.",
+  saupe:"Herbivorous sparid with golden stripes found in Posidonia meadows. Its flesh can rarely be hallucinogenic (ichthyoallyeinotoxism) — consume with caution.",
+  picarel:"Abundant Mediterranean species schooling on sandy or detrital bottoms. Light tackle fishing — delicate flesh.",
+  sparaillon:"Smallest Diplodus species, identified by the black ring on its tail. Lives on shallow rocky substrates.",
+  'pageot-acarne':"Identified by the black spot at the base of the pectoral fin. Sandy bottoms 20–500 m — bottom fishing.",
+  maigre:"Largest European sparid, reaching 2 m and 100 kg. Exceptional flesh, one of the finest in the Mediterranean. Live bait or lure fishing in estuaries.",
+  girelle:"Highly colourful small wrasse with marked sexual dimorphism (females are brown). Lives in Posidonia meadows — protogynous hermaphrodite.",
+  'labre-ballan':"Largest European wrasse, up to 60 cm. Lives in kelp beds and rocky reefs — mainly Atlantic and English Channel. Protogynous hermaphrodite.",
+  'rouget-vase':"Close relative of the Striped Red Mullet, preferring deeper muddy bottoms. Equally prized in Mediterranean cuisine.",
+  mostelle:"Deep-water gadiform (50–1000 m) with an elongated body. Deep-sea bottom fishing. Fine white flesh.",
+  merlan:"A common Atlantic gadid found near coasts. Bottom or float fishing — delicate flesh, best eaten fresh.",
+  'lieu-noir':"Also called Coalfish or Saithe, this Atlantic gadid is an active predator in open water. Sporty trolling in the North Atlantic.",
+  plie:"Flatfish with characteristic orange spots. Sandy coastal bottoms — surfcasting or slow trolling.",
+  'raie-brunette':"Protected undulate ray of Atlantic coasts. Release immediately with care — do not retain.",
+  'grondin-rouge':"Scorpaeniform with a chunky red-orange body. Walks on its modified pectoral fins. White, tasty flesh.",
+  'grondin-perlon':"Largest gurnard (up to 75 cm). Characteristic vivid blue pectoral fins. Bottom fishing — excellent in soup.",
+  ablette:"Small silver cyprinid of calm waters. Very abundant — ideal beginner species for float fishing.",
+  goujon:"Bottom-dwelling river cyprinid. Natural bait and fun float-fishing catch.",
+  vandoise:"Slender cyprinid of fast, oxygenated rivers. Fly fishing or rolling tackle.",
+  aspe:"Rare predatory cyprinid in France. Surface hunter — surface lure fishing.",
+  ide:"Colourful cyprinid (red and golden with age). Slow rivers and lakes — float fishing or lures.",
+  carassin:"Ancestor of the goldfish, extremely tolerant of low oxygen. Lives in muddy ponds and pools.",
+  lavaret:"Coregonid of large alpine lakes (Léman, Bourget, Annecy). Delicate, highly prized flesh — net or deep-water fishing.",
+  'truite-mer':"Sea form of the Brown Trout, migrating between rivers and the sea. Highly sporting — fly fishing or lures in coastal rivers.",
+  'poisson-chat':"Introduced North American catfish, prolific in warm waters. ⚠ Return to water strictly prohibited.",
+  gremille:"Small perch with a spiny dorsal fin. Lives on the bottom of lakes and slow rivers — bottom fishing.",
 };
 
 // ══ NOMS EN ANGLAIS ══
@@ -1708,6 +1881,13 @@ const NAME_EN = {
   breme:'Common Bream',tanche:'Tench',rotengle:'Rudd',anguille_edf:'European Eel',perche_soleil:'Pumpkinseed',
   ecrevisse_pp:'Noble Crayfish',ecrevisse_pb:'White-clawed Crayfish',ecrevisse_signal:'Signal Crayfish',
   ecrevisse_louisiane:'Red Swamp Crayfish',moule_perliere:'Freshwater Pearl Mussel',mulette_epaisse:'Thick-shelled River Mussel',
+  anchois:'European Anchovy',orphie:'Garfish',liche:'Leerfish','liche-glauque':'Pompano',
+  bogue:'Bogue',oblade:'Saddled Sea Bream',saupe:'Salema Porgy',picarel:'Picarel',sparaillon:'Annular Sea Bream',
+  'pageot-acarne':'Axillary Sea Bream',maigre:'Meagre',girelle:'Rainbow Wrasse','labre-ballan':'Ballan Wrasse',
+  'rouget-vase':'Red Mullet (Goatfish)',mostelle:'Greater Forkbeard',merlan:'Whiting','lieu-noir':'Saithe',
+  plie:'European Plaice','raie-brunette':'Undulate Ray','grondin-rouge':'Red Gurnard','grondin-perlon':'Tub Gurnard',
+  ablette:'Bleak',goujon:'Gudgeon',vandoise:'Common Dace',aspe:'Asp',ide:'Ide/Orfe',carassin:'Crucian Carp',
+  lavaret:'Common Whitefish','truite-mer':'Sea Trout','poisson-chat':'Black Bullhead',gremille:'Eurasian Ruffe',
 };
 
 // ══ COORDONNÉES CARTE ══
@@ -1736,6 +1916,13 @@ const MAP_COORDS = {
   breme:[47.0,2.0],tanche:[46.0,2.0],rotengle:[46.5,2.5],anguille_edf:[47.0,1.0],
   perche_soleil:[45.5,1.5],ecrevisse_pp:[45.0,4.0],ecrevisse_pb:[44.5,5.0],
   ecrevisse_signal:[46.0,3.0],ecrevisse_louisiane:[43.5,3.0],moule_perliere:[45.0,3.5],mulette_epaisse:[46.5,5.0],
+  anchois:[43.1,5.2],orphie:[43.4,5.5],'liche-glauque':[43.0,6.8],bogue:[43.2,5.5],
+  oblade:[43.0,6.1],saupe:[43.1,6.3],picarel:[43.2,6.0],sparaillon:[42.9,5.8],
+  'pageot-acarne':[43.0,5.4],maigre:[43.3,4.7],girelle:[43.2,6.4],'labre-ballan':[47.0,-3.0],
+  'rouget-vase':[43.2,5.7],mostelle:[42.0,9.0],merlan:[50.0,1.5],'lieu-noir':[49.0,-3.5],
+  plie:[49.0,-1.0],'raie-brunette':[47.5,-3.0],'grondin-rouge':[43.5,5.0],'grondin-perlon':[48.0,-4.0],
+  ablette:[46.0,3.5],goujon:[45.5,3.0],vandoise:[44.5,4.0],aspe:[47.0,6.0],ide:[47.5,3.5],
+  carassin:[46.5,2.5],lavaret:[45.9,6.1],'truite-mer':[46.5,-1.5],'poisson-chat':[45.0,2.0],gremille:[46.8,4.5],
 };
 
 // ══ PROFONDEUR & HABITAT ══
@@ -1767,6 +1954,14 @@ const DEPTH = {
   crabe_vert:'0–10 m · Roche/Sable',tourteau:'0–100 m · Roche/Sable',
   homard:'0–60 m · Roche',langouste:'10–80 m · Roche',cigale_mer:'15–80 m · Sable/Roche',
   crevette_bouquet:'0–40 m · Sable/Roche',crevette_grise:'0–40 m · Sable/Vase',
+  anchois:'0–200 m · Pélagique',orphie:'0–50 m · Surface/Pélagique','liche-glauque':'0–50 m · Pélagique',
+  bogue:'5–350 m · Pélagique',oblade:'3–30 m · Roche/Posidonie',saupe:'0–30 m · Roche/Posidonie',
+  picarel:'10–100 m · Sable/Côtier',sparaillon:'1–30 m · Roche/Sable','pageot-acarne':'20–500 m · Sable',
+  maigre:'0–300 m · Estuaire/Sable',girelle:'0–30 m · Roche/Posidonie','labre-ballan':'0–200 m · Roche/Algues',
+  'rouget-vase':'5–400 m · Vase/Sable',mostelle:'10–1000 m · Roche/Vase',
+  merlan:'0–200 m · Sable/Vase','lieu-noir':'0–300 m · Pélagique/Roche',
+  plie:'0–200 m · Sable/Gravier','raie-brunette':'0–200 m · Sable/Gravier',
+  'grondin-rouge':'0–200 m · Sable/Vase','grondin-perlon':'0–300 m · Sable',
 };
 const DEPTH_EN = {
   thon:'0–300 m · Pelagic',espadon:'0–800 m · Pelagic',seriole:'0–80 m · Pelagic',
@@ -1795,6 +1990,14 @@ const DEPTH_EN = {
   crabe_vert:'0–10 m · Rocky/Sand',tourteau:'0–100 m · Rocky/Sand',
   homard:'0–60 m · Rocky',langouste:'10–80 m · Rocky',cigale_mer:'15–80 m · Sand/Rock',
   crevette_bouquet:'0–40 m · Sand/Rock',crevette_grise:'0–40 m · Sand/Mud',
+  anchois:'0–200 m · Pelagic',orphie:'0–50 m · Surface/Pelagic','liche-glauque':'0–50 m · Pelagic',
+  bogue:'5–350 m · Pelagic',oblade:'3–30 m · Rocky/Posidonia',saupe:'0–30 m · Rocky/Posidonia',
+  picarel:'10–100 m · Sandy/Coastal',sparaillon:'1–30 m · Rocky/Sandy','pageot-acarne':'20–500 m · Sandy',
+  maigre:'0–300 m · Estuary/Sand',girelle:'0–30 m · Rocky/Posidonia','labre-ballan':'0–200 m · Rocky/Kelp',
+  'rouget-vase':'5–400 m · Mud/Sand',mostelle:'10–1000 m · Rocky/Mud',
+  merlan:'0–200 m · Sandy/Mud','lieu-noir':'0–300 m · Pelagic/Rocky',
+  plie:'0–200 m · Sand/Gravel','raie-brunette':'0–200 m · Sand/Gravel',
+  'grondin-rouge':'0–200 m · Sandy/Mud','grondin-perlon':'0–300 m · Sandy',
 };
 
 // ══ RECETTES ══ (à compléter par l'auteur — HTML libre)
@@ -1909,6 +2112,8 @@ function applyLang(){
   document.getElementById('country-fr').textContent=T('country_fr');
   document.getElementById('country-es').textContent=T('country_es');
   document.getElementById('country-it').textContent=T('country_it');
+  const itNote=document.getElementById('it-zone-note');
+  if(itNote)itNote.textContent=LANG==='en'?'🇮🇹 Italy — Mediterranean only':'🇮🇹 Italie — Méditerranée uniquement';
   const lcb=document.getElementById('lang-corner-btn');if(lcb)lcb.textContent=T('langBtn');
   const sl=document.getElementById('sl-caught');if(sl)sl.textContent=T('stat_caught');
   const slt=document.getElementById('sl-total');if(slt)slt.textContent=T('stat_total');
@@ -2229,6 +2434,7 @@ function applyZone(){
 }
 function setCountry(c){
   COUNTRY=c;
+  if(c==='it'&&ZONE==='atl'){ZONE='med';if(ACTIVE_PID)localStorage.setItem(lsKey('pesc-zone'),'med');applyZone();}
   if(ACTIVE_PID)localStorage.setItem(lsKey('pesc-country'),c);
   applyCountry();FILTER='all';renderFilters();render();upStats();
 }
@@ -2236,6 +2442,10 @@ function applyCountry(){
   document.getElementById('country-fr').classList.toggle('on',COUNTRY==='fr');
   document.getElementById('country-es').classList.toggle('on',COUNTRY==='es');
   document.getElementById('country-it').classList.toggle('on',COUNTRY==='it');
+  const atlBtn=document.getElementById('zone-atl');
+  if(atlBtn){atlBtn.style.display=COUNTRY==='it'?'none':'';}
+  const itNote=document.getElementById('it-zone-note');
+  if(itNote){itNote.style.display=COUNTRY==='it'?'block':'none';}
   updateBrandSub();
 }
 function updateBrandSub(){
@@ -2827,11 +3037,15 @@ function openMap(){
     if(!window.L){document.getElementById('map-title').textContent='🗺 Leaflet non chargé — connexion requise';return;}
     if(!_leafletMap){
       _leafletMap=L.map('leaflet-map',{zoomControl:true}).setView([44.5,4],5);
-      const osmBase=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'});
+      const osmBase=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'});
+      const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© <a href="https://www.esri.com">Esri</a> World Imagery'});
       const seamarkOverlay=L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{maxZoom:18,opacity:0.85,attribution:'© <a href="https://www.openseamap.org">OpenSeaMap</a>'});
+      const bathyOverlay=L.tileLayer('https://tiles.emodnet-bathymetry.eu/2020/baselayer/web_mercator/{z}/{x}/{y}.png',{maxZoom:11,opacity:0.55,attribution:'© <a href="https://www.emodnet-bathymetry.eu">EMODnet</a>'});
       osmBase.addTo(_leafletMap);
       seamarkOverlay.addTo(_leafletMap);
-      L.control.layers({},{'🗺 Cartes nautiques / Nautical charts':seamarkOverlay},{position:'topright',collapsed:false}).addTo(_leafletMap);
+      const baseLayers={[LANG==='fr'?'🗺 Carte standard':'🗺 Street Map']:osmBase,[LANG==='fr'?'🛰 Satellite':'🛰 Satellite']:satellite};
+      const overlays={[LANG==='fr'?'⚓ Cartes nautiques':'⚓ Nautical charts']:seamarkOverlay,[LANG==='fr'?'🌊 Fonds marins (EMODnet)':'🌊 Seabed (EMODnet)']:bathyOverlay};
+      L.control.layers(baseLayers,overlays,{position:'topright',collapsed:false}).addTo(_leafletMap);
       const zoneColor={med:'#1AAFA0',atl:'#1565C0',edf:'#2E7D32',cq:'#795548'};
       const getZoneOf=id=>{
         const edf=['truite_fario','truite_arenciel','ombre','omble','saumon','brochet','sandre','perche','blackbass','silure','carpe','barbeau','chevesne','gardon','breme','tanche','rotengle','anguille_edf','perche_soleil','ecrevisse_pp','ecrevisse_pb','ecrevisse_signal','ecrevisse_louisiane','moule_perliere','mulette_epaisse'];
@@ -2850,10 +3064,25 @@ function openMap(){
         const depthStr=depthObj[id]?`<br><span style="font-size:11px;color:#1565C0">⚓ ${depthObj[id]}</span>`:'';
         circle.bindPopup(`<b>${displayName}</b> ${subName}<br><span style="font-size:11px;color:#666;font-style:italic">${sp.latin||''}</span>${depthStr}`);
       });
+      // Custom spots
+      _renderCustomSpotMarkers();
     } else {
       _leafletMap.invalidateSize();
+      _renderCustomSpotMarkers();
     }
   },120);
+}
+let _customSpotLayer=null;
+function _renderCustomSpotMarkers(){
+  if(!_leafletMap)return;
+  if(_customSpotLayer){_leafletMap.removeLayer(_customSpotLayer);_customSpotLayer=null;}
+  const spots=_loadCustomSpots();if(!spots.length)return;
+  const markers=spots.map(s=>{
+    const m=L.marker([s.lat,s.lon],{icon:L.divIcon({className:'',html:'<div style="background:#FF6F00;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff">📍</div>',iconSize:[28,28],iconAnchor:[14,14]})});
+    m.bindPopup(`<b>📍 ${s.name}</b><br><span style="font-size:11px;color:#888">${s.lat.toFixed(4)}, ${s.lon.toFixed(4)}</span>`);
+    return m;
+  });
+  _customSpotLayer=L.layerGroup(markers).addTo(_leafletMap);
 }
 function closeMap(){
   document.getElementById('map-overlay').classList.remove('open');
@@ -3053,18 +3282,47 @@ function openWeather(){
   _renderWeatherUI();
 }
 function closeWeather(){document.getElementById('weather-overlay').classList.remove('open');_bnavHome();}
+function _loadCustomSpots(){try{return JSON.parse(localStorage.getItem('pesc-custom-spots')||'[]');}catch{return[];}}
+function _saveCustomSpots(arr){localStorage.setItem('pesc-custom-spots',JSON.stringify(arr));}
+function _addCustomSpot(){
+  const name=prompt(LANG==='fr'?'Nom du spot (ex: Calanque de Sormiou)':'Spot name (e.g. Secret Cove)');
+  if(!name||!name.trim())return;
+  const latRaw=prompt(LANG==='fr'?'Latitude (ex: 43.215)':'Latitude (e.g. 43.215)');
+  const lonRaw=prompt(LANG==='fr'?'Longitude (ex: 5.421)':'Longitude (e.g. 5.421)');
+  const lat=parseFloat(latRaw),lon=parseFloat(lonRaw);
+  if(isNaN(lat)||isNaN(lon)||lat<-90||lat>90||lon<-180||lon>180){alert(LANG==='fr'?'Coordonnées invalides.':'Invalid coordinates.');return;}
+  const spots=_loadCustomSpots();
+  spots.push({name:name.trim(),lat,lon,zone:_wZone,custom:true});
+  _saveCustomSpots(spots);
+  _wSpot={name:name.trim(),lat,lon};
+  _renderWeatherUI();
+}
+function _deleteCustomSpot(name){
+  if(!confirm((LANG==='fr'?'Supprimer le spot ':'Delete spot ')+name+'?'))return;
+  const spots=_loadCustomSpots().filter(s=>s.name!==name);
+  _saveCustomSpots(spots);
+  _wSpot=(METEO_SPOTS[_wZone]||[])[0]||null;
+  _renderWeatherUI();
+}
 function _renderWeatherUI(){
   const zl={med:LANG==='fr'?'🌊 Méditerranée':'🌊 Mediterranean',atl:'🌊 Atlantique',cor:LANG==='fr'?'🏝 Corse':'🏝 Corsica',edf:LANG==='fr'?'🏞 Eau douce':'🏞 Freshwater'};
   let ztabs='';
   ['med','atl','cor','edf'].forEach(z=>{ztabs+=`<button class="wbtn${_wZone===z?' sel':''}" onclick="_wSetZone('${z}')">${zl[z]}</button>`;});
   document.getElementById('weather-zone-tabs').innerHTML=ztabs;
+  const customSpots=_loadCustomSpots().filter(s=>s.zone===_wZone);
   let sbtns='';
   (METEO_SPOTS[_wZone]||[]).forEach(s=>{sbtns+=`<button class="wbtn${_wSpot?.name===s.name?' sel':''}" onclick="_wSetSpot('${s.name}')">${s.name}</button>`;});
+  customSpots.forEach(s=>{sbtns+=`<button class="wbtn${_wSpot?.name===s.name?' sel':''}" onclick="_wSetSpot('${s.name}')">📍 ${s.name} <span onclick="event.stopPropagation();_deleteCustomSpot('${s.name.replace(/'/g,"\\'")}')" style="opacity:.6;margin-left:3px;font-size:10px" title="Supprimer">✕</span></button>`;});
+  sbtns+=`<button class="wbtn" onclick="_addCustomSpot()" style="background:none;border-style:dashed;color:var(--acc2)">＋ ${LANG==='fr'?'Ajouter un spot':'Add a spot'}</button>`;
   document.getElementById('weather-spot-btns').innerHTML=sbtns;
   _fetchWeather();
 }
-function _wSetZone(z){_wZone=z;_wSpot=(METEO_SPOTS[z]||[])[0];_renderWeatherUI();}
-function _wSetSpot(n){_wSpot=(METEO_SPOTS[_wZone]||[]).find(s=>s.name===n)||_wSpot;_renderWeatherUI();}
+function _wSetZone(z){_wZone=z;_wSpot=(METEO_SPOTS[z]||[])[0]||null;_renderWeatherUI();}
+function _wSetSpot(n){
+  const custom=_loadCustomSpots();
+  _wSpot=(METEO_SPOTS[_wZone]||[]).find(s=>s.name===n)||custom.find(s=>s.name===n)||_wSpot;
+  _renderWeatherUI();
+}
 function _wIcon(c){if(c<=1)return'☀️';if(c<=3)return'⛅';if(c<=49)return'🌫️';if(c<=67)return'🌧️';if(c<=77)return'❄️';if(c<=82)return'🌦️';if(c<=86)return'❄️';return'⛈️';}
 function _wWindDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8];}
 function _lunarPhase(dateStr){
