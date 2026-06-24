@@ -1,0 +1,14 @@
+{
+  "name": "Pesciudex & Coquidex",
+  "short_name": "Pesciudex",
+  "description": "Carnet de pêche numérique — Méditerranée & Atlantique",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0B2540",
+  "theme_color": "#0B2540",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Pesciudex & Coquidex</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B2540">
+<link rel="apple-touch-icon" href="logo.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B2540'/%3E%3Cpath d='M16,50C20,38 40,30 58,29C70,28 78,31 83,36L91,23L97,14L90,30L88,50L90,70L97,86L91,77L83,64C78,69 70,72 58,71C40,70 20,62 16,50Z' fill='%231AAFA0'/%3E%3Cpath d='M52,29L62,15L72,29' fill='%231AAFA0'/%3E%3Ccircle cx='22' cy='49' r='3.5' fill='%230B2540'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -621,6 +624,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .wh-wind{font-size:9px;color:var(--txt2)}
 .wh-wave{font-size:9px;color:var(--teal3)}
 .dark .wh-cell{background:#243040}
+/* ══ MAP FILTER BAR ══ */
+#map-filter-bar{background:var(--sea);padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;overflow-x:auto}
+.mf-btn{font-size:11px;font-weight:700;padding:5px 12px;border-radius:50px;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);cursor:pointer;white-space:nowrap;transition:all .15s;letter-spacing:.03em}
+.mf-btn.on{background:rgba(255,255,255,.92);color:var(--sea);border-color:#fff}
+/* ══ SEASON BADGE ══ */
+.season-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;vertical-align:middle;border:1px solid transparent}
+.season-badge.in{background:#E8F5E9;color:#1B5E20;border-color:rgba(27,94,32,.2)}
+.season-badge.out{background:#FFF3E0;color:#BF360C;border-color:rgba(191,54,12,.2)}
+.dark .season-badge.in{background:rgba(107,201,154,.15);color:#6BC99A;border-color:rgba(107,201,154,.3)}
+.dark .season-badge.out{background:rgba(191,54,12,.15);color:#FF8A65;border-color:rgba(191,54,12,.3)}
+/* ══ SHARE HIGHLIGHT ══ */
+@keyframes shareGlow{0%,100%{box-shadow:0 0 0 0 rgba(26,175,160,0)}50%{box-shadow:0 0 0 8px rgba(26,175,160,.35)}}
+.share-highlight{animation:shareGlow 1.2s ease 2}
+/* ══ LEADERBOARD SORT BAR ══ */
+.lb-sort-bar{display:flex;gap:6px;padding:8px 14px 0;flex-shrink:0;align-items:center}
+.lb-sort-lbl{font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;margin-right:4px;white-space:nowrap}
+.lb-sort-btn{font-size:11px;font-weight:600;padding:4px 12px;border-radius:50px;border:1.5px solid rgba(11,37,64,.15);background:#fff;color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.lb-sort-btn.on{background:var(--sea);color:#fff;border-color:var(--sea)}
+.dark .lb-sort-btn{background:#364C60;border-color:rgba(255,255,255,.12);color:#C5D8E8}
+.dark .lb-sort-btn.on{background:var(--sea);color:#fff}
+/* ══ WEATHER MINI-MAP ══ */
+#weather-spot-map{height:130px;border-radius:12px;overflow:hidden;margin-bottom:12px;border:1px solid rgba(11,37,64,.1)}
+/* ══ PALMARÈS PERSONNEL ══ */
+.palmares-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.palmares-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-page);border-radius:10px}
+.palmares-medal{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.palmares-info{flex:1;min-width:0}
+.palmares-name{font-size:13px;font-weight:700;color:var(--sea);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.palmares-stats{font-size:11px;color:var(--txt3);margin-top:1px}
+.palmares-best{font-size:12px;font-weight:700;color:var(--teal3);white-space:nowrap;flex-shrink:0}
+.dark .palmares-item{background:#364C60}
 </style>
 </head>
 <body>
@@ -785,6 +819,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <span class="map-topbar-title" id="map-title">🗺 Carte de pêche — Méditerranée & Atlantique</span>
     <button class="map-close-btn" onclick="closeMap()">✕ Fermer</button>
   </div>
+  <div id="map-filter-bar">
+    <button class="mf-btn on" data-filter="all" onclick="_mapFilterSet('all')">Tout</button>
+    <button class="mf-btn" data-filter="med" onclick="_mapFilterSet('med')">🟣 Med</button>
+    <button class="mf-btn" data-filter="atl" onclick="_mapFilterSet('atl')">🔵 Atl</button>
+    <button class="mf-btn" data-filter="edf" onclick="_mapFilterSet('edf')">🟢 EDF</button>
+    <button class="mf-btn" data-filter="cq" onclick="_mapFilterSet('cq')">🟫 Coquidex</button>
+    <button class="mf-btn" data-filter="spots" onclick="_mapFilterSet('spots')">📍 Spots</button>
+  </div>
   <div id="leaflet-map"></div>
   <div class="map-legend-bar">
     <span class="map-leg-item"><span class="map-leg-dot" style="background:#1AAFA0"></span>Méditerranée</span>
@@ -946,6 +988,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
   <div class="weather-body">
     <div class="weather-zone-tabs" id="weather-zone-tabs"></div>
     <div class="weather-spot-btns" id="weather-spot-btns"></div>
+    <div id="weather-spot-map"></div>
     <div class="weather-cards" id="weather-cards"></div>
   </div>
 </div>
@@ -988,6 +1031,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <button class="lb-nav-btn" onclick="_lbPrevMonth()">‹</button>
     <div class="lb-month-lbl" id="lb-month-lbl"></div>
     <button class="lb-nav-btn" onclick="_lbNextMonth()">›</button>
+  </div>
+  <div class="lb-sort-bar">
+    <span class="lb-sort-lbl">Tri :</span>
+    <button class="lb-sort-btn on" data-sort="weight" onclick="_lbSetSort('weight')">⚖ Poids</button>
+    <button class="lb-sort-btn" data-sort="size" onclick="_lbSetSort('size')">📏 Taille</button>
+    <button class="lb-sort-btn" data-sort="date" onclick="_lbSetSort('date')">📅 Date</button>
   </div>
   <div id="lb-sponsor" class="lb-sponsor" style="display:none"></div>
   <div class="lb-body" id="lb-body"><div class="lb-loading">Chargement…</div></div>
@@ -3030,6 +3079,21 @@ function initInfoMiniMap(id){
 
 // ══ MAP (Leaflet) ══
 let _leafletMap=null;
+let _mapFilter='all';
+let _mapLayerGroups={};
+function _mapFilterSet(f){
+  _mapFilter=f;
+  document.querySelectorAll('#map-filter-bar .mf-btn').forEach(b=>b.classList.toggle('on',b.dataset.filter===f));
+  _applyMapFilter();
+}
+function _applyMapFilter(){
+  if(!_leafletMap)return;
+  ['med','atl','edf','cq','spots'].forEach(z=>{
+    const lg=_mapLayerGroups[z];if(!lg)return;
+    if(_mapFilter==='all'||_mapFilter===z){if(!_leafletMap.hasLayer(lg))lg.addTo(_leafletMap);}
+    else{if(_leafletMap.hasLayer(lg))_leafletMap.removeLayer(lg);}
+  });
+}
 function openMap(){
   document.getElementById('map-overlay').classList.add('open');
   document.body.style.overflow='hidden';
@@ -3053,36 +3117,51 @@ function openMap(){
         const atl=['turbot','barbue','cabillaud','lieujane','saintpierre','raie_bouclee'];
         if(edf.includes(id))return 'edf';if(cq.includes(id))return 'cq';if(atl.includes(id))return 'atl';return 'med';
       };
+      // Build layer groups by zone
+      _mapLayerGroups={med:L.layerGroup(),atl:L.layerGroup(),edf:L.layerGroup(),cq:L.layerGroup(),spots:L.layerGroup()};
       Object.entries(MAP_COORDS).forEach(([id,coords])=>{
         const allData=[...BASE_DATA,...COQUIDEX_DATA,...FRESHWATER_DATA,...CQ_FRESHWATER_DATA,...(CUSTOM||[])];
         const sp=allData.find(x=>x.id===id);if(!sp)return;
         const z=getZoneOf(id);
-        const circle=L.circleMarker(coords,{radius:7,fillColor:zoneColor[z]||'#1AAFA0',color:'#fff',weight:1.5,opacity:1,fillOpacity:0.85}).addTo(_leafletMap);
+        const circle=L.circleMarker(coords,{radius:7,fillColor:zoneColor[z]||'#1AAFA0',color:'#fff',weight:1.5,opacity:1,fillOpacity:0.85});
         const displayName=LANG==='en'&&NAME_EN[id]?NAME_EN[id]:sp.name;
         const subName=LANG==='en'?`<em style="color:#888;font-size:11px">${sp.name}</em>`:(NAME_EN[id]?`<em style="color:#888;font-size:11px">${NAME_EN[id]}</em>`:'');
         const depthObj=LANG==='en'?DEPTH_EN:DEPTH;
         const depthStr=depthObj[id]?`<br><span style="font-size:11px;color:#1565C0">⚓ ${depthObj[id]}</span>`:'';
         circle.bindPopup(`<b>${displayName}</b> ${subName}<br><span style="font-size:11px;color:#666;font-style:italic">${sp.latin||''}</span>${depthStr}`);
+        (_mapLayerGroups[z]||_mapLayerGroups.med).addLayer(circle);
       });
-      // Custom spots
+      Object.values(_mapLayerGroups).forEach(lg=>lg.addTo(_leafletMap));
+      // Custom spots in their own layer group
       _renderCustomSpotMarkers();
     } else {
       _leafletMap.invalidateSize();
       _renderCustomSpotMarkers();
     }
+    _applyMapFilter();
   },120);
 }
 let _customSpotLayer=null;
 function _renderCustomSpotMarkers(){
   if(!_leafletMap)return;
-  if(_customSpotLayer){_leafletMap.removeLayer(_customSpotLayer);_customSpotLayer=null;}
+  // Use the spots layer group if available
+  const spotsLg=_mapLayerGroups.spots;
+  if(spotsLg){spotsLg.clearLayers();}
+  else{if(_customSpotLayer){_leafletMap.removeLayer(_customSpotLayer);_customSpotLayer=null;}}
   const spots=_loadCustomSpots();if(!spots.length)return;
-  const markers=spots.map(s=>{
+  spots.forEach(s=>{
     const m=L.marker([s.lat,s.lon],{icon:L.divIcon({className:'',html:'<div style="background:#FF6F00;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff">📍</div>',iconSize:[28,28],iconAnchor:[14,14]})});
     m.bindPopup(`<b>📍 ${s.name}</b><br><span style="font-size:11px;color:#888">${s.lat.toFixed(4)}, ${s.lon.toFixed(4)}</span>`);
-    return m;
+    if(spotsLg)spotsLg.addLayer(m);
   });
-  _customSpotLayer=L.layerGroup(markers).addTo(_leafletMap);
+  if(!spotsLg){
+    const markers=spots.map(s=>{
+      const m=L.marker([s.lat,s.lon],{icon:L.divIcon({className:'',html:'<div style="background:#FF6F00;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff">📍</div>',iconSize:[28,28],iconAnchor:[14,14]})});
+      m.bindPopup(`<b>📍 ${s.name}</b><br><span style="font-size:11px;color:#888">${s.lat.toFixed(4)}, ${s.lon.toFixed(4)}</span>`);
+      return m;
+    });
+    _customSpotLayer=L.layerGroup(markers).addTo(_leafletMap);
+  }
 }
 function closeMap(){
   document.getElementById('map-overlay').classList.remove('open');
@@ -3315,7 +3394,23 @@ function _renderWeatherUI(){
   customSpots.forEach(s=>{sbtns+=`<button class="wbtn${_wSpot?.name===s.name?' sel':''}" onclick="_wSetSpot('${s.name}')">📍 ${s.name} <span onclick="event.stopPropagation();_deleteCustomSpot('${s.name.replace(/'/g,"\\'")}')" style="opacity:.6;margin-left:3px;font-size:10px" title="Supprimer">✕</span></button>`;});
   sbtns+=`<button class="wbtn" onclick="_addCustomSpot()" style="background:none;border-style:dashed;color:var(--acc2)">＋ ${LANG==='fr'?'Ajouter un spot':'Add a spot'}</button>`;
   document.getElementById('weather-spot-btns').innerHTML=sbtns;
+  _initWeatherMiniMap();
   _fetchWeather();
+}
+let _wMiniMap=null;let _wMiniMapMarker=null;
+function _initWeatherMiniMap(){
+  if(!window.L)return;
+  const el=document.getElementById('weather-spot-map');if(!el)return;
+  if(!_wMiniMap){
+    _wMiniMap=L.map('weather-spot-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,doubleClickZoom:false}).setView([43,7],7);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:13}).addTo(_wMiniMap);
+  }
+  if(_wSpot){
+    _wMiniMap.setView([_wSpot.lat,_wSpot.lon],9);
+    if(_wMiniMapMarker)_wMiniMap.removeLayer(_wMiniMapMarker);
+    _wMiniMapMarker=L.circleMarker([_wSpot.lat,_wSpot.lon],{radius:9,fillColor:'#1AAFA0',color:'#fff',weight:2,fillOpacity:1}).addTo(_wMiniMap).bindPopup(_wSpot.name);
+    setTimeout(()=>_wMiniMap.invalidateSize(),80);
+  }
 }
 function _wSetZone(z){_wZone=z;_wSpot=(METEO_SPOTS[z]||[])[0]||null;_renderWeatherUI();}
 function _wSetSpot(n){
@@ -3498,6 +3593,26 @@ function renderStats(){
   } else {
     html+=`<div style="text-align:center;padding:28px 20px;color:var(--txt3)"><div style="font-size:36px;margin-bottom:10px">🎣</div><div style="font-size:13px">${fr?'Coche des espèces pour voir tes stats !':'Check species to see your stats!'}</div></div>`;
   }
+  // ── Palmarès personnel ──
+  const withMeasure=allCatches.filter(c=>c.s.weight||c.s.size);
+  if(withMeasure.length){
+    withMeasure.sort((a,b)=>{
+      const wa=parseFloat(a.s.weight)||0,wb=parseFloat(b.s.weight)||0;
+      if(wa!==wb)return wb-wa;
+      const sa=parseFloat(a.s.size)||0,sb=parseFloat(b.s.size)||0;
+      return sb-sa;
+    });
+    const medals=['🥇','🥈','🥉'];
+    html+=`<div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 9px">🏆 ${fr?'Palmarès personnel':'Personal records'}</div><div class="palmares-list">`;
+    withMeasure.slice(0,10).forEach((c,i)=>{
+      const cn=(LANG==='en'&&NAME_EN[c.id])||c.sp.name;
+      const medal=i<3?medals[i]:`<span style="font-size:12px;font-weight:800;color:var(--txt3)">${i+1}</span>`;
+      const best=c.s.weight?`⚖️ ${c.s.weight} kg`:(c.s.size?`📏 ${c.s.size}`:'');
+      const detail=[];if(c.s.weight)detail.push(`⚖️ ${c.s.weight} kg`);if(c.s.size)detail.push(`📏 ${c.s.size}`);if(c.s.date)detail.push(`📅 ${c.s.date}`);
+      html+=`<div class="palmares-item"><div class="palmares-medal">${medal}</div><div class="palmares-info"><div class="palmares-name">${c.sp.e} ${cn}</div><div class="palmares-stats">${detail.join(' · ')}</div></div><div class="palmares-best">${best}</div></div>`;
+    });
+    html+=`</div>`;
+  }
   document.getElementById('stats-body').innerHTML=html;
 }
 
@@ -3510,6 +3625,31 @@ function tSeason(s){
     .replace(/\bJuin\b/g,'Jun').replace(/\bJuil\b/g,'Jul').replace(/\bAoût\b/g,'Aug')
     .replace(/\bFév\b/g,'Feb').replace(/\bAvr\b/g,'Apr').replace(/\bMai\b/g,'May')
     .replace(/\bDéc\b/g,'Dec');
+}
+// ══ SEASON BADGE ══
+function _isInSeason(sStr){
+  if(!sStr)return null;
+  const s=sStr.toLowerCase();
+  if(/toute\s*l.ann/i.test(s))return true;
+  const now=new Date().getMonth()+1;
+  const mMap={jan:1,'fév':2,fev:2,mar:3,avr:4,mai:5,juin:6,juil:7,'aoû':8,aou:8,sep:9,oct:10,nov:11,'déc':12,dec:12};
+  if(/printemps|spring/i.test(s)&&(now>=3&&now<=5))return true;
+  if(/(été|ete|summer)/i.test(s)&&(now>=6&&now<=8))return true;
+  if(/(automne|autumn)/i.test(s)&&(now>=9&&now<=11))return true;
+  if(/(hiver|winter)/i.test(s)&&(now===12||now<=2))return true;
+  const hits=[];
+  for(const [k,v] of Object.entries(mMap)){if(s.includes(k))hits.push(v);}
+  if(hits.length>=2){hits.sort((a,b)=>a-b);const st=hits[0],en=hits[hits.length-1];return st<=en?now>=st&&now<=en:now>=st||now<=en;}
+  if(hits.length===1)return now===hits[0];
+  return null;
+}
+// ══ SHARE SPECIES ══
+function _shareSpecies(id){
+  const f=getData().find(x=>x.id===id);if(!f)return;
+  const url=`${location.origin}${location.pathname}?share=${id}&z=${ZONE}&c=${COUNTRY}`;
+  const txt=`${f.e} ${f.name} — Pesciudex`;
+  if(navigator.share){navigator.share({title:'Pesciudex',text:txt,url}).catch(()=>{});}
+  else{navigator.clipboard?.writeText(url).then(()=>{const msg=LANG==='fr'?'Lien copié !':'Link copied!';const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'90px',left:'50%',transform:'translateX(-50%)',background:'#0B2540',color:'#fff',padding:'8px 18px',borderRadius:'50px',fontSize:'13px',fontWeight:'700',zIndex:'9999',pointerEvents:'none'});document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}).catch(()=>prompt('Lien :',url));}
 }
 // ══ MAILLE LÉGALE HELPERS ══
 function _parseMaille(m){
@@ -3559,7 +3699,10 @@ function rc(id){
   const mailleWarn=caught?_buildMailleWarn(f,s):'';
   const lbPhotoGate=caught&&!_isSubmitted(id)&&!s.photo?`<button class="lb-card-btn" style="opacity:.45;cursor:not-allowed;pointer-events:none;" disabled>${T('lb_submit_btn')} — 📸 photo requise</button>`:'';
   const lbBtn=caught?(_isSubmitted(id)?`<div class="lb-submitted-badge">${T('lb_submitted')}<button class="lb-unsub-btn" onclick="event.stopPropagation();unsub('${id}')">× ${T('lb_unsub')}</button></div>`:(s.photo?`<button class="lb-card-btn" onclick="event.stopPropagation();openLbSubmit('${id}')">${T('lb_submit_btn')}</button>`:lbPhotoGate)):'';
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${ringBtn}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span></div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button>${caught?`<button class="reset-btn" onclick="event.stopPropagation();resetCatch('${id}')" title="${LANG==='en'?'Clear data':'Effacer les données'}">✕</button>`:''}<button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button></div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${mailleWarn}${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
+  const seasonIn=_isInSeason(f.s);
+  const seasonBadge=seasonIn!==null?`<span class="season-badge ${seasonIn?'in':'out'}">${seasonIn?(LANG==='fr'?'En saison':'In season'):(LANG==='fr'?'Hors saison':'Off-season')}</span>`:'';
+  const shareBtn=`<button class="info-btn" style="margin-left:2px" onclick="event.stopPropagation();_shareSpecies('${id}')" title="${LANG==='fr'?'Partager':'Share'}">⤴</button>`;
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${ringBtn}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span>${seasonBadge}</div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button>${caught?`<button class="reset-btn" onclick="event.stopPropagation();resetCatch('${id}')" title="${LANG==='en'?'Clear data':'Effacer les données'}">✕</button>`:''}<button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button>${shareBtn}</div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${mailleWarn}${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
   _twParse(el);
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
@@ -3680,7 +3823,8 @@ const _FB_CONFIG={
   appId:"1:429108777336:web:8a701a17d716990111388d"
 };
 let _fbDb=null,_fbUser=null,_fbReady=false;
-let _lbRegion='med',_lbMonthOffset=0;
+let _lbRegion='med',_lbMonthOffset=0,_lbSort='weight';
+function _lbSetSort(s){_lbSort=s;document.querySelectorAll('.lb-sort-btn').forEach(b=>b.classList.toggle('on',b.dataset.sort===s));_fetchLbEntries();}
 let _pendingSubmitId=null;
 
 // Sponsor configuration — à mettre à jour avec le vrai partenaire
@@ -3823,8 +3967,10 @@ function _renderLbEntries(entries){
     if(!byFam[fk])byFam[fk]=[];
     byFam[fk].push(e);
   });
-  // Sort within each family by weight desc, then size desc
+  // Sort within each family per _lbSort
   Object.values(byFam).forEach(arr=>arr.sort((a,b)=>{
+    if(_lbSort==='date'){const da=a.date||'',db=b.date||'';return db.localeCompare(da)||0;}
+    if(_lbSort==='size'){const sa=parseFloat(a.size)||0,sb=parseFloat(b.size)||0;if(sa!==sb)return sb-sa;}
     const wa=parseFloat(a.weight)||0,wb=parseFloat(b.weight)||0;
     if(wa!==wb)return wb-wa;
     const sa=parseFloat(a.size)||0,sb=parseFloat(b.size)||0;
@@ -3993,7 +4139,22 @@ const doStart=pid=>{
   applyMode();applyZone();applyCountry();updateProfileChip();
   renderFilters();render();upStats();
   _twParse(document.body);
+  // Handle share URL parameter
+  const _sp=new URLSearchParams(location.search);
+  const _shareId=_sp.get('share');
+  if(_shareId){
+    const _sz=_sp.get('z');const _sc=_sp.get('c');
+    if(_sz&&_sz!==ZONE){ZONE=_sz;applyZone();}
+    if(_sc&&_sc!==COUNTRY){COUNTRY=_sc;applyCountry();}
+    render();
+    setTimeout(()=>{
+      const _el=document.getElementById('c-'+_shareId);
+      if(_el){_el.scrollIntoView({behavior:'smooth',block:'center'});_el.classList.add('share-highlight');setTimeout(()=>_el.classList.remove('share-highlight'),2500);}
+    },500);
+  }
 };
+// ── Service Worker ──
+if('serviceWorker'in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
 // Toujours afficher le choix du profil au lancement
 (function(){
   const phrases=LANG==='fr'?['Prêt à tous les collectionner…','Le carnet du pêcheur passionné','Méditerranée · Atlantique · Eau douce']:['Ready to catch them all…','The passionate angler\'s logbook','Mediterranean · Atlantic · Fresh water'];
