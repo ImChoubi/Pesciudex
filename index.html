@@ -222,6 +222,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .cdet{display:none;border-top:1px solid rgba(11,37,64,.07);padding:0 12px 12px;animation:sIn .2s ease}
 @keyframes sIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .card.caught .cdet{display:block}
+.card.caught.collapsed .cdet{display:none}
 .nbox{font-size:11px;color:var(--txt2);background:rgba(26,175,160,.07);border-left:3px solid var(--acc);border-radius:0 8px 8px 0;padding:7px 10px;margin-top:10px;line-height:1.6}
 .slbl{font-size:10px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em;margin:11px 0 5px}
 .mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}
@@ -2088,7 +2089,7 @@ const I18N={
       recipe_soon:'Recette originale à venir — retrouvez bientôt les créations exclusives de Pesciudex 🍽',
       map_link:'Voir sur la carte de pêche',
       mode_lbl:'Mode',catch_lbl:'Ma prise',photo_lbl:'Ma photo',photo_add:'Ajouter ma photo',
-      notes_lbl:'Notes',sz_qty:'Taille / Qté',weight_lbl:'Poids (kg)',notes_ph:'Lieu, profondeur, technique…',
+      notes_lbl:'Notes',sz_qty:'Taille (en CM)',weight_lbl:'Poids (kg)',notes_ph:'Lieu, profondeur, technique…',
       size_lbl:'Taille',weight_short:'Poids',clbl_one:'espèce',clbl_many:'espèces',
       flt_riviere:'🏞 Rivière',flt_lac:'💧 Lac',flt_coup:'🎣 Coup',
       flt_main:'🖐 À main',flt_nasse:'🪤 Nasse',flt_balance:'⚖ Balance',
@@ -2124,7 +2125,7 @@ const I18N={
       recipe_soon:'Original recipe coming soon — exclusive Pesciudex creations 🍽',
       map_link:'View on fishing map',
       mode_lbl:'Mode',catch_lbl:'My catch',photo_lbl:'My photo',photo_add:'Add my photo',
-      notes_lbl:'Notes',sz_qty:'Size / Qty',weight_lbl:'Weight (kg)',notes_ph:'Location, depth, technique…',
+      notes_lbl:'Notes',sz_qty:'Size (in CM)',weight_lbl:'Weight (kg)',notes_ph:'Location, depth, technique…',
       size_lbl:'Size',weight_short:'Weight',clbl_one:'species',clbl_many:'species',
       flt_riviere:'🏞 River',flt_lac:'💧 Lake',flt_coup:'🎣 Float fishing',
       flt_main:'🖐 By hand',flt_nasse:'🪤 Trap',flt_balance:'⚖ Balance net',
@@ -3643,14 +3644,7 @@ function _isInSeason(sStr){
   if(hits.length===1)return now===hits[0];
   return null;
 }
-// ══ SHARE SPECIES ══
-function _shareSpecies(id){
-  const f=getData().find(x=>x.id===id);if(!f)return;
-  const url=`${location.origin}${location.pathname}?share=${id}&z=${ZONE}&c=${COUNTRY}`;
-  const txt=`${f.e} ${f.name} — Pesciudex`;
-  if(navigator.share){navigator.share({title:'Pesciudex',text:txt,url}).catch(()=>{});}
-  else{navigator.clipboard?.writeText(url).then(()=>{const msg=LANG==='fr'?'Lien copié !':'Link copied!';const t=document.createElement('div');t.textContent=msg;Object.assign(t.style,{position:'fixed',bottom:'90px',left:'50%',transform:'translateX(-50%)',background:'#0B2540',color:'#fff',padding:'8px 18px',borderRadius:'50px',fontSize:'13px',fontWeight:'700',zIndex:'9999',pointerEvents:'none'});document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}).catch(()=>prompt('Lien :',url));}
-}
+function _collapseCard(id){const el=document.getElementById('c-'+id);if(el)el.classList.toggle('collapsed');}
 // ══ MAILLE LÉGALE HELPERS ══
 function _parseMaille(m){
   if(!m)return null;
@@ -3701,8 +3695,9 @@ function rc(id){
   const lbBtn=caught?(_isSubmitted(id)?`<div class="lb-submitted-badge">${T('lb_submitted')}<button class="lb-unsub-btn" onclick="event.stopPropagation();unsub('${id}')">× ${T('lb_unsub')}</button></div>`:(s.photo?`<button class="lb-card-btn" onclick="event.stopPropagation();openLbSubmit('${id}')">${T('lb_submit_btn')}</button>`:lbPhotoGate)):'';
   const seasonIn=_isInSeason(f.s);
   const seasonBadge=seasonIn!==null?`<span class="season-badge ${seasonIn?'in':'out'}">${seasonIn?(LANG==='fr'?'En saison':'In season'):(LANG==='fr'?'Hors saison':'Off-season')}</span>`:'';
-  const shareBtn=`<button class="info-btn" style="margin-left:2px" onclick="event.stopPropagation();_shareSpecies('${id}')" title="${LANG==='fr'?'Partager':'Share'}">⤴</button>`;
-  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${ringBtn}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span>${seasonBadge}</div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button>${caught?`<button class="reset-btn" onclick="event.stopPropagation();resetCatch('${id}')" title="${LANG==='en'?'Clear data':'Effacer les données'}">✕</button>`:''}<button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button>${shareBtn}</div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${mailleWarn}${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
+  const isCollapsed=el.classList.contains('collapsed');
+  const collapseBtn=caught?`<button class="info-btn" onclick="event.stopPropagation();_collapseCard('${id}')" title="${LANG==='fr'?'Réduire/Agrandir':'Collapse/Expand'}" style="font-size:13px">${isCollapsed?'▸':'▾'}</button>`:'';
+  el.innerHTML=`<div class="card-top" onclick="tog('${id}')"><div class="fthumb" onclick="event.stopPropagation();(()=>{const i=document.querySelector('#c-${id} .fthumb .simg');if(i&&i.src)openLightbox(i.src,'${cname.replace(/'/g,"\\'")}');})()">${th}</div><div class="cinfo"><div class="cname">${cname}${ringBtn}${f.custom?'<span style="font-size:10px;color:var(--acc2);font-weight:400"> ✚</span>':''}</div><div class="clatin">${f.latin}</div><div class="tags"><span class="tag tm">📏 ${f.m}</span>${f.pm?`<span class="tag tp">⚖ min. ${f.pm}</span>`:''}<span class="tag ts">📅 ${tSeason(f.s)}</span><span class="tag ${ic.cls}">${ic.dot} ${LANG==='en'?(ic.label_en||ic.label):ic.label}</span>${seasonBadge}</div></div><button class="chk${caught?' on':''}" onclick="event.stopPropagation();tog('${id}')">${caught?'✓':''}</button>${caught?`<button class="reset-btn" onclick="event.stopPropagation();resetCatch('${id}')" title="${LANG==='en'?'Clear data':'Effacer les données'}">✕</button>`:''}<button class="info-btn" onclick="event.stopPropagation();openInfo('${id}')" title="${LANG==='en'?'More info':'Plus d\'infos'}">ℹ</button>${collapseBtn}</div>${caught?`<div class="cdet">${f.n?`<div class="nbox">ℹ ${f.n}</div>`:''}`+(DESC[id]?`<div class="desc-box">${DESC[id]}</div>`:'')+`<div class="slbl">${T('mode_lbl')}</div><div class="mgrid">${mb}</div><div class="slbl">${T('catch_lbl')}</div><div class="frow"><div class="field"><label>Date</label><input type="date" value="${s.date||''}" onchange="sd('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"></div><div class="field"><label>${T('sz_qty')}</label><input type="text" placeholder="ex: 45 cm" value="${s.size||''}" onchange="ss('${id}',this.value)" onclick="event.stopPropagation()"></div><div class="field"><label>${T('weight_lbl')}</label><input type="number" step="0.1" placeholder="ex: 2.3" value="${s.weight||''}" onchange="sw('${id}',this.value)" onclick="event.stopPropagation()"></div></div>${mailleWarn}${s.size||s.weight||s.mode?`<div class="rrow">${s.size?`<div class="rbox"><div class="rl">${T('size_lbl')}</div><div class="rv">${s.size}</div></div>`:''} ${s.weight?`<div class="rbox"><div class="rl">${T('weight_short')}</div><div class="rv">${s.weight} kg</div></div>`:''} ${s.mode?`<div class="rbox"><div class="rl">${T('mode_lbl')}</div><div class="rv">${modes.find(m=>m.key===s.mode)?.label||''}</div></div>`:''}</div>`:''}<div class="ffield"><label>${T('notes_lbl')}</label><textarea onclick="event.stopPropagation()" onchange="sn('${id}',this.value)" placeholder="${T('notes_ph')}">${s.note||''}</textarea></div><div class="slbl">${T('photo_lbl')}</div>${up}<div class="slbl">🍳 ${T('recipe_tab')}</div><div class="recipe-box">${RECIPES[id]?`<div class="recipe-content">${RECIPES[id]}</div>`:`<div class="recipe-empty">${T('recipe_soon')}</div>`}</div><button class="story-btn" onclick="event.stopPropagation();exportStory('${id}')">${T('story_btn')}</button>${lbBtn}${delBtn}</div>`:''}`;
   _twParse(el);
   // Lazy-load photo from Wikipedia API (uses localStorage cache)
   if(f.latin)loadThumb(id,f.latin);
