@@ -1,4 +1,4 @@
-const CACHE = 'pesciudex-v1';
+const CACHE = 'pesciudex-v2';
 const ASSETS = ['./index.html', './logo.png', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -17,6 +17,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  const isHTML = e.request.mode === 'navigate' || e.request.url.endsWith('index.html');
   e.respondWith(
     caches.match(e.request).then(cached => {
       const network = fetch(e.request).then(r => {
@@ -26,7 +27,8 @@ self.addEventListener('fetch', e => {
         }
         return r;
       }).catch(() => cached);
-      return cached || network;
+      // HTML : réseau d'abord (mises à jour immédiates), reste : cache d'abord
+      return isHTML ? network : (cached || network);
     })
   );
 });
