@@ -3407,12 +3407,13 @@ function openMap(){
       _leafletMap=L.map('leaflet-map',{zoomControl:true}).setView([44.5,4],5);
       const osmBase=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>'});
       // Carte littorale IGN/SHOM (Géoportail) : sondes, nature des fonds, balisage — WMTS libre
-      const littoral=L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.COASTALMAPS&STYLE=normal&TILEMATRIXSET=PM_6_16&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fpng',{minZoom:6,maxZoom:16,attribution:'© IGN / SHOM'});
+      // maxNativeZoom 16 (limite WMTS) mais zoom 19 autorisé : Leaflet agrandit les tuiles au-delà
+      const littoral=L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=GEOGRAPHICALGRIDSYSTEMS.COASTALMAPS&STYLE=normal&TILEMATRIXSET=PM_6_16&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fpng',{minZoom:6,maxNativeZoom:16,maxZoom:19,attribution:'© IGN / SHOM'});
       const ignSat=L.tileLayer('https://data.geopf.fr/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&FORMAT=image%2Fjpeg',{maxZoom:19,attribution:'© IGN'});
       const satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© <a href="https://www.esri.com">Esri</a> World Imagery'});
       const seamarkOverlay=L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',{maxZoom:18,opacity:0.85,attribution:'© <a href="https://www.openseamap.org">OpenSeaMap</a>'});
       const bathyOverlay=L.tileLayer('https://tiles.emodnet-bathymetry.eu/2020/baselayer/web_mercator/{z}/{x}/{y}.png',{maxZoom:11,opacity:0.55,attribution:'© <a href="https://www.emodnet-bathymetry.eu">EMODnet</a>'});
-      osmBase.addTo(_leafletMap);
+      littoral.addTo(_leafletMap); // fond par défaut : carte littorale IGN/SHOM
       seamarkOverlay.addTo(_leafletMap);
       const baseLayers={
         [LANG==='fr'?'⚓ Carte littorale (IGN/SHOM)':'⚓ Coastal chart (IGN/SHOM)']:littoral,
