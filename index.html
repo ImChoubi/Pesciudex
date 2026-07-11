@@ -4391,6 +4391,11 @@ function openLeaderboard(){
 function closeLeaderboard(){document.getElementById('lb-overlay').classList.remove('open');_bnavHome();}
 function _bnav(tab){
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  // Fermer tous les overlays plein écran avant d'ouvrir l'onglet demandé (sinon ils s'empilent)
+  ['weather-overlay','map-overlay','lb-overlay','stats-overlay'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('open');
+  });
+  document.body.style.overflow='';
   if(tab==='weather')openWeather();
   else if(tab==='map')openMap();
   else if(tab==='ranking')openLeaderboard();
