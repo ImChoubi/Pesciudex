@@ -737,8 +737,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .mf-btn.mf-tool.on{background:#FFC53D;border-color:#FFC53D;color:#3a2a00}
 
 /* ── V2 : MODAL AJOUT DEPUIS LA CARTE ── */
-#mapadd-overlay{position:fixed;inset:0;z-index:450;background:rgba(2,8,15,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px}
-#mapadd-overlay.open{display:flex}
+#mapadd-overlay,#zonename-overlay{position:fixed;inset:0;z-index:450;background:rgba(2,8,15,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px}
+#mapadd-overlay.open,#zonename-overlay.open{display:flex}
 .mapadd-modal{background:#fff;border-radius:20px;width:100%;max-width:400px;padding:20px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.5);color:var(--txt)}
 .dark .mapadd-modal{background:#0E2236}
 .mapadd-seg{display:flex;background:rgba(11,37,64,.06);border-radius:12px;padding:3px;margin-bottom:12px}
@@ -978,6 +978,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
     <span class="map-leg-item"><span class="map-leg-dot" style="background:#1565C0"></span>Atlantique</span>
     <span class="map-leg-item"><span class="map-leg-dot" style="background:#2E7D32"></span>Eau douce</span>
     <span class="map-leg-item"><span class="map-leg-dot" style="background:#795548"></span>Coquidex</span>
+  </div>
+</div>
+
+<!-- ZONE NAME (nommage de zone dessinée — remplace prompt(), cassé en PWA iOS) -->
+<div id="zonename-overlay" onclick="if(event.target===this)cancelZoneName()">
+  <div class="mapadd-modal">
+    <div style="font-size:16px;font-weight:800;margin-bottom:2px">✏️ Nommer la zone</div>
+    <div style="font-size:11.5px;color:var(--txt3);margin-bottom:12px">Ta zone de pêche dessinée sur la carte</div>
+    <label class="mapadd-lbl">Nom de la zone</label>
+    <input id="zonename-inp" class="mapadd-inp" placeholder="ex : Calanque de Sormiou" autocomplete="off" onkeydown="if(event.key==='Enter')confirmZoneName()">
+    <button class="mapadd-save" onclick="confirmZoneName()">✓ Enregistrer la zone</button>
+    <button class="mapadd-cancel" onclick="cancelZoneName()">Annuler le dessin</button>
   </div>
 </div>
 
@@ -3510,25 +3522,47 @@ function _renderZonePolys(){
   });
 }
 function delZoneDrawn(id){ZONES_DRAWN=ZONES_DRAWN.filter(z=>z.id!==id);saveZonesDrawn();_renderZonePolys();}
+function _zoneDrawReset(){
+  _zoneDrawPts=null;
+  if(_zoneDrawTemp){_leafletMap.removeLayer(_zoneDrawTemp);_zoneDrawTemp=null;}
+  const btn=document.getElementById('zone-draw-btn');
+  if(btn){btn.classList.remove('on');btn.textContent='✏️ Zone';}
+  _leafletMap.getContainer().style.cursor='';
+  document.getElementById('map-title').textContent=LANG==='en'?'🗺 Fishing map':'🗺 Carte de pêche';
+}
 function toggleZoneDraw(){
   const fr=LANG!=='en';
   const btn=document.getElementById('zone-draw-btn');
   if(_zoneDrawPts){ // terminer
     if(_zoneDrawPts.length>=3){
-      const name=prompt(fr?'Nom de la zone :':'Zone name:',fr?'Ma zone':'My zone');
-      if(name&&name.trim()){ZONES_DRAWN.push({id:'z'+Date.now(),name:name.trim(),pts:_zoneDrawPts});saveZonesDrawn();_renderZonePolys();}
-    }else if(_zoneDrawPts.length>0){alert(fr?'Il faut au moins 3 points.':'At least 3 points needed.');}
-    _zoneDrawPts=null;
-    if(_zoneDrawTemp){_leafletMap.removeLayer(_zoneDrawTemp);_zoneDrawTemp=null;}
-    if(btn){btn.classList.remove('on');btn.textContent='✏️ Zone';}
-    _leafletMap.getContainer().style.cursor='';
-    document.getElementById('map-title').textContent=fr?'🗺 Carte de pêche':'🗺 Fishing map';
+      // Pas de prompt() : cassé en PWA iOS (renvoie null → la zone disparaissait). Modal maison.
+      const d=new Date();
+      document.getElementById('zonename-inp').value=(fr?'Zone du ':'Zone ')+d.getDate()+'/'+String(d.getMonth()+1).padStart(2,'0');
+      document.getElementById('zonename-overlay').classList.add('open');
+      setTimeout(()=>document.getElementById('zonename-inp').select(),80);
+      return; // le dessin reste affiché tant que le nom n'est pas validé/annulé
+    }
+    document.getElementById('map-title').textContent=fr?'⚠️ Il faut au moins 3 points — zone annulée':'⚠️ At least 3 points needed — zone cancelled';
+    _zoneDrawReset();
   }else{ // démarrer
     _zoneDrawPts=[];
     if(btn){btn.classList.add('on');btn.textContent=fr?'✓ Terminer':'✓ Finish';}
     _leafletMap.getContainer().style.cursor='crosshair';
     document.getElementById('map-title').textContent=fr?'✏️ Touche la carte pour dessiner la zone (3 points min), puis "Terminer"':'✏️ Tap to draw the zone (min 3 points), then "Finish"';
   }
+}
+function confirmZoneName(){
+  const name=document.getElementById('zonename-inp').value.trim()||('Zone '+new Date().toLocaleDateString());
+  if(_zoneDrawPts&&_zoneDrawPts.length>=3){
+    ZONES_DRAWN.push({id:'z'+Date.now(),name,pts:_zoneDrawPts});
+    saveZonesDrawn();_renderZonePolys();
+  }
+  document.getElementById('zonename-overlay').classList.remove('open');
+  _zoneDrawReset();
+}
+function cancelZoneName(){
+  document.getElementById('zonename-overlay').classList.remove('open');
+  _zoneDrawReset();
 }
 function _mapAddHere(){
   const fr=LANG!=='en';
